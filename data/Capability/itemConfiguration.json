@@ -1,0 +1,42 @@
+{
+    "identifier": "Name",
+
+    "summary": [
+      { "schemaID": "Name",        "tableColumn": "Name",        "detailsID": "Name",        "DBColumn": "NAME"        },
+      { "schemaID": "Description", "tableColumn": "Description", "detailsID": "Description", "DBColumn": "DESCRIPTION" },
+      { "schemaID": null,          "tableColumn": "State",       "detailsID": "State",       "DBColumn": "STATE"       },
+      { "schemaID": null,          "tableColumn": null,          "detailsID": "ID",          "DBColumn": "ID"          }
+    ],
+
+    "toolbarConfig": {
+      "toolbars": [ "New", "Edit", "Delete" ],
+      "actions": { "create": "New", "edit": "Edit", "delete": "Delete" }
+    },
+
+    "schema": {
+        "create": [
+          { "ID": "Name",         "caption": "Name *",          "field": "input" },
+          { "ID": "Description",  "caption": "Description *",   "field": "input" }
+        ]
+    },
+
+    "tableConfig": {
+      "filters": { "STATE": "ACTIVE" },
+      "orderBy": ["NAME", "ASC"],
+      "maxRows": 40,
+      "tableSelector": "Name"
+    },
+
+    "detailsConfig": {
+      "Name"        : { "caption": "Name",        "type": "FIELD" , "showsOn": "all" },
+      "Description" : { "caption": "Description", "type": "FIELD" , "showsOn": "all" },
+      "State"       : { "caption": "State",       "type": "FIELD" , "showsOn": "all" },
+      "ID"          : { "caption": "ID",          "type": "FIELD" , "showsOn": "all" }
+    },
+
+    "reportingDBConfig": {
+      "tableName": "CAPABILITY"
+    },
+
+    "url": "#/hmws/capabilities/{NAME}"
+}
