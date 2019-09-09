@@ -1,4 +1,4 @@
-import { browser } from 'protractor';
+import { browser, promise } from 'protractor';
 import * as _ from 'lodash';
 
 import { ToolbarPage, FormPage } from '../po/po.exports';
@@ -10,12 +10,14 @@ import { Application } from '../utils/utils.exports';
 const root = browser.params.testsPath;
 const fs = require('fs');
 
+// TODO custom errors
+
 export class Item implements ItemConfig {
   readonly config: ItemConfig;
-  readonly reportingDBConfig: any;
-  readonly toolbarConfig: any;
-  readonly tableConfig: Table;
-  readonly detailsConfig: Details;
+  readonly reportingDB: any;
+  readonly toolbar: any;
+  readonly table: Table;
+  readonly details: Details;
   
   readonly identifier: string;
 
@@ -27,26 +29,20 @@ export class Item implements ItemConfig {
   readonly values: any;
   readonly url: string
 
-  readonly rdbTableName: string;
-  readonly rdbForeignKeys: string;
-
   constructor(itemName: ItemNameSingular) {
     this.name = itemName;
     this.pluralName = ItemNamePlural[itemName];
     
-    this.values = this.getValues;
+    this.values = this._values;
 
-    this.config = this.getConfig;
-    this.toolbarConfig = this.config.toolbarConfig;
-    this.detailsConfig = this.config.detailsConfig;
+    this.config = this._config;
+    this.toolbar = this.config.toolbar;
+    this.details = this.config.details;
     this.summary = this.config.summary;
     this.schema = this.config.schema;
-    this.reportingDBConfig = this.config.reportingDBConfig;
+    this.reportingDB = this.config.reportingDB;
     this.url = this.config.url;
     this.identifier = this.config.identifier;
-
-    this.rdbTableName = this.reportingDBConfig.tableName;
-    this.rdbForeignKeys = this.reportingDBConfig.foreignKeys;
   }
 
   /**
@@ -61,12 +57,12 @@ export class Item implements ItemConfig {
    * Retrieves the whole configuration of the item
    * @returns the configuration of the item in JSON
    */  
-  private get getConfig(): any {
+  private get _config(): ItemConfig {
     const path = `${root}/data/${this.name}/itemConfiguration.json`;
     this.log.debug(`Config retrieved from: ${path}`);
 
     const config = JSON.parse(fs.readFileSync(path))
-    this.log.debug(`Config: ${config}`);
+    this.log.debug(`Config: ${JSON.stringify(config)}`);
 
     return config;
   }
@@ -75,7 +71,7 @@ export class Item implements ItemConfig {
    * Retrieves the values of the item.
    * @returns the values of the item in JSON
    */  
-  get getValues() {
+  get _values(): any {
     const path = `${root}/data/${this.name}/values.td.json`;
     this.log.debug(`Test data values retrieved from: ${path}`);
     
@@ -83,17 +79,6 @@ export class Item implements ItemConfig {
     this.log.debug(`Test data: ${JSON.stringify(testData)}`);
 
     return testData;
-  }
-
-  /**
-   * Retrieves the toolbar configuration of the item
-   * @returns the configuration of the item toolbar in JSON
-   */  
-  get getToolbarConfig(): any {
-    const toolbars = JSON.parse(this.toolbarConfig);
-    this.log.debug(`Toolbars: ${toolbars}`);
-
-    return toolbars;
   }
   
   /**
@@ -129,16 +114,38 @@ export class Item implements ItemConfig {
   }
 
   /**
+   * 
+   * @param limit 
+   */
+  async reportingDBInstances(limit: number) {
+    return await ReportingDB.getItem(this.reportingDB.tableName, '*', null, limit);
+  }
+
+  /**
+   * Navigates to the dedicated page of the item
+   * @returns a command to either navigate to the given page or refresh the page
+   */
+  async navigateToPage(): promise.Promise<any> {
+    const itemUrl = `${browser.baseUrl}/${this.url}`;
+    this.log.debug(`Navigating to ${itemUrl}`);
+
+    return (await browser.getCurrentUrl()) !== itemUrl ? browser.get(itemUrl) : browser.refresh();
+  }
+
+  /**
    * Executes the generic steps for creating an item which consists of:
    * 1. Clicking the button for create
    * 2. Entering of data in the form
    * 3. Submitting the form
    * 
    * Passes the data filled in the form to the protractor browser params: createdItemDetails
-   * Passes the UUID of the entered data to the protractor browser params: createdUUIDs
+   * Passes the UUID of the created data to the protractor browser params: createdUUIDs
+   * 
+   * @param asCollection if true, the item will create itself as a collection
    */
-  async create() {
-    this.log.info(`Creating a/an ${this.name}`);
+  async create(asCollection: boolean = false) {
+    this.log.debug(`Creating a/an ${this.name}`);
+    //TODO create iteself as a collection
     let formSchemaWithValues;
 
     try {
@@ -147,10 +154,10 @@ export class Item implements ItemConfig {
       formSchemaWithValues = this.formSchemaWithValues(TestValue.CREATE, 'create');
     }
         
-    const createButton = await ToolbarPage.findButton(this.toolbarConfig.actions.create);
+    const createButton = await ToolbarPage.findButton(this.toolbar.actions.create);
     await createButton.click();
     const formPanel = await FormPage._formPanel;
-    this.log.info(`The form "${await (await FormPage._formHeader).getText()}" has been displayed`);
+    this.log.debug(`The form "${await (await FormPage._formHeader).getText()}" has been displayed`);
     
     formSchemaWithValues = await FormPage.fill(formSchemaWithValues);
     const createdItemValues = this.values[TestValue.CREATE];
@@ -161,59 +168,13 @@ export class Item implements ItemConfig {
     await ElementToBe.stale(formPanel.nativeElement);
 
     const conditions = await ReportingDB.parseToQueryConditions(createdItemValues, this.summary, ItemSummaryField.SCHEMA_ID);
-    const itemDBRow = await (await ReportingDB.getItem(this.rdbTableName, ['UUID', this.identifier.toUpperCase()] , conditions));
+    const itemDBRow = await (await ReportingDB.getItem(this.reportingDB.tableName, ['UUID', this.identifier.toUpperCase()] , conditions));
 
-    createdItemValues.UUID = itemDBRow.UUID;
+    createdItemValues.UUID = itemDBRow['UUID'];
     createdItemValues[_.camelCase(this.identifier)] = itemDBRow[this.identifier.toUpperCase()];
 
     browser.params.createdItemDetails[this.name] = createdItemValues;
   }
-
-  // /**
-  //  * Retrieves the item list columns of the item
-  //  *
-  //  * @param itemSummary the summary configuration of the item
-  //  * 
-  //  * @returns the item list columns of the item in JSON
-  //  */  
-  // static getColumns(itemSummary: Array<any>): Array<string> {
-  //   return itemSummary.map(res => res.tableColumn).filter(col => !isNullOrUndefined(col));
-  // }
-
-  // static async parseRDBData(rdbListData: any, rdbConfig?: any) {
-  //   const parsedItemData = [];
-  //   for (const item of rdbListData) {
-  //     let rowData;
-  //     for (const key in item) {
-  //       // Some items save 'null' as a string in the database
-  //       if (isNullOrUndefined(item[key]) || item[key] === 'null') {
-  //         continue;
-  //       }
-        
-  //       if (rdbConfig && rdbConfig.hasOwnProperty('foreignKeys')) {
-  //         const fkey = rdbConfig.foreignKeys;
-  //         if (fkey.hasOwnProperty(key)) {
-  //           let res;
-  //           if (fkey[key].constructor.name === 'String') {
-  //             res = await ReportingDB.getItem(fkey[key], `"UUID" = '${item[key]}'`, "NAME");
-  //           } else if (fkey[key].constructor.name === 'Object') {
-  //             res = await ReportingDB.getItem(fkey[key]['table'], `"UUID" = '${item[key]}'`, "NAME");
-  //           }
-  //           item[key] = res.NAME;
-  //         }
-  //       }
-
-  //       if (item[key] instanceof Date) {
-  //         item[key] = this.parseISODate(item[key]);
-  //       }
-
-  //       rowData = rowData ? `${rowData} ${item[key]}` : item[key];
-  //     }
-  //     rowData = rowData.replace(/\s\s+/g, ' ');
-  //     parsedItemData.push(rowData);
-  //   }
-  //   return parsedItemData;
-  // }
 
   // static parseISODate(date: Date) {
   //   const dateRegex = /(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})\.(\d{3}[Z])/gm;

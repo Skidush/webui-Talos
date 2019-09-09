@@ -20,6 +20,12 @@
         ]
     },
 
+    "collectionSchema": {
+        "select": [
+          { "ID": "MemberName",         "caption": "Name *",          "field": "dropdown" }
+        ]
+    },
+
     "tableConfig": {
       "filters": { "STATE": "ACTIVE" },
       "orderBy": ["NAME", "ASC"],

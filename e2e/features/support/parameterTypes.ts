@@ -2,6 +2,7 @@ import { defineParameterType } from 'cucumber'
 import { _ } from 'lodash';
 import { ItemNameSingular, AuthState, Role, TestAction, Page, ItemNamePlural } from '../../helpers/enum/test.enum';
 
+// TODO: Segregate hmws specific parameter types from generic parameters
 class ParamaterUtil {
     static toRegExpOr(regexpEnum: any, includeKeys: boolean = false, valuesToSentenceCase: boolean = false): RegExp {
         const regExpArr = [];

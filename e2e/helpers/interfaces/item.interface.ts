@@ -3,11 +3,11 @@ import { ToolbarAction, FormField, ShowsOn } from "../helper.exports";
 export interface ItemConfig {
   readonly identifier: string,
   readonly summary: Array<ItemSummary>,
-  readonly toolbarConfig: Toolbar,
+  readonly toolbar: Toolbar,
   readonly schema: Array<SchemaField>,
-  readonly tableConfig: Table,
-  readonly detailsConfig: Details,
-  readonly reportingDBConfig: ReportingDB,
+  readonly table: Table,
+  readonly details: Details,
+  readonly reportingDB: ReportingDB,
   readonly url: string
 }
 

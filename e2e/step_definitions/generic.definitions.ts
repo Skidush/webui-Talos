@@ -33,7 +33,7 @@ Given('A/An {itemState} {item} exists', async function (state, itemName) {
   log.info(`Step: A/An ${itemName} exists`);
   const item = new Item(itemName);
 
-  if (!await (await ReportingDB.getItem(item.rdbTableName, "STATE", {STATE: state}))){
+  if (!await (await ReportingDB.getItem(item.reportingDB.tableName, "STATE", {STATE: state}))){
     
   };
 });
@@ -94,8 +94,8 @@ Then('The user should see the {action}(d)(ed) item details of the {item}', async
   // }
   
   const displayedDetails = {};
-  for (let key in item.detailsConfig) {
-    const details = item.detailsConfig[key];
+  for (let key in item.details) {
+    const details = item.details[key];
     // TODO Add checking for TABLE details
     // Also fix these conditions
     if (details.type === 'TABLE') {
@@ -123,7 +123,7 @@ Then('The user should see the {action}(d)(ed) item details of the {item}', async
   });
 
   const conditions = await ReportingDB.parseToQueryConditions(browser.params.createdItemDetails[itemName], item.summary, ItemSummaryField.SCHEMA_ID);
-  const rdbItemRow = await ReportingDB.getItem(item.rdbTableName, detailsDBCols, conditions);
+  const rdbItemRow = await ReportingDB.getItem(item.reportingDB.tableName, detailsDBCols, conditions);
 
   // TODO: Move to parseRDBData method of test-helpers
   for (const key in rdbItemRow) {
