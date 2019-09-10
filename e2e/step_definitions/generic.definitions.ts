@@ -1,11 +1,14 @@
 import { Given, When, Then } from 'cucumber';
 import { browser } from 'protractor';
+import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
-import { Item, Page, TestAction, ReportingDB, ItemSummaryField } from '../helpers/helper.exports';
+import { Item, GenericItemAction, ReportingDB, ItemSummaryField } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
+
 import { DetailsPage } from '../po/details.po';
-import { isNullOrUndefined } from 'util';
+
+import { Page } from '../../project/enum/test.enum';
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
@@ -29,21 +32,17 @@ Given('The user is on the {page} page', async function (page) {
   }
 });
 
-Given('A/An {itemState} {item} exists', async function (state, itemName) {
-  log.info(`Step: A/An ${itemName} exists`);
-  const item = new Item(itemName);
+Given('A/An {string} {item} exists', async function (state, item) {
+  log.info(`Step: A/An ${item.name} exists`);
 
-  if (!await (await ReportingDB.getItem(item.reportingDB.tableName, "STATE", {STATE: state}))){
-    
-  };
+  await (await item.reportingDBInstances({STATE: state}, 1));
 });
 
-When('The user {action}(s) a/an {item}', async function (action, itemName) {
-  log.info(`Step: The user ${action}(s) a/an ${itemName}`);
+When('The user {genericItemAction}(s) a/an {item}', async function (action, item) {
+  log.info(`Step: The user ${action}(s) a/an ${item.name}`);
 
-  const item = new Item(itemName);
     switch (action) {
-      case TestAction.CREATE:
+      case GenericItemAction.CREATE:
         await item.create();
         break;
       // case 'edit':
@@ -64,22 +63,22 @@ Then('The user should be redirected to the details page of the created {item}', 
   log.info('Redirection checked');
 });
 
-Then('The user should be redirected to the {page} page', async function (page) {
-  log.info(`Step: The user should be redirected to the ${page} page`);
+// Then('The user should be redirected to the {page} page', async function (page) {
+//   log.info(`Step: The user should be redirected to the ${page} page`);
 
-  const nextPage = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
-  const currentPage = `${browser.baseUrl}/${Page.LOGIN}`;
+//   const nextPage = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
+//   const currentPage = `${browser.baseUrl}/${Page.LOGIN}`;
 
-  log.debug(`Current page: ${currentPage}`);
-  log.debug(`Next page: ${nextPage}`);
+//   log.debug(`Current page: ${currentPage}`);
+//   log.debug(`Next page: ${nextPage}`);
 
-  const isRedirected = await Application.isRedirected(`${currentPage}`, `${nextPage}`);
+//   const isRedirected = await Application.isRedirected(`${currentPage}`, `${nextPage}`);
   
-  log.debug(`Browser was redirected: ${isRedirected}`);
+//   log.debug(`Browser was redirected: ${isRedirected}`);
   
-  expect(isRedirected).to.be.true;
-  log.info('Redirection checked');
-});
+//   expect(isRedirected).to.be.true;
+//   log.info('Redirection checked');
+// });
 
 
 Then('The user should see the {action}(d)(ed) item details of the {item}', async function(action, itemName) {

@@ -8,13 +8,13 @@ import { ItemSummary, ItemSummaryField } from "./interfaces/item.interface";
 const pg: pgConnection = new pgConnection();
 
 export class ReportingDB {
+  //TODO Change conditions to a type (Create condition type)
   static async getItem(tableName: string, columns: Array<string> | string = '*', conditions: any = `1 = 1`, limit: number = null): Promise<JSONObject | JSONArray> {
     const query = pg.queryBuilder.select(columns).from(tableName).where(conditions);
-    
-    if (limit) {
+    if (limit && limit > 0) {
       query.limit(limit);
+      return await (await pg.query(query)).rows;
     }
-
     return await (await pg.query(query)).rows[0];
   }
 

@@ -19,10 +19,11 @@ exports.config = {
 
   directConnect: true,
   // baseUrl: 'http://localhost:4200', // Local URL
-  baseUrl: 'http://192.168.88.75:4200',
+  // baseUrl: 'http://192.168.88.75:4200',
+  baseUrl: 'http://clark.titusgt.com:7542',
 
   specs: [
-    './e2e/features/*.feature',
+    'project/features/*.feature'
   ],
 
   framework: 'custom',
@@ -32,10 +33,10 @@ exports.config = {
     require: [
       './e2e/utils/*.ts',
       './e2e/hooks/*.ts',
-      './e2e/features/support/*.ts',
+      'project/features/support/*.ts',
       './e2e/step_definitions/*.ts'
     ],
-    tags: '@Capability',
+    tags: '@Capability and @Create',
     strict: true,
     format: [
       `json:reports/summary.json`,
@@ -45,19 +46,17 @@ exports.config = {
   },
 
   params: {
+    project: 'hmws',    
     agents: [
       { role: 'Admin', username: 'hmws', password: 'test' }
     ],
-
+    
     createdItemDetails: {},
     createdItemUUIDs: [],
     editedItemDetails: {},
-
-    testsPath: process.cwd(),
-
-    originalTime: 0,
     
-    logLevel: 'info',
+    originalTime: 0,
+    logLevel: 'off',
     currentScenario: '',
   },
   

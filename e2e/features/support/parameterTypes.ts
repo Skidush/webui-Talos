@@ -1,59 +1,34 @@
 import { defineParameterType } from 'cucumber'
 import { _ } from 'lodash';
-import { ItemNameSingular, AuthState, Role, TestAction, Page, ItemNamePlural } from '../../helpers/enum/test.enum';
 
-// TODO: Segregate hmws specific parameter types from generic parameters
-class ParamaterUtil {
-    static toRegExpOr(regexpEnum: any, includeKeys: boolean = false, valuesToSentenceCase: boolean = false): RegExp {
-        const regExpArr = [];
+import { AuthenticationState, GenericItemAction } from '../../helpers/enum/test.enum';
+export class ParamaterUtil {
+    static toOrFormat(regexpEnum: any, includeKeys: boolean = false, returnAsRegExp: boolean = true): string | RegExp {
+        let values = [];
         Object.keys(regexpEnum).forEach(enumKey => {
-            const enumValue = valuesToSentenceCase ? _.startCase(_.toLower(regexpEnum[enumKey])) : regexpEnum[enumKey];
-            regExpArr.push(...[enumValue]);
+            values.push(...[regexpEnum[enumKey]]);
             
             if (includeKeys) {
-                regExpArr.push(...[_.startCase(_.toLower(enumKey))]);
+                values.push(...[_.startCase(_.toLower(enumKey))]);
             }
         });
-        return new RegExp(regExpArr.toString().split(',').join('|'));
+        const valuesStr = values.toString().split(',').join('|'); 
+        return returnAsRegExp ? new RegExp(valuesStr) : valuesStr;
     }
 
-    static appendToRegExp(regExp: RegExp, stringToAppend: string): RegExp {
-        return new RegExp(regExp.toString().replace(/\//g, '').concat(`|${stringToAppend}`));
+    static appendToRegExp(regExp: RegExp, regExpToAppend: string): RegExp {
+        return new RegExp(regExp.toString().replace(/\//g, '').concat(`${regExpToAppend}`));
     }
 }
 
 defineParameterType({
-    regexp: `${ParamaterUtil.appendToRegExp(ParamaterUtil.toRegExpOr(Page, true), 'Login|Dashboard')}`,
+    regexp: ParamaterUtil.toOrFormat(AuthenticationState),
     transformer: s => s.toString(),
-    name: 'page'
+    name: 'authenticationState'
 });
 
 defineParameterType({
-    regexp: ParamaterUtil.toRegExpOr(ItemNameSingular, true),
+    regexp: ParamaterUtil.toOrFormat(GenericItemAction),
     transformer: s => s.toString(),
-    name: 'item'
-});
-
-defineParameterType({
-    regexp: ParamaterUtil.toRegExpOr(ItemNamePlural, true),
-    transformer: s => s.toString(),
-    name: 'items'
-});
-
-defineParameterType({
-    regexp: ParamaterUtil.toRegExpOr(AuthState),
-    transformer: s => s.toString(),
-    name: 'authState'
-});
-
-defineParameterType({
-    regexp: ParamaterUtil.toRegExpOr(Role),
-    transformer: s => s.toString(),
-    name: 'role'
-});
-
-defineParameterType({
-    regexp: ParamaterUtil.toRegExpOr(TestAction),
-    transformer: s => s.toString(),
-    name: 'action'
+    name: 'genericItemAction'
 })

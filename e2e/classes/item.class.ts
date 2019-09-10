@@ -1,17 +1,21 @@
 import { browser, promise } from 'protractor';
 import * as _ from 'lodash';
 
-import { ToolbarPage, FormPage } from '../po/po.exports';
-import { TestValue, TestValueParam, ItemNameSingular, ItemNamePlural } from '../helpers/enum/test.enum';
+import { ItemValueParameter } from '../helpers/enum/test.enum';
+import { JSONObject, JSONArray } from '../helpers/interfaces/generic.interface';
 import { ItemSummary, ItemSummaryField, ItemConfig, Table, Details } from '../helpers/interfaces/item.interface';
-import { ElementToBe, ReportingDB } from '../helpers/helper.exports';
+import { ElementToBe, ReportingDB, SchemaField } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
-const root = browser.params.testsPath;
+import { ToolbarPage, FormPage } from '../po/po.exports';
+
+import { ItemSingularName, ItemPluralName } from '../../project/enum/test.enum';
+
+const root = process.cwd();
 const fs = require('fs');
 
 // TODO custom errors
-
+// Maybe also do an item name search on files??
 export class Item implements ItemConfig {
   readonly config: ItemConfig;
   readonly reportingDB: any;
@@ -24,14 +28,25 @@ export class Item implements ItemConfig {
   readonly summary: Array<ItemSummary>;
   readonly schema: any;
   
-  readonly name: ItemNameSingular;
-  readonly pluralName: ItemNamePlural;
+  readonly name: ItemSingularName;
+  readonly pluralName: ItemPluralName;
   readonly values: any;
   readonly url: string
 
-  constructor(itemName: ItemNameSingular) {
-    this.name = itemName;
-    this.pluralName = ItemNamePlural[itemName];
+  constructor(itemName: ItemSingularName | ItemPluralName) {
+    // Means the itemName is singular
+    this.name = ItemSingularName[itemName.toUpperCase()];
+    this.pluralName = ItemPluralName[itemName.toUpperCase()];
+
+    // If the itemName is plural
+    if (!this.name) {
+      this.name = <ItemSingularName> Object.keys(ItemPluralName).find(name => {
+        if (ItemPluralName[name] === itemName) {
+          return name;
+        }
+      });
+      this.pluralName = ItemPluralName[this.name.toUpperCase()];
+    }
     
     this.values = this._values;
 
@@ -83,10 +98,10 @@ export class Item implements ItemConfig {
   
   /**
    * Retrieves the schema of the item with defined values
-   * @param valueType the type of values to pair fill the schema with. See the `TestValue` enum for more details.
+   * @param valueType the values to pair with the schema. See `values.td.json` of an item
    * @returns the schema of the item with defined values in JSON
    */
-  formSchemaWithValues(valueType: TestValue, schemaName: string) {
+  formSchemaWithValues(valueType: any, schemaName: string): Array<SchemaField> {
     const itemValues = this.values[valueType];
     const formSchema = _.cloneDeep(this.schema[schemaName]);
 
@@ -95,9 +110,9 @@ export class Item implements ItemConfig {
       for (let formField of formSchema) {
         const value = Object.keys(itemValues).find(keys => keys.toUpperCase() === formField.ID.toUpperCase());
   
-        if (itemValues[value].includes(TestValueParam.RANDOM_NUM)) {
+        if (itemValues[value].includes(ItemValueParameter.RANDOM_NUM)) {
           this.log.debug(`Replacing value param from: ${itemValues[value]}`);
-          itemValues[value] = itemValues[value].replace(TestValueParam.RANDOM_NUM, _.random(0, 9999));
+          itemValues[value] = itemValues[value].replace(ItemValueParameter.RANDOM_NUM, _.random(0, 9999));
           this.log.debug(`New value: ${itemValues[value]}`);
         }
         formField['value'] = itemValues[value];
@@ -114,11 +129,11 @@ export class Item implements ItemConfig {
   }
 
   /**
-   * 
-   * @param limit 
+   * Retrieves the instances of the item (not including collections) in the database.
+   * @param limit the maximum amount of instances to retrieve
    */
-  async reportingDBInstances(limit: number) {
-    return await ReportingDB.getItem(this.reportingDB.tableName, '*', null, limit);
+  async reportingDBInstances(conditions: any = `1 = 1`, limit: number = 0): Promise<JSONObject | JSONArray> {
+    return await ReportingDB.getItem(this.reportingDB.tableName, '*', conditions, limit);
   }
 
   /**
@@ -146,12 +161,13 @@ export class Item implements ItemConfig {
   async create(asCollection: boolean = false) {
     this.log.debug(`Creating a/an ${this.name}`);
     //TODO create iteself as a collection
+    const valueType = 'create';
     let formSchemaWithValues;
 
     try {
-      formSchemaWithValues = this.formSchemaWithValues(TestValue.CREATE, 'create|edit');
+      formSchemaWithValues = this.formSchemaWithValues(valueType, 'create|edit');
     } catch (_err) {
-      formSchemaWithValues = this.formSchemaWithValues(TestValue.CREATE, 'create');
+      formSchemaWithValues = this.formSchemaWithValues(valueType, 'create');
     }
         
     const createButton = await ToolbarPage.findButton(this.toolbar.actions.create);
@@ -160,7 +176,7 @@ export class Item implements ItemConfig {
     this.log.debug(`The form "${await (await FormPage._formHeader).getText()}" has been displayed`);
     
     formSchemaWithValues = await FormPage.fill(formSchemaWithValues);
-    const createdItemValues = this.values[TestValue.CREATE];
+    const createdItemValues = this.values[valueType];
 
     const submitButton = await FormPage._button('OK');
     await submitButton.click();

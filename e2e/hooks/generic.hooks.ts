@@ -1,5 +1,5 @@
-import { Before, After, BeforeAll, AfterAll, setDefaultTimeout } from 'cucumber';
-import { browser, protractor, element, by } from 'protractor';
+import { Before, BeforeAll, setDefaultTimeout } from 'cucumber';
+import { browser, protractor } from 'protractor';
 import { Application } from '../utils/utils.exports';
 import { LoginPage } from '../po/po.exports';
 

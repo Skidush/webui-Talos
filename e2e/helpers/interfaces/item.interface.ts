@@ -1,6 +1,8 @@
 import { ToolbarAction, FormField, ShowsOn } from "../helper.exports";
 
 export interface ItemConfig {
+  readonly name: string,
+  readonly pluralName: string,
   readonly identifier: string,
   readonly summary: Array<ItemSummary>,
   readonly toolbar: Toolbar,
@@ -41,16 +43,17 @@ type Toolbar = {
   actions: ToolbarActions
 }
 
-type ToolbarActions = {
-  [ToolbarAction.CREATE]: string, 
-  [ToolbarAction.EDIT]: string, 
-  [ToolbarAction.DELETE]: string, 
+interface ToolbarActions {
+  [ToolbarAction.CREATE]?: string, 
+  [ToolbarAction.EDIT]?: string, 
+  [ToolbarAction.DELETE]?: string, 
 }
 
-interface SchemaField {
+export interface SchemaField {
   ID: string,
   caption: string,
-  field: FormField
+  field: FormField,
+  value?: string
 }
 
 type Filter = {
