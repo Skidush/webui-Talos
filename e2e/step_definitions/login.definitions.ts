@@ -1,7 +1,7 @@
 import { When, Then } from 'cucumber';
 import { browser } from 'protractor';
 
-import { AuthenticationState } from '../helpers/helper.exports';
+import { AuthenticationState, Role } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
 import { LoginPage } from '../po/po.exports';
@@ -22,20 +22,32 @@ When('The user logs in as {role}', async function (role) {
   await LoginPage.login(username, password);
 });
 
-Then('The user should be {authenticationState} as {role}', async function (authState, role) {
+// 'The user should be/is {authenticationState} (as {role})'
+Then(new RegExp(`^The user (should be|is) (${Application.objectToOrString(AuthenticationState)})(\\sas ${Application.objectToOrString(Role)})?$`), async function (tense, authState, role) {
   const log = Application.log(browser.params.currentScenario);
-  log.info(`Step: The user should be ${authState} as ${role}`);
+  log.info(`Step: The user should be ${authState} (as ${role || '(role)'})`);
+  
+  if (role) {
+    role = role.replace(' as ', '');
+  }
 
   switch (authState) {
     case AuthenticationState.LOGGED_IN:
-      log.info(`Checking login state and role`);
+      log.info(`Checking login state and/or role`);
+
+      const userRole = await browser.executeScript("return window.localStorage.getItem('roles');");
+      const actualAuthData = {
+        loggedIn: await Application.isLoggedIn(),
+        loggedInAsRole: role ? (<string> userRole).includes(role) : false
+      }
+
+      const expectedAuthData = {
+        loggedIn: false,
+        loggedInAsRole: role ? true : false
+      }
       
-      const isLoggedIn = await Application.isLoggedIn();   
-      const userRoles: string = await browser.executeScript("return window.localStorage.getItem('roles');");
-
-      log.debug(`User is logged in: ${isLoggedIn} --- User role: ${userRoles}`);
-
-      expect({ loggedIn: isLoggedIn, includesRole: userRoles.includes(role) }).to.eql({ loggedIn: true, includesRole: true });
+      log.debug(`User is logged in: ${actualAuthData.loggedIn} --- User role: ${userRole || 'not defined'}`);
+      expect(actualAuthData).to.eql(expectedAuthData);
       log.info(`User is logged in with the role ${role}`);
       break;
     

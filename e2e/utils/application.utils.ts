@@ -41,6 +41,16 @@ export class Application {
         return require(requestedModulePath)[namespace] || require(defaultModulePath)[namespace];
     }
 
+    /**
+     * Converts an object to a string that is joined with the `|` pipe operator
+     *
+     * @param _obj the object to convert
+     * @returns the string representation of the converted object
+     */
+    static objectToOrString(_obj: any): string {
+        return Object.values(_obj).join('|');
+    }
+
     //TODO Does not wait for redirection if the link is invalid
     /**
      * Checks if the user has been redirected from a url to another
