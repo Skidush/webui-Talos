@@ -3,7 +3,7 @@ import { browser } from 'protractor';
 import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
-import { Item, ReportingDB } from '../classes/classes.exports';
+import { ReportingDB } from '../classes/classes.exports';
 import { ItemActivity, ItemSummaryField } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
@@ -19,7 +19,7 @@ Given('The user is on the {page} page', async function (page) {
   const path = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
   const currentUrl = await browser.getCurrentUrl();
 
-  log.info(`Step: The user is on ${page} page`);
+  log.info(`Step: The user is on the ${page} page`);
   log.info(`Navigating to ${path}`);
   
   await browser.get(path);
@@ -55,10 +55,9 @@ When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
     }
 });
 
-Then('The user should be redirected to the details page of the created {item}', async function (itemName) {
-  log.info(`Step: The user should be redirected to the details page of the created ${itemName}`)
-  const item = new Item(itemName);
-  const itemUrl = `${browser.baseUrl}/${item.url.substring(0, item.url.indexOf('{') - 1)}/${encodeURI(browser.params.createdItemDetails[itemName][_.camelCase(item.identifier)])}`;
+Then('The user should be redirected to the details page of the created {item}', async function (item) {
+  log.info(`Step: The user should be redirected to the details page of the created ${item.name}`)
+  const itemUrl = `${browser.baseUrl}/${item.url.substring(0, item.url.indexOf('{') - 1)}/${encodeURI(browser.params.createdItemDetails[item.name][_.camelCase(item.identifier)])}`;
 
   expect(await browser.getCurrentUrl(), `The browser was not redirected to ${itemUrl}`).to.equal(itemUrl);
   log.info('Redirection checked');
@@ -117,9 +116,9 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
     if (!isNullOrUndefined(summary.detailsID) && !isNullOrUndefined(summary.DBColumn)) {
       return summary.DBColumn;
     }
-  });
+  }).filter(summary => summary);
 
-  const conditions = await ReportingDB.parseToQueryConditions(browser.params.createdItemDetails[item.name], item.summary, ItemSummaryField.SCHEMA_ID);
+  const conditions = await ReportingDB.parseToQueryConditions(browser.params.createdItemDetails[item.name], item.summary, ItemSummaryField.DETAILS_ID);
   const rdbItemRow = await ReportingDB.getItem(item.reportingDB.tableName, detailsDBCols, conditions);
 
   // TODO: Move to parseRDBData method of test-helpers

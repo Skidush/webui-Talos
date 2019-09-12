@@ -106,7 +106,7 @@ export class ElementAction {
      */
     async click(_el: ElementFinder = this._element, timeout: number = this._elementTimeout): Promise<ElementAction> {
       const selector = ElementUtil.selector(_el);
-      log.info(`Element to click => '${selector}'`);
+      log.debug(`Element to click => '${selector}'`);
 
       browser.params.originalTime = browser.params.originalTime || timeout;
       log.debug(`Original time: ${browser.params.originalTime}, Timeout: ${timeout}`);
@@ -125,7 +125,7 @@ export class ElementAction {
         }
       });
       
-      log.info(`Element '${selector}' was clicked`);
+      log.debug(`Element '${selector}' was clicked`);
       return this;
     }
   
@@ -139,7 +139,7 @@ export class ElementAction {
      */
     async clear(_el: ElementFinder = this._element, timeout: number = this._elementTimeout): Promise<ElementAction> {
       const selector = ElementUtil.selector(_el);
-      log.info(`Element to clear => '${selector}'`);
+      log.debug(`Element to clear => '${selector}'`);
       
       browser.params.originalTime = browser.params.originalTime || timeout;
 
@@ -150,7 +150,7 @@ export class ElementAction {
       let stopWatch = new Stopwatch();
       stopWatch.start();
       // TODO:TOFIX Sleep is needed for update script refs :(
-      log.info(`Sending key strokes to clear the element`);
+      log.debug(`Sending key strokes to clear the element`);
       await browser.sleep(800);
       await _el.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, "a")).then(async () => {
         await _el.sendKeys(protractor.Key.BACK_SPACE);
@@ -164,7 +164,7 @@ export class ElementAction {
         }
       });
 
-      log.info(`Element '${selector}' innerText cleared`);
+      log.debug(`Element '${selector}' innerText cleared`);
       return this;
     }
     

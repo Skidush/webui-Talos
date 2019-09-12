@@ -25,7 +25,7 @@ export class ElementToBe {
         let stopWatch = new Stopwatch();
         stopWatch.start();
     
-        log.info(`Checking the presence of the element => '${selector}'`);
+        log.debug(`Checking the presence of the element => '${selector}'`);
         await browser.wait(EC.presenceOf(_el), timeout).catch(async (error) => {
             let _error: Error = <Error> error;
             if (_error.message.includes(WebDriverError.STALE_ELEMENT)) {
@@ -40,7 +40,7 @@ export class ElementToBe {
             }
         });
 
-        log.info(`Element '${selector}' is present`);
+        log.debug(`Element '${selector}' is present`);
         return this;
     }
   

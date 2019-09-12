@@ -36,7 +36,7 @@ exports.config = {
       'project/features/support/*.ts',
       './e2e/step_definitions/*.ts'
     ],
-    tags: '@Login',
+    tags: '@Capability',
     strict: true,
     format: [
       `json:reports/summary.json`,
@@ -57,7 +57,7 @@ exports.config = {
     editedItemDetails: {},
     
     originalTime: 0,
-    logLevel: 'info',
+    logLevel: 'off',
     currentScenario: '',
   },
   

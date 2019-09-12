@@ -12,8 +12,8 @@
     "summary": [
       { "schemaID": "Name",        "tableColumn": "Name",        "detailsID": "Name",        "DBColumn": "NAME"        },
       { "schemaID": "Description", "tableColumn": "Description", "detailsID": "Description", "DBColumn": "DESCRIPTION" },
-      { "schemaID": null,          "tableColumn": "State",       "detailsID": "State",       "DBColumn": "STATE"       },
-      { "schemaID": null,          "tableColumn": null,          "detailsID": "ID",          "DBColumn": "ID"          }
+      { "schemaID": null,          "tableColumn": "State",       "detailsID": null,          "DBColumn": "STATE"       },
+      { "schemaID": null,          "tableColumn": null,          "detailsID": null,          "DBColumn": "ID"          }
     ],
 
     "schema": {
@@ -38,9 +38,7 @@
 
     "details": {
       "Name"        : { "caption": "Name",        "type": "FIELD" , "showsOn": "all" },
-      "Description" : { "caption": "Description", "type": "FIELD" , "showsOn": "all" },
-      "State"       : { "caption": "State",       "type": "FIELD" , "showsOn": "all" },
-      "ID"          : { "caption": "ID",          "type": "FIELD" , "showsOn": "all" }
+      "Description" : { "caption": "Description", "type": "FIELD" , "showsOn": "all" }
     },
 
     "reportingDB": {

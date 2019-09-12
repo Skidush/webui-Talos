@@ -9,7 +9,7 @@ export * from './interfaces/generic.interface';
 
 export * from './enum/errors.enum';
 export * from './enum/element.enum';
-export * from './enum/generic.enum';
+export * from './enum/testGeneric.enum';
 
 // ========================
 // Export overridable enums 
