@@ -36,7 +36,7 @@ exports.config = {
       'project/features/support/*.ts',
       './e2e/step_definitions/*.ts'
     ],
-    tags: '@Capability and @Create',
+    tags: '@Login',
     strict: true,
     format: [
       `json:reports/summary.json`,
@@ -46,7 +46,8 @@ exports.config = {
   },
 
   params: {
-    project: 'hmws',    
+    project: 'hmws',
+    root: process.cwd(),
     agents: [
       { role: 'Admin', username: 'hmws', password: 'test' }
     ],
@@ -56,7 +57,7 @@ exports.config = {
     editedItemDetails: {},
     
     originalTime: 0,
-    logLevel: 'off',
+    logLevel: 'info',
     currentScenario: '',
   },
   

@@ -1,17 +1,17 @@
 import { browser, promise } from 'protractor';
 import * as _ from 'lodash';
 
-import { ItemValueParameter } from '../helpers/enum/test.enum';
+import { ItemValueParameter } from '../helpers/enum/generic.enum';
 import { JSONObject, JSONArray } from '../helpers/interfaces/generic.interface';
-import { ItemSummary, ItemSummaryField, ItemConfig, Table, Details } from '../helpers/interfaces/item.interface';
-import { ElementToBe, ReportingDB, SchemaField } from '../helpers/helper.exports';
+import { ElementToBe, SchemaField, Details, ItemSummary, ItemSummaryField, ItemConfig, Table } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
 import { ToolbarPage, FormPage } from '../po/po.exports';
 
-import { ItemSingularName, ItemPluralName } from '../../project/enum/test.enum';
+import { ItemSingularName, ItemPluralName } from '../../project/enum/generic.enum';
+import { ReportingDB } from './classes.exports';
 
-const root = process.cwd();
+const root = browser.params.root;
 const fs = require('fs');
 
 // TODO custom errors

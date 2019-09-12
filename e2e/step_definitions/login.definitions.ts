@@ -6,34 +6,25 @@ import { Application } from '../utils/utils.exports';
 
 import { LoginPage } from '../po/po.exports';
 
-import { Role } from '../../project/enum/test.enum';
-
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
-When('I login as {role}', async function (role) {
+When('The user logs in as {role}', async function (role) {
   const log = Application.log(browser.params.currentScenario);
   log.info(`Step: I login as ${role}`);
 
   const userData = (browser.params.agents).find(agent => agent.role === role);
-  let username;
-  let password;
-
-  switch (role) {
-    case Role.ADMIN:
-      username = userData.username;
-      password = userData.password;
-    break;
-  }
+  const username = userData.username;
+  const password = userData.password;
 
   log.debug(`Role: ${role}, Username: ${username}, Password: ${password}`);
   log.info(`Logging in user: ${username}`);
   await LoginPage.login(username, password);
 });
 
-Then('The user should be {authenticationState} (as) ({role})', async function (authState, role) {
+Then('The user should be {authenticationState} as {role}', async function (authState, role) {
   const log = Application.log(browser.params.currentScenario);
-  log.info(`Step: The user should be ${authState} (as ${role})`);
+  log.info(`Step: The user should be ${authState} as ${role}`);
 
   switch (authState) {
     case AuthenticationState.LOGGED_IN:

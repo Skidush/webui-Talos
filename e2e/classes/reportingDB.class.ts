@@ -2,8 +2,8 @@ import { isNullOrUndefined } from "util";
 import * as _ from 'lodash';
 
 import { pgConnection } from "../../configurations/pgCon.conf";
-import { JSONArray, JSONObject, QueryCondition } from "./interfaces/generic.interface";
-import { ItemSummary, ItemSummaryField } from "./interfaces/item.interface";
+import { JSONArray, JSONObject, QueryCondition } from "../helpers/interfaces/generic.interface";
+import { ItemSummary, ItemSummaryField } from "../helpers/interfaces/item.interface";
 
 const pg: pgConnection = new pgConnection();
 

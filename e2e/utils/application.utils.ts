@@ -3,14 +3,17 @@ import * as request from 'request';
 
 const log4js = require('log4js');
 const EC = protractor.ExpectedConditions;
+const root = browser.params.root;
 
 export class Application {
     /**
-     * Writes logs to stdin and stdout. Default and only stdout file is `automated_test.log` at the root folder
+     * Writes logs to stdin and stdout. 
+     * Default and only stdout file is `automated_test.log` at the root folder
+     * 
      * @param appenderName name of the appender 
      */
-    // TODO change stdout file. Separate logs from separate runs
-    static log(appenderName: string) {
+    // TODO Separate logs from separate runs
+    static log(appenderName: string): any {
         const thisLog = log4js;
         const logConfig = {
             appenders: {
@@ -22,6 +25,20 @@ export class Application {
 
         thisLog.configure(logConfig);
         return thisLog.getLogger(appenderName);
+    }
+
+    /**
+     * Returns the namespace object of the requested module.
+     * 
+     * @param namespace the namespace of the module being requested/imported
+     * @param requestedModulePath the path of the module being requested/imported
+     * @param defaultModulePath the fallback path of the import when the requested module is not found
+     */
+    static getNamespaceModule(
+        namespace: string, 
+        requestedModulePath: string = `${root}/project/enum/generic.enum`, 
+        defaultModulePath: string = `${root}/helpers/helper.exports`): any {
+        return require(requestedModulePath)[namespace] || require(defaultModulePath)[namespace];
     }
 
     //TODO Does not wait for redirection if the link is invalid
@@ -64,6 +81,7 @@ export class Application {
 
     /**
      * Erases the item/s from the system
+     * 
      * @param uuids an array of UUIDs to delete
      */
     static async eraseItems(uuids: Array<string>): Promise<void> {

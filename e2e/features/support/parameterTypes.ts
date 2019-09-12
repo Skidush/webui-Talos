@@ -1,12 +1,13 @@
 import { defineParameterType } from 'cucumber'
 import { _ } from 'lodash';
 
-import { AuthenticationState, GenericItemAction } from '../../helpers/enum/test.enum';
+import { AuthenticationState, ItemActivity, Role, Page } from '../../helpers/helper.exports';
+
 export class ParamaterUtil {
-    static toOrFormat(regexpEnum: any, includeKeys: boolean = false, returnAsRegExp: boolean = true): string | RegExp {
+    static toOrFormat(stringToTransform: any, includeKeys: boolean = false, returnAsRegExp: boolean = true): string | RegExp {
         let values = [];
-        Object.keys(regexpEnum).forEach(enumKey => {
-            values.push(...[regexpEnum[enumKey]]);
+        Object.keys(stringToTransform).forEach(enumKey => {
+            values.push(...[stringToTransform[enumKey]]);
             
             if (includeKeys) {
                 values.push(...[_.startCase(_.toLower(enumKey))]);
@@ -28,7 +29,19 @@ defineParameterType({
 });
 
 defineParameterType({
-    regexp: ParamaterUtil.toOrFormat(GenericItemAction),
+    regexp: ParamaterUtil.toOrFormat(ItemActivity),
     transformer: s => s.toString(),
-    name: 'genericItemAction'
-})
+    name: 'itemActivity'
+});
+
+defineParameterType({
+    regexp: ParamaterUtil.toOrFormat(Role),
+    transformer: s => s.toString(),
+    name: 'role'
+});
+
+defineParameterType({
+    regexp: ParamaterUtil.toOrFormat(Page, true),
+    transformer: s => s.toString(),
+    name: 'page'
+});

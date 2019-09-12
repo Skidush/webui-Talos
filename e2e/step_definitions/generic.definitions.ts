@@ -3,12 +3,13 @@ import { browser } from 'protractor';
 import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
-import { Item, GenericItemAction, ReportingDB, ItemSummaryField } from '../helpers/helper.exports';
+import { Item, ReportingDB } from '../classes/classes.exports';
+import { ItemActivity, ItemSummaryField } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
 import { DetailsPage } from '../po/details.po';
 
-import { Page } from '../../project/enum/test.enum';
+import { Page } from '../../project/enum/generic.enum';
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
@@ -38,11 +39,11 @@ Given('A/An {string} {item} exists', async function (state, item) {
   await (await item.reportingDBInstances({STATE: state}, 1));
 });
 
-When('The user {genericItemAction}(s) a/an {item}', async function (action, item) {
+When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
   log.info(`Step: The user ${action}(s) a/an ${item.name}`);
 
     switch (action) {
-      case GenericItemAction.CREATE:
+      case ItemActivity.CREATE:
         await item.create();
         break;
       // case 'edit':
@@ -81,9 +82,8 @@ Then('The user should be redirected to the details page of the created {item}', 
 // });
 
 
-Then('The user should see the {action}(d)(ed) item details of the {item}', async function(action, itemName) {
-  log.info(`Step: The user should see the ${action}(d)(ed) item details of the ${itemName}`);
-  const item = new Item(itemName);
+Then('The user should see the {itemActivity}(d)(ed) item details of the {item}', async function(action, item) {
+  log.info(`Step: The user should see the ${action}(d)(ed) item details of the ${item.name}`);
   
   // if (action === 'updated') {
   //   detailsJSON = browser.params.editedItemDetails[itemName];
@@ -121,7 +121,7 @@ Then('The user should see the {action}(d)(ed) item details of the {item}', async
     }
   });
 
-  const conditions = await ReportingDB.parseToQueryConditions(browser.params.createdItemDetails[itemName], item.summary, ItemSummaryField.SCHEMA_ID);
+  const conditions = await ReportingDB.parseToQueryConditions(browser.params.createdItemDetails[item.name], item.summary, ItemSummaryField.SCHEMA_ID);
   const rdbItemRow = await ReportingDB.getItem(item.reportingDB.tableName, detailsDBCols, conditions);
 
   // TODO: Move to parseRDBData method of test-helpers
