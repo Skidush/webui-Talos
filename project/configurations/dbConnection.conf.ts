@@ -14,7 +14,7 @@ const database = 'hmws';
 const pg = require('pg');
 const connectionString = 'postgres://' + user + ':' + password + '@' + host + ':' + port + '/' + database;
 
-export class pgConnection {
+export class DBConnection {
     async query(query: string) {
         try {
             const client = new pg.Client(connectionString);

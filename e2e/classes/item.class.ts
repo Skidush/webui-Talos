@@ -73,10 +73,9 @@ export class Item implements ItemConfig {
    * @returns the configuration of the item in JSON
    */  
   private get _config(): ItemConfig {
-    const path = `${root}/data/${this.name}/itemConfiguration.json`;
-    this.log.debug(`Config retrieved from: ${path}`);
-
+    const path = `${root}/project/data/${this.name}/itemConfiguration.json`;
     const config = JSON.parse(fs.readFileSync(path))
+    this.log.debug(`Config retrieved from: ${path}`);
     this.log.debug(`Config: ${JSON.stringify(config)}`);
 
     return config;
@@ -87,10 +86,9 @@ export class Item implements ItemConfig {
    * @returns the values of the item in JSON
    */  
   get _values(): any {
-    const path = `${root}/data/${this.name}/values.td.json`;
-    this.log.debug(`Test data values retrieved from: ${path}`);
-    
+    const path = `${root}/project/data/${this.name}/values.td.json`;
     const testData = JSON.parse(fs.readFileSync(path));
+    this.log.debug(`Test data values retrieved from: ${path}`);
     this.log.debug(`Test data: ${JSON.stringify(testData)}`);
 
     return testData;
