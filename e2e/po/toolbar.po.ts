@@ -1,5 +1,6 @@
 import { by, element, ElementFinder } from 'protractor';
-import { GetElementBy, WebuiElement } from '../helpers/helper.exports';
+import { WebuiElement } from '../classes/classes.exports';
+import { GetElementBy } from '../helpers/helper.exports';
 import { ElementUtil } from '../utils/element.utils';
 
 export enum ToolbarPageElement {

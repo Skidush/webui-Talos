@@ -64,22 +64,20 @@ Then('The user should be redirected to the details page of the created {item}', 
   log.info('Redirection checked');
 });
 
-// Then('The user should be redirected to the {page} page', async function (page) {
-//   log.info(`Step: The user should be redirected to the ${page} page`);
+Then('The user should be redirected to the {page} page', async function (page) {
+  log.info(`Step: The user should be redirected to the ${page} page`);
 
-//   const nextPage = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
-//   const currentPage = `${browser.baseUrl}/${Page.LOGIN}`;
+  const nextPage = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
+  const currentPage = `${browser.baseUrl}/${Page.LOGIN}`;
+  log.debug(`Current page: ${currentPage}`);
+  log.debug(`Next page: ${nextPage}`);
 
-//   log.debug(`Current page: ${currentPage}`);
-//   log.debug(`Next page: ${nextPage}`);
-
-//   const isRedirected = await Application.isRedirected(`${currentPage}`, `${nextPage}`);
+  const isRedirected = await Application.isRedirected(`${currentPage}`, `${nextPage}`);
+  log.debug(`Browser was redirected: ${isRedirected}`);
   
-//   log.debug(`Browser was redirected: ${isRedirected}`);
-  
-//   expect(isRedirected).to.be.true;
-//   log.info('Redirection checked');
-// });
+  expect(isRedirected).to.be.true;
+  log.info('Redirection checked');
+});
 
 
 Then('The user should see the {itemActivity}(d)(ed) item details of the {item}', async function(action, item) {

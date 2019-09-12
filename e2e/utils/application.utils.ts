@@ -37,7 +37,7 @@ export class Application {
     static getNamespaceModule(
         namespace: string, 
         requestedModulePath: string = `${root}/project/enum/generic.enum`, 
-        defaultModulePath: string = `${root}/helpers/helper.exports`): any {
+        defaultModulePath: string = `${root}/e2e/helpers/enum/overridable.enum`): any {
         return require(requestedModulePath)[namespace] || require(defaultModulePath)[namespace];
     }
 

@@ -1,6 +1,7 @@
 import { ElementFinder, element, by, ElementArrayFinder } from "protractor";
 
-import { ElementToBe, WebuiElement } from '../helper.exports';
+import { ElementToBe } from '../helper.exports';
+import { WebuiElement } from '../../classes/classes.exports';
 
 export class GetElementBy {
   /**

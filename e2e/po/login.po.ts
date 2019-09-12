@@ -1,5 +1,6 @@
 import { element, by } from 'protractor';
-import { WebuiElement, GetElementBy } from '../helpers/helper.exports';
+import { WebuiElement } from '../classes/classes.exports';
+import { GetElementBy } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
 const log = Application.log('Login');

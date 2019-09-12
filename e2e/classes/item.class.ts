@@ -1,7 +1,7 @@
 import { browser, promise } from 'protractor';
 import * as _ from 'lodash';
 
-import { ItemValueParameter } from '../helpers/enum/generic.enum';
+import { ItemValueParameter } from '../helpers/enum/testGeneric.enum';
 import { JSONObject, JSONArray } from '../helpers/interfaces/generic.interface';
 import { ElementToBe, SchemaField, Details, ItemSummary, ItemSummaryField, ItemConfig, Table } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';

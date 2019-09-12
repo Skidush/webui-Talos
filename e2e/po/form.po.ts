@@ -1,7 +1,8 @@
 import { element, by, ElementFinder, browser } from "protractor";
 import * as _ from "lodash";
 
-import { GetElementBy, WebuiElement, ElementToBe, FormField } from "../helpers/helper.exports";
+import { WebuiElement } from '../classes/classes.exports';
+import { GetElementBy, ElementToBe, FormField } from "../helpers/helper.exports";
 import { ElementUtil } from "../utils/element.utils";
 import { Application } from "../utils/utils.exports";
 
