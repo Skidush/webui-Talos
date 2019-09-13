@@ -1,18 +1,19 @@
 export enum AuthenticationState {
-    LOGGED_IN = 'logged in',
-    LOGGED_OUT = 'logged out'
+    TEST_AUTHENTICATION_STATE = 'Authentication State'
 }
 
 export enum Role {
-    TEST_ROLE = 'Test Role'
+    TEST_ROLE = 'Role'
 }
 
 export enum Page {
-    LOGIN = '#/login',
+    TEST_PAGE = '#/login',
 }
 
 export enum ItemActivity {
-    CREATE = 'create',
-    EDIT = 'edit',
-    DELETE = 'delete'
+    TEST_ACTIVITY = 'Activity',
+}
+
+export enum ItemState {
+    TEST_STATE = 'State'
 }

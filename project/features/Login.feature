@@ -7,7 +7,7 @@ Feature: Login
         Given The user is on the Login page
             When The user logs in as <role>
             Then The user should be redirected to the Dashboard page
-                And The user should be <authState> as <role>
+                And The user should be <authState> as an <role>
 
     @Login_Admin
     Scenarios:

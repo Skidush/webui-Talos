@@ -11,7 +11,7 @@ const expect = chai.expect;
 
 When('The user logs in as {role}', async function (role) {
   const log = Application.log(browser.params.currentScenario);
-  log.info(`Step: I login as ${role}`);
+  log.info(`Step: The user logs in as ${role}`);
 
   const userData = (browser.params.agents).find(agent => agent.role === role);
   const username = userData.username;
@@ -22,15 +22,30 @@ When('The user logs in as {role}', async function (role) {
   await LoginPage.login(username, password);
 });
 
-// 'The user should be/is {authenticationState} (as {role})'
-Then(new RegExp(`^The user (should be|is) (${Application.objectToOrString(AuthenticationState)})(\\sas ${Application.objectToOrString(Role)})?$`), async function (tense, authState, role) {
+/**
+ * Syntax:
+ * ================================================================
+ * The user (should be/is) {authenticationState} (as (a/an) {role})
+ * ================================================================
+ * Usage:
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * The user should be {authenticationState}
+ * The user should be {authenticationState} as a {role}
+ * The user should be {authenticationState} as an {role}
+ * The user is {authenticationState}
+ * The user is {authenticationState} as a {role}
+ * The user is {authenticationState} as an {role}
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Examples:
+ * ----------------------------------------------------------------
+ * The user should be logged in as a Manager
+ * The user is logged in as an Admin
+ * ----------------------------------------------------------------
+ */ 
+Then(new RegExp(`^The user (?:should be|is) (${Application.objectToOrString(AuthenticationState)})(?:\\sas (?:an|a)\\s)(${Application.objectToOrString(Role)})?$`), async function (authState, role) {
   const log = Application.log(browser.params.currentScenario);
-  log.info(`Step: The user should be ${authState} (as ${role || '(role)'})`);
+  log.info(`Step: The user should be ${authState} (as an/a${role || '(role)'})`);
   
-  if (role) {
-    role = role.replace(' as ', '');
-  }
-
   switch (authState) {
     case AuthenticationState.LOGGED_IN:
       log.info(`Checking login state and/or role`);
@@ -42,7 +57,7 @@ Then(new RegExp(`^The user (should be|is) (${Application.objectToOrString(Authen
       }
 
       const expectedAuthData = {
-        loggedIn: false,
+        loggedIn: true,
         loggedInAsRole: role ? true : false
       }
       

@@ -55,7 +55,7 @@ export class FormPage {
     static async fill(formSchemaWithValues: any, timeout: number = browser.allScriptsTimeout) {
       const log = Application.log(`FormPage(fill) => Fill out form`);
       for (let details of formSchemaWithValues) {
-        log.info('Checking the field caption');
+        log.debug('Checking the field caption');
         this.compareFieldCaption(details.ID, details.caption);
 
         const _formEl = await GetElementBy.elementFinder(element(by.id(details.ID)), timeout);
@@ -71,11 +71,8 @@ export class FormPage {
             const dateField = new WebuiElement(_formEl.nativeElement.element(by.tagName('input')));
             const datePickerBtn = new WebuiElement(_formEl.nativeElement.element(by.className('ui-datepicker-trigger')));
             await dateField.clear();
-            log.info(`${dateField.locator} field cleared`);
             await dateField.sendKeys(details.value);
-            log.info(`"${details.value}" entered in the ${details.field}[${details.ID}] field`);
             await datePickerBtn.click();
-            log.info(`${details.field} button ${_formEl.locator} clicked`);
             break;
           case FormField.AUTOCOMPLETE_DROPDOWN:
             // TODO: Select random data in autocomplete-dropdown

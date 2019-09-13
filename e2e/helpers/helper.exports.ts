@@ -18,3 +18,4 @@ export const AuthenticationState = Application.getNamespaceModule('Authenticatio
 export const Role = Application.getNamespaceModule('Role');
 export const Page = Application.getNamespaceModule('Page');
 export const ItemActivity = Application.getNamespaceModule('ItemActivity');
+export const ItemState = Application.getNamespaceModule('ItemState');

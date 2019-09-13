@@ -1,10 +1,12 @@
+# TODO Explicit stating of the test data to use
+# https://stackoverflow.com/questions/4671703/should-bdd-scenarios-include-actual-test-data-or-just-describe-it
 @Capability
 Feature: Capability
-    As an Admin or Manager
+    As an Admin
     I should be able to Create, Read, Update, and Delete a Capability.
 
-    Background: User is logged in as an Admin or Manager
-        Given The user is logged in
+    Background: User is logged in as an Admin
+        Given The user is logged in as an Admin
 
     @Create
     Scenario: Create a Capability
@@ -13,9 +15,9 @@ Feature: Capability
         Then The user should be redirected to the details page of the created Capability
             And The user should see the created item details of the Capability
         
-    # @Read
-    # Scenario: Read Capability details from the table
-    #     Given An "active" Capability exists
+    @Read
+    Scenario: Read Capability details from the table
+        Given An ACTIVE Capability exists
         # When I go to "/#/hmws/capabilities"
         # Then I should "see" the details of the "Capabilities" in the table
 

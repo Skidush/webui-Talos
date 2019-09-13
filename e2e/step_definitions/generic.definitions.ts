@@ -4,12 +4,10 @@ import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
 import { ReportingDB } from '../classes/classes.exports';
-import { ItemActivity, ItemSummaryField } from '../helpers/helper.exports';
+import { ItemActivity, ItemSummaryField, Page } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
 import { DetailsPage } from '../po/details.po';
-
-import { Page } from '../../project/enum/generic.enum';
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
@@ -33,9 +31,9 @@ Given('The user is on the {page} page', async function (page) {
   }
 });
 
-Given('A/An {string} {item} exists', async function (state, item) {
-  log.info(`Step: A/An ${item.name} exists`);
-
+Given('A/An {itemState} {item} exists', async function (state, item) {
+  log.info(`Step: A/An ${state} ${item.name} exists`);
+  
   await (await item.reportingDBInstances({STATE: state}, 1));
 });
 

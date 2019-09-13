@@ -11,6 +11,7 @@ const log = Application.log(`Element to be`);
 export class ElementToBe {
     /**
      * Waits for the presence of the element
+     * 
      * @param _el the element being tested
      * @param timeout the time, in milliseconds, for waiting the element to meet the condition
      * @returns a promise that will represent the presence of the element
@@ -46,6 +47,7 @@ export class ElementToBe {
   
     /**
      * Waits for the staleness of the element
+     * 
      * @param el the element being tested
      * @param timeout the time, in milliseconds, for waiting the element to meet the condition
      * @returns a promise that will represent the staleness of the element
@@ -64,10 +66,9 @@ export class ElementToBe {
      *
      * @param el the element being tested
      * @param timeout the time, in milliseconds, for waiting the element to meet the condition
-     *
      * @returns a promise that will represent the clickability of the element
      */
-    static clickable(_el: ElementFinder, timeout: number = _el.browser_.allScriptsTimeout) {
+    static clickable(_el: ElementFinder, timeout: number = _el.browser_.allScriptsTimeout): promise.Promise<unknown> {
         return browser.wait(EC.elementToBeClickable(_el), timeout).catch(err => {
             err = err.toString().split(":");
             throw `Element ${_el.parentElementArrayFinder.locator_} is not clickable. ${err[1]}`;
@@ -79,7 +80,6 @@ export class ElementToBe {
      *
      * @param _el the element being tested
      * @param timeout the time, in milliseconds, for waiting the element to meet the condition
-     *
      * @returns a promise that will represent the page visibility of the element
      */
     static async displayed(_el: ElementFinder, timeout?: number): Promise<boolean> {

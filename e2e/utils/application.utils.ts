@@ -73,10 +73,7 @@ export class Application {
         const currentUrl = await browser.getCurrentUrl();
         log.debug(`Url after redirection: ${currentUrl}`);
 
-        if (currentUrl === oldUrl) {
-            redirected = false;
-        }
-
+        redirected = !(currentUrl === oldUrl);
         log.debug(`Redirected: ${redirected}`);
         return redirected;
     }
@@ -125,9 +122,7 @@ export class Application {
             }
         });
         
-        do {
-            // dont exit
-        } while (count !== uuids.length);
+        while (count !== uuids.length) {};
 
         return;
     }

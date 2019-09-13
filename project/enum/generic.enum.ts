@@ -46,6 +46,17 @@ export enum Page {
     CAPABILITIES = '#/hmws/capabilities',
 }
 
+export enum ItemActivity {
+    CREATE = 'create',
+    EDIT = 'edit',
+    DELETE = 'delete'
+}
+
+export enum ItemState {
+    ACTIVE = 'ACTIVE',
+    DEACTIVATED = 'DEACTIVATED'
+}
+
 export enum TestValue {
     CREATE = 'create',
     EDIT = 'edit',

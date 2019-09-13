@@ -37,7 +37,9 @@ Before(({tags: 'not @Login'}), async (scenario) => {
         browser.get(`${browser.baseUrl}/#/login`);
         await browser.wait(EC.urlIs(`${browser.baseUrl}/#/login`), browser.params.defaultTimer);
         await LoginPage.login();
-
+        while(!(await Application.isLoggedIn())) {
+            // Wait until user is logged in
+        }
         log.info('Login action executed');
     }
 });

@@ -1,7 +1,7 @@
 import { defineParameterType } from 'cucumber'
 import { _ } from 'lodash';
 
-import { AuthenticationState, ItemActivity, Role, Page } from '../../helpers/helper.exports';
+import { AuthenticationState, ItemActivity, Role, Page, ItemState } from '../../helpers/helper.exports';
 
 export class ParamaterUtil {
     static toOrFormat(stringToTransform: any, includeKeys: boolean = false, returnAsRegExp: boolean = true): string | RegExp {
@@ -9,9 +9,7 @@ export class ParamaterUtil {
         Object.keys(stringToTransform).forEach(enumKey => {
             values.push(...[stringToTransform[enumKey]]);
             
-            if (includeKeys) {
-                values.push(...[_.startCase(_.toLower(enumKey))]);
-            }
+            includeKeys && values.push(...[_.startCase(_.toLower(enumKey))]);
         });
         const valuesStr = values.toString().split(',').join('|'); 
         return returnAsRegExp ? new RegExp(valuesStr) : valuesStr;
@@ -32,6 +30,12 @@ defineParameterType({
     regexp: ParamaterUtil.toOrFormat(ItemActivity),
     transformer: s => s.toString(),
     name: 'itemActivity'
+});
+
+defineParameterType({
+    regexp: ParamaterUtil.toOrFormat(ItemState, true),
+    transformer: s => s.toString(),
+    name: 'itemState'
 });
 
 defineParameterType({

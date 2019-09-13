@@ -24,6 +24,7 @@ export class ElementAction {
   
     /**
      * Scrolls the element into view
+     * 
      * @param timeout the time window in milliseconds to execute the event
      */
     async scrollIntoView(timeout: number = this._elementTimeout): promise.Promise<unknown> {
@@ -36,6 +37,7 @@ export class ElementAction {
   
     /**
      * Sends a request to get the innerText of the specified element 
+     * 
      * @param _el the element to click
      * @param attribute the attribute to get
      * @param timeout the time window in milliseconds to execute the event
@@ -51,9 +53,7 @@ export class ElementAction {
       
       await _el.getAttribute(attribute).then(async (attribute) => {
         att = attribute;
-        if (!att) {
-          await this.getAttribute(attribute, _el, timeout - stopWatch.getTime());
-        }
+        att || await this.getAttribute(attribute, _el, timeout - stopWatch.getTime());
       }, async (error) => {
         let _error: Error = <Error>error;
   
@@ -69,6 +69,7 @@ export class ElementAction {
   
     /**
      * Sends a request to get the innerText of the specified element 
+     * 
      * @param _el the element/elements to extract the text from
      * @param timeout the time window in milliseconds to execute the event
      * @returns a promise representing the text extracted from the element/elements
@@ -142,7 +143,6 @@ export class ElementAction {
       log.debug(`Element to clear => '${selector}'`);
       
       browser.params.originalTime = browser.params.originalTime || timeout;
-
       log.debug(`Original time: ${browser.params.originalTime}, Timeout: ${timeout}`);
 
       ElementUtil.checkTimeout(timeout, selector, ElementCommand.CLEAR, ElementCommandCycle.RETRY);
