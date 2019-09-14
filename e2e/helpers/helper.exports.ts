@@ -2,7 +2,6 @@ import { Application } from '../utils/utils.exports';
 
 export * from './element_helpers/elementToBe.helper';
 export * from './element_helpers/getElement.helper';
-export * from './element_helpers/elementAction.helper';
 
 export * from './interfaces/item.interface';
 export * from './interfaces/generic.interface';
