@@ -5,6 +5,7 @@ import { AuthenticationState, Role } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
 import { LoginPage } from '../po/po.exports';
+import { ParamaterUtil } from '../features/support/parameterTypes';
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
@@ -23,7 +24,7 @@ When('The user logs in as {role}', async function (role) {
 });
 
 /**
- * Syntax:
+ * Expression:
  * ================================================================
  * The user (should be/is) {authenticationState} (as (a/an) {role})
  * ================================================================
@@ -42,7 +43,8 @@ When('The user logs in as {role}', async function (role) {
  * The user is logged in as an Admin
  * ----------------------------------------------------------------
  */ 
-Then(new RegExp(`^The user (?:should be|is) (${Application.objectToOrString(AuthenticationState)})(?:\\sas (?:an|a)\\s)(${Application.objectToOrString(Role)})?$`), async function (authState, role) {
+Then(new RegExp(`^The user (?:should be|is) (${ParamaterUtil.toOrFormat(AuthenticationState, false, false)})` + 
+    `(?:\\sas (?:an|a)\\s)(${ParamaterUtil.toOrFormat(Role, false, false)})?$`), async function (authState, role) {
   const log = Application.log(browser.params.currentScenario);
   log.info(`Step: The user should be ${authState} (as an/a${role || '(role)'})`);
   

@@ -17,9 +17,9 @@ Feature: Capability
         
     @Read
     Scenario: Read Capability details from the table
-        Given An ACTIVE Capability exists
-        # When I go to "/#/hmws/capabilities"
-        # Then I should "see" the details of the "Capabilities" in the table
+        # Given An ACTIVE Capability exists
+        When The user navigates to the Capabilities page
+        Then I should see details of Capabilities in the table
 
 #     @EditCapability
 #     Scenario: Edit a Capability

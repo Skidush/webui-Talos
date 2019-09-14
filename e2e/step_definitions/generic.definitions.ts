@@ -7,13 +7,30 @@ import { ReportingDB } from '../classes/classes.exports';
 import { ItemActivity, ItemSummaryField, Page } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
-import { DetailsPage } from '../po/details.po';
+import { DetailsPage, ListPage } from '../po/po.exports';
+import { ParamaterUtil } from '../features/support/parameterTypes';
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 const log = Application.log(browser.params.currentScenario);
 
-Given('The user is on the {page} page', async function (page) {
+/**
+ * Expression:
+ * ================================================================
+ * The user (is on/navigates to) the {page} page
+ * ================================================================
+ * Usage:
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * The user is on the {page}
+ * The user navigates to the {page}
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * Examples:
+ * ----------------------------------------------------------------
+ * The user is on the Capabilities page
+ * The user navigates to the Capabilities page
+ * ----------------------------------------------------------------
+ */ 
+Given(new RegExp(`^The user (?: is on|navigates to) the (${ParamaterUtil.toOrFormat(Page, true, false)}) page$`), async function (page) {
   const path = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
   const currentUrl = await browser.getCurrentUrl();
 
@@ -144,7 +161,7 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
     //   rdbItemRow[key] = Item.parseISODate(rdbItemRow[key]);
     // }
 
-    // Pass expectedJSON[key] to a variable for instances where it equals to scKey
+  // Pass expectedJSON[key] to a variable for instances where it equals to scKey
     const value = rdbItemRow[key];
     delete rdbItemRow[key];
     rdbItemRow[scKey] = value;
@@ -152,4 +169,38 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
 
   expect(displayedDetails).to.eql(rdbItemRow);
   log.info(`Item details checked`);
+});
+
+Then('I should see details of {items} in the table', async function (item) {
+  // const rdbListData = await ReportingDB.getItemTableData(itemConfig.reportingDB, itemConfig.tableConfig, itemConfig.itemSummary);
+  // Column checking. Wait for all columns to load
+  for (const column of item.summary.map(summaryRow => summaryRow.tableColumn).filter(column => column)) {
+    await ListPage._columnHeader(column).catch((_err) => {
+      _err.includes(`No element found that contains the text: ${column}`) && log.warn(_err);   
+    });
+  }
+  const headers = await ListPage._columnHeaders.getText();
+  console.log(headers);
+  console.log(typeof headers);
+
+  //   await ElementToBe.stale(ItemList.getTableLoadingIconElement());
+  //   // TODO:TOFIX there is a millisecond that when the loading element would disappear, the row would still be there 
+  //   await browser.sleep(800);
+
+  //   const tableRows = ItemList.getTableRows();
+  //   await ElementToBe.present(tableRows.first());
+  //   await ElementAction.scrollIntoView(await tableRows.first());
+    
+  //   // Parse the data from Reporting DB to match the format of the data extracted from the table
+  //   const databaseData = await Item.parseRDBData(rdbListData, itemConfig.reportingDB);
+  //   const itemListData = await ElementAction.getText(tableRows);
+
+  //   expect(itemListData).to.have.members(databaseData);
+  // } catch (err) {
+  //   if (view === 'not see' && err.toString().includes("No database result found for query:")) {
+  //     expect(true).to.be.true;
+  //   } else {
+  //     throw err;
+  //   }
+  // }
 });
