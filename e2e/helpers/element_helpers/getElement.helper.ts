@@ -25,11 +25,10 @@ export class GetElementBy {
    *
    * @param _el the ElementFinder to wrap and get
    * @param timeout the time to wait for the element in milliseconds
-   * 
    * @returns a promise that represents the present element wrapped in WebuiElement
    */
-  static async elementFinder(_el: ElementFinder, timeout?: number): Promise<WebuiElement> {
-    await ElementToBe.present(_el, timeout);
+  static async elementFinder(_el: ElementFinder | ElementArrayFinder, timeout?: number): Promise<WebuiElement> {
+    await ElementToBe.present(_el.constructor.name === 'ElementFinder' ? _el : _el.first(), timeout);
     return new WebuiElement(_el);
   }
 
