@@ -1,5 +1,5 @@
 export enum AuthenticationState {
-    TEST_AUTHENTICATION_STATE = 'Authentication State'
+    LOGGED_IN = 'logged in'
 }
 
 export enum Role {
