@@ -21,7 +21,8 @@ export class GetElementBy {
   }
 
   /**
-   * Checks the presence of the ElementFinder and returns the element wrapped as WebuiElement
+   * Checks the presence of the ElementFinder (or the first element of the ElementArrayFinder) 
+   * and returns the element/s wrapped as WebuiElement
    *
    * @param _el the ElementFinder to wrap and get
    * @param timeout the time to wait for the element in milliseconds
