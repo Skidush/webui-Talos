@@ -3,8 +3,7 @@ import * as _ from "lodash";
 
 import { WebuiElement } from '../classes/classes.exports';
 import { GetElementBy, ElementToBe, FormField } from "../helpers/helper.exports";
-import { ElementUtil } from "../utils/element.utils";
-import { Application } from "../utils/utils.exports";
+import { Application, ElementUtil } from "../utils/utils.exports";
 
 export enum FormPageElement {
   BUTTON = 'webuilib-item-job-form button[id="{ID}"]',
@@ -37,6 +36,7 @@ export class FormPage {
 
     static async compareFieldCaption(captionFor: string, expectedCaption: string): Promise<boolean> {
       const log = Application.log(`FormPage(compareFieldCaption) => Comparing caption`);
+      log.debug('Checking the field caption...');
       log.debug(`Caption For value: ${captionFor}, Expected caption: ${expectedCaption}`);
 
       return await this._fieldCaption(captionFor).then(async (_el) => {
@@ -55,7 +55,6 @@ export class FormPage {
     static async fill(formSchemaWithValues: any, timeout: number = browser.allScriptsTimeout) {
       const log = Application.log(`FormPage(fill) => Fill out form`);
       for (let details of formSchemaWithValues) {
-        log.debug('Checking the field caption');
         this.compareFieldCaption(details.ID, details.caption);
 
         const _formEl = await GetElementBy.elementFinder(element(by.id(details.ID)), timeout);
@@ -68,22 +67,22 @@ export class FormPage {
             await _formEl.sendKeys(details.value);
             break;
           case FormField.DATE:
-            const dateField = new WebuiElement(_formEl.nativeElement.element(by.tagName('input')));
-            const datePickerBtn = new WebuiElement(_formEl.nativeElement.element(by.className('ui-datepicker-trigger')));
+            const dateField = new WebuiElement(_formEl._element.element(by.tagName('input')));
+            const datePickerBtn = new WebuiElement(_formEl._element.element(by.className('ui-datepicker-trigger')));
             await dateField.clear();
             await dateField.sendKeys(details.value);
             await datePickerBtn.click();
             break;
           case FormField.AUTOCOMPLETE_DROPDOWN:
             // TODO: Select random data in autocomplete-dropdown
-            const autocompleteField = new WebuiElement(_formEl.nativeElement.element(by.css('input.ui-dropdown-label')));
+            const autocompleteField = new WebuiElement(_formEl._element.element(by.css('input.ui-dropdown-label')));
             await autocompleteField.clear();
             await autocompleteField.sendKeys(details.value);
             break;
           case FormField.DROPDOWN:
             // TODO Update script ref needs time to populate the field
             await browser.sleep(1200);
-            const dropdownDiv = new WebuiElement(_formEl.nativeElement.element(by.className('ui-dropdown')));
+            const dropdownDiv = new WebuiElement(_formEl._element.element(by.className('ui-dropdown')));
             const dropdownClass = await dropdownDiv.getAttribute('class');
   
             if (dropdownClass.includes('ui-state-disabled')) {

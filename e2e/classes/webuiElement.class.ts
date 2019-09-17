@@ -2,22 +2,69 @@ import { ElementFinder, ElementArrayFinder, promise, browser, protractor } from 
 import { Stopwatch } from "ts-stopwatch";
 
 import { ElementToBe, ElementCommand, ElementCommandCycle, WebDriverError } from '../helpers/helper.exports';
-import { Application, ElementUtil } from "../utils/utils.exports";
+import { ElementUtil, Application } from "../utils/utils.exports";
 
 const log = Application.log(`WebuiElement`);
 
-export class WebuiElement {
-  readonly _element: ElementFinder;
+export class WebuiElements {
   readonly _elements: ElementArrayFinder;
   readonly _elementTimeout: number;
-  constructor(_el: ElementFinder | ElementArrayFinder) {
-    //TODO Move to an enum
-    if (_el.constructor.name === 'ElementFinder') {
-      this._element = _el as ElementFinder;
-    } else {
-      this._elements = _el as ElementArrayFinder;
-    }
+  constructor(_els: ElementArrayFinder) {
+    this._elements = _els;
+    this._elementTimeout = _els.browser_.allScriptsTimeout;
+  }
 
+  /**
+   * Retrieves the first matching element of the ElementArrayFinder
+   * 
+   * @returns a promise that will resolve to a WebuiElement
+   */
+  async first(): Promise<WebuiElement> {
+    const _firstEl = this._elements.first();
+    await ElementToBe.present(_firstEl);
+    return new WebuiElement(_firstEl);
+  }
+
+  /**
+   * Retrieves the last matching element of the ElementArrayFinder
+   * 
+   * @returns a promise that will resolve to a WebuiElement
+   */
+  async last(): Promise<WebuiElement> {
+    const _lastEl = this._elements.last();
+    await ElementToBe.present(_lastEl);
+    return new WebuiElement(_lastEl);
+  }
+
+  /**
+   * Retrieves the matching element based on the given index of the ElementArrayFinder
+   * 
+   * @param index the index of the element within the ElementArrayFinder
+   * @returns a promise that will resolve to a WebuiElement
+   */
+  async get(index: number): Promise<WebuiElement> {
+    const _indexedEl = this._elements.get(index);
+    await ElementToBe.present(_indexedEl);
+    return new WebuiElement(_indexedEl);
+  }
+
+  /**
+   * Sends a request to get the innerText of the specified elements
+   * 
+   * @returns a promise representing the text extracted from the elements
+   */
+  async getText(): Promise<string> {
+    const _firstEl = this._elements.first();
+    await ElementToBe.present(_firstEl);
+    return new WebuiElement(_firstEl).getText(this._elements);
+  }
+}
+
+export class WebuiElement {
+  readonly _element: ElementFinder;
+  readonly _elementTimeout: number;
+  constructor(_el: ElementFinder) {
+    this._element = _el;
     this._elementTimeout = _el.browser_.allScriptsTimeout
   }
 
@@ -35,7 +82,7 @@ export class WebuiElement {
   }
 
   /**
-   * Sends a request to get the innerText of the specified element 
+   * Sends a request to get an attribute of the specified element 
    * 
    * @param _el the element to click
    * @param attribute the attribute to get
@@ -73,7 +120,7 @@ export class WebuiElement {
    * @param timeout the time window in milliseconds to execute the event
    * @returns a promise representing the text extracted from the element/elements
    */
-  async getText(_el: ElementFinder | ElementArrayFinder = this._element || this._elements, timeout: number = this._elementTimeout): Promise<string> {
+  async getText(_el: ElementFinder | ElementArrayFinder = this._element, timeout: number = this._elementTimeout): Promise<string> {
     browser.params.originalTime = browser.params.originalTime || timeout;
     let text;
     
@@ -148,9 +195,8 @@ export class WebuiElement {
 
     let stopWatch = new Stopwatch();
     stopWatch.start();
-    // TODO:TOFIX Sleep is needed for update script refs :(
     log.debug(`Sending key strokes to clear the element`);
-    await browser.sleep(800);
+
     await _el.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, "a")).then(async () => {
       await _el.sendKeys(protractor.Key.BACK_SPACE);
     }, async (error) => {
@@ -198,25 +244,10 @@ export class WebuiElement {
 
     return this;
   }
-  
-  /**
-   * Retrieves the native element of the Webui wrapped element
-   * @returns the unwrapped webui element
-   */
-  get nativeElement(): ElementFinder {
-    return this._element;
-  }
-
-  /**
-   * Retrieves the native elements of the Webui wrapped elements
-   * @returns the unwrapped webui elements
-   */
-  get nativeElements(): ElementArrayFinder {
-    return this._elements;
-  }
 
   /**
   * Retrieves the locator of the Webui wrapped element
+  * 
   * @returns the locator of the webui element
   */
   get locator(): string {

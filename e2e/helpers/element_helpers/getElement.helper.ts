@@ -1,7 +1,7 @@
 import { ElementFinder, element, by, ElementArrayFinder } from "protractor";
 
 import { ElementToBe } from '../helper.exports';
-import { WebuiElement } from '../../classes/classes.exports';
+import { WebuiElement, WebuiElements } from '../../classes/classes.exports';
 
 export class GetElementBy {
   /**
@@ -11,25 +11,25 @@ export class GetElementBy {
    * @param text the text contained by the css
    * @param timeout the time to wait for the element in milliseconds
    * 
-   * @returns a promise that represents the first element with the specified css which contains the text wrapped in WebuiElement
+   * @returns a promise that represents the first element with the specified css which 
+   * contains the text wrapped in WebuiElements
    */
-  static async allElementsContainingText(cssSelector: string, text: string, timeout?: number): Promise<WebuiElement> {
+  static async allElementsContainingText(cssSelector: string, text: string, timeout?: number): Promise<WebuiElements> {
     const _el = element.all(by.cssContainingText(cssSelector, text));
     await ElementToBe.present(_el.first(), timeout);
 
-    return new WebuiElement(_el);
+    return new WebuiElements(_el);
   }
 
   /**
-   * Checks the presence of the ElementFinder (or the first element of the ElementArrayFinder) 
-   * and returns the element/s wrapped as WebuiElement
+   * Checks the presence of the ElementFinder and returns the element wrapped as WebuiElement
    *
    * @param _el the ElementFinder to wrap and get
    * @param timeout the time to wait for the element in milliseconds
    * @returns a promise that represents the present element wrapped in WebuiElement
    */
-  static async elementFinder(_el: ElementFinder | ElementArrayFinder, timeout?: number): Promise<WebuiElement> {
-    await ElementToBe.present(_el.constructor.name === 'ElementFinder' ? _el : _el.first(), timeout);
+  static async elementFinder(_el: ElementFinder, timeout?: number): Promise<WebuiElement> {
+    await ElementToBe.present(_el, timeout);
     return new WebuiElement(_el);
   }
 
