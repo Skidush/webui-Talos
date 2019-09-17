@@ -48,9 +48,8 @@ export class Item implements ItemConfig {
       this.pluralName = ItemPluralName[this.name.toUpperCase()];
     }
     
-    this.values = this._values;
-
-    this.config = this._config;
+    this.config = JSON.parse(fs.readFileSync(`${root}/project/data/${this.name}/itemConfiguration.json`));
+    this.values = JSON.parse(fs.readFileSync(`${root}/project/data/${this.name}/values.td.json`));
     this.toolbar = this.config.toolbar;
     this.details = this.config.details;
     this.summary = this.config.summary;
@@ -66,32 +65,6 @@ export class Item implements ItemConfig {
    */
   private get log(): any {
     return Application.log(`Item(${this.name})`);
-  }
-
-  /**
-   * Retrieves the whole configuration of the item
-   * @returns the configuration of the item in JSON
-   */  
-  private get _config(): ItemConfig {
-    const path = `${root}/project/data/${this.name}/itemConfiguration.json`;
-    const config = JSON.parse(fs.readFileSync(path))
-    this.log.debug(`Config retrieved from: ${path}`);
-    this.log.debug(`Config: ${JSON.stringify(config)}`);
-
-    return config;
-  }
-
-  /**
-   * Retrieves the values of the item.
-   * @returns the values of the item in JSON
-   */  
-  get _values(): any {
-    const path = `${root}/project/data/${this.name}/values.td.json`;
-    const testData = JSON.parse(fs.readFileSync(path));
-    this.log.debug(`Test data values retrieved from: ${path}`);
-    this.log.debug(`Test data: ${JSON.stringify(testData)}`);
-
-    return testData;
   }
   
   /**
@@ -154,16 +127,17 @@ export class Item implements ItemConfig {
    * Passes the data filled in the form to the protractor browser params: createdItemDetails
    * Passes the UUID of the created data to the protractor browser params: createdUUIDs
    * 
+   * @param schemaName the schema name of the form to be filled
    * @param asCollection if true, the item will create itself as a collection
    */
-  async create(asCollection: boolean = false) {
+  async create(schemaName: string = 'create|edit', asCollection: boolean = false) {
     this.log.debug(`Creating a/an ${this.name}`);
     //TODO create iteself as a collection
     const valueType = 'create';
     let formSchemaWithValues;
 
     try {
-      formSchemaWithValues = this.formSchemaWithValues(valueType, 'create|edit');
+      formSchemaWithValues = this.formSchemaWithValues(valueType, schemaName);
     } catch (_err) {
       formSchemaWithValues = this.formSchemaWithValues(valueType, 'create');
     }
@@ -179,7 +153,7 @@ export class Item implements ItemConfig {
     const submitButton = await FormPage._button('OK');
     await submitButton.click();
 
-    await ElementToBe.stale(formPanel.nativeElement);
+    await ElementToBe.stale(formPanel._element);
 
     const conditions = await ReportingDB.parseToQueryConditions(createdItemValues, this.summary, ItemSummaryField.SCHEMA_ID);
     const itemDBRow = await (await ReportingDB.getItem(this.reportingDB.tableName, ['UUID', this.identifier.toUpperCase()] , conditions));
