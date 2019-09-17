@@ -31,12 +31,12 @@ exports.config = {
 
   cucumberOpts: {
     require: [
-      './e2e/utils/*.ts',
+      './e2e/classes/*.ts',
       './e2e/hooks/*.ts',
       'project/features/support/*.ts',
       './e2e/step_definitions/*.ts'
     ],
-    tags: '@Capability',
+    tags: '@Capability and @Read',
     strict: true,
     format: [
       `json:reports/summary.json`,
@@ -47,7 +47,7 @@ exports.config = {
 
   params: {
     project: 'hmws',
-    root: process.cwd(),
+    logLevel: 'info',
     agents: [
       { role: 'Admin', username: 'hmws', password: 'test' }
     ],
@@ -56,8 +56,8 @@ exports.config = {
     createdItemUUIDs: [],
     editedItemDetails: {},
     
+    root: process.cwd(),
     originalTime: 0,
-    logLevel: 'off',
     currentScenario: '',
   },
   
