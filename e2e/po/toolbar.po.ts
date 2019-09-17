@@ -1,7 +1,7 @@
 import { by, element, ElementFinder } from 'protractor';
 import { WebuiElement } from '../classes/classes.exports';
 import { GetElementBy } from '../helpers/helper.exports';
-import { ElementUtil } from '../utils/element.utils';
+import { ElementUtil } from '../utils/utils.exports';
 
 export enum ToolbarPageElement {
     DIALOG ='webuilib-item-toolbar p-dialog div[role="dialog"]',
@@ -18,7 +18,7 @@ export class ToolbarPage {
             const splitButton = await this._splitButton(buttonID);
             await splitButton.click();
 
-            subButton = await this._splitButtonSubButton(splitButton.nativeElement, button[buttonID]);
+            subButton = await this._splitButtonSubButton(splitButton._element, button[buttonID]);
         } else if (button.constructor.name === 'String') {
             subButton = await this._button(button);
         }

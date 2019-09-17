@@ -1,7 +1,7 @@
 import { by, element } from 'protractor';
 import { WebuiElement } from '../classes/classes.exports';
 import { GetElementBy } from '../helpers/helper.exports';
-import { ElementUtil } from '../utils/element.utils';
+import { ElementUtil } from '../utils/utils.exports';
 
 export enum DetailsPageElement {
   DETAIL_FIELD = 'webuilib-outcome-view webuilib-uuid-link[id="{ID}"]',

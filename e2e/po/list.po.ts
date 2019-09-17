@@ -1,7 +1,6 @@
 import { by, element } from 'protractor';
 import { WebuiElement } from '../classes/classes.exports';
 import { GetElementBy } from '../helpers/helper.exports';
-import { ElementUtil } from '../utils/element.utils';
 
 export enum ListPageElement {
   LIST_HEADER = 'cristalise-list p-table thead tr.itemCollectionRow th',

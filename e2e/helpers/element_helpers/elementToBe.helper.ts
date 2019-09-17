@@ -2,8 +2,7 @@ import { ElementFinder, browser, promise, protractor } from "protractor";
 import { Stopwatch } from "ts-stopwatch";
 
 import { ElementCommand, ElementCommandCycle, WebDriverError } from '../helper.exports';
-import { ElementUtil } from '../../utils/element.utils';
-import { Application } from '../../utils/application.utils';
+import { Application, ElementUtil } from '../../utils/utils.exports';
 
 const EC = protractor.ExpectedConditions;
 const log = Application.log(`Element to be`);
