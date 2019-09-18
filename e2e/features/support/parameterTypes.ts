@@ -1,7 +1,13 @@
 import { defineParameterType } from 'cucumber'
 import { _ } from 'lodash';
 
-import { AuthenticationState, ItemActivity, Role, Page, ItemState } from '../../helpers/helper.exports';
+import { Item } from '../../classes/classes.exports';
+import { 
+    AuthenticationState, 
+    ItemActivity, Role, Page, 
+    ItemSingularName, 
+    ItemState, 
+    ItemPluralName } from '../../helpers/helper.exports';
 
 export class ParamaterUtil {
     static toOrFormat(stringToTransform: any, includeKeys: boolean = false, returnAsRegExp: boolean = true): string | RegExp {
@@ -48,4 +54,16 @@ defineParameterType({
     regexp: ParamaterUtil.toOrFormat(Page, true),
     transformer: s => s.toString(),
     name: 'page'
+});
+
+defineParameterType({
+    regexp: ParamaterUtil.toOrFormat(ItemSingularName, true),
+    transformer: s => new Item(s),
+    name: 'item'
+});
+
+defineParameterType({
+    regexp: ParamaterUtil.toOrFormat(ItemPluralName, true),
+    transformer: s => new Item(s),
+    name: 'items'
 });
