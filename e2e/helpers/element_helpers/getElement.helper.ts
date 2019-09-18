@@ -22,16 +22,29 @@ export class GetElementBy {
   }
 
   /**
-   * Checks the presence of the ElementFinder and returns the element wrapped as WebuiElement
+   * Returns the element wrapped as WebuiElement
    *
-   * @param _el the ElementFinder to wrap and get
+   * @param _el the ElementFinder to get
    * @param timeout the time to wait for the element in milliseconds
    * @returns a promise that represents the present element wrapped in WebuiElement
    */
-  static async elementFinder(_el: ElementFinder, timeout?: number): Promise<WebuiElement> {
+  static async elementFinder(_el: ElementFinder, timeout: number = _el.browser_.allScriptsTimeout): Promise<WebuiElement> {
     await ElementToBe.present(_el, timeout);
     return new WebuiElement(_el);
   }
+
+  /**
+   * Returns the element wrapped as WebuiElements
+   *
+   * @param _el the ElementArrayFinder to get
+   * @param timeout the time to wait for the element in milliseconds
+   * @returns a promise that represents the present element wrapped in WebuiElements
+   */
+  static async elementsFinder(_el: ElementArrayFinder, timeout: number = _el.browser_.allScriptsTimeout): Promise<WebuiElements> {
+    await ElementToBe.present(_el.first(), timeout);
+    return new WebuiElements(_el);
+  }
+  
 
   /**
    * Retrieves the element with the specified css and its exact text
@@ -42,7 +55,7 @@ export class GetElementBy {
    * 
    * @returns a promise representing the element with the exact text wrapped in WebuiElement
    */
-  static async cssWithExactText(_el: ElementArrayFinder, text: string, timeout?: number): Promise<WebuiElement> {
+  static async cssWithExactText(_el: ElementArrayFinder, text: string, timeout: number = _el.browser_.allScriptsTimeout): Promise<WebuiElement> {
     await ElementToBe.present(_el.first(), timeout);
     const elCount = await _el.count();
 
