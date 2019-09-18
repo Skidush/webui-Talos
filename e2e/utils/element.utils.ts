@@ -1,4 +1,4 @@
-import { browser, ElementFinder } from "protractor";
+import { browser, ElementFinder, ElementArrayFinder } from "protractor";
 import { ElementCommand, ElementCommandCycle, SelectorParameter } from '../helpers/helper.exports';
 
 export class ElementUtil {
@@ -56,7 +56,7 @@ export class ElementUtil {
         throw `The selector: ${selectorWithParam} - does not contain any parameters`;
     }
 
-    static selector(_el: ElementFinder): string {
-        return (_el.parentElementArrayFinder.locator_.toString()).split(',')[1].replace(/.$/, '');
+    static selector(_el: ElementFinder | ElementArrayFinder): string {
+        return ((_el.constructor.name === 'ElementFinder' ? _el.parentElementArrayFinder.locator_ : _el.locator_).toString()).split(',')[1].replace(/.$/, '');
     }
 }
