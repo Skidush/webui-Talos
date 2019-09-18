@@ -33,7 +33,12 @@
       "filters": { "STATE": "ACTIVE" },
       "orderBy": ["NAME", "ASC"],
       "maxRows": 40,
-      "tableSelector": "Name"
+      "tableSelector": "RadioButton",
+      "columns": [
+        { "column": "Name"        },
+        { "column": "Description" },
+        { "column": "State"       }
+      ]
     },
 
     "details": {

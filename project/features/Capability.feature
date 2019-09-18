@@ -17,16 +17,22 @@ Feature: Capability
         
     @Read
     Scenario: Read Capability details from the table
-        # Given An ACTIVE Capability exists
+        Given An ACTIVE Capability exists
         When The user navigates to the Capabilities page
-        Then I should see details of Capabilities in the table
+        Then The user should see details of Capabilities in the table
 
-#     @EditCapability
-#     Scenario: Edit a Capability
-#         Given I have an existing "Capability"
-#             And I am on "/#/hmws/capabilities"
-#         When I "edit" a "Capability"
-#         Then I should "see" the details of the "Capabilities" in the table
+    # @Read
+    # Scenario: Read Capability details from its page
+    #     Given An ACTIVE Capability exists
+    #     When The user navigates to the Capabilities page
+    #     Then The user should see details of Capabilities in the table
+
+    @Edit
+    Scenario: Edit a Capability from the table
+        Given An ACTIVE Capability exists
+            And The user is on the Capabilities page
+        When The user edits a Capability
+        # Then The user should "see" the details of the "Capabilities" in the table
 #             And I should see the "updated" item details of the "Capability" 
         
 #     @DeleteCapability

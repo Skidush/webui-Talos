@@ -1,3 +1,4 @@
 {
-    "create": { "name": "[Test]Capability-{randomNumber}",  "description": "[Test]Capability_Description" }
+    "create": { "name": "[Test]Capability-{randomNumber}",        "description": "[Test]Capability_Description" },
+    "edit":   { "name": "[Test][Edit]Capability-{randomNumber}",  "description": "[Test]Capability_Description" }
 }

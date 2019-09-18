@@ -1,13 +1,13 @@
 import { Given, When, Then } from 'cucumber';
-import { browser } from 'protractor';
+import { browser, element, by } from 'protractor';
 import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
-import { ReportingDB } from '../classes/classes.exports';
-import { ItemActivity, ItemSummaryField, Page } from '../helpers/helper.exports';
+import { ReportingDB, WebuiElement } from '../classes/classes.exports';
+import { ItemActivity, ItemSummaryField, Page, ElementToBe } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
-import { DetailsPage, ListPage } from '../po/po.exports';
+import { DetailsPage, ListPage, ListPageElement } from '../po/po.exports';
 import { ParamaterUtil } from '../features/support/parameterTypes';
 
 const chai = require('chai').use(require('chai-as-promised'));
@@ -51,7 +51,8 @@ Given(new RegExp(`^The user (?: is on|navigates to) the (${ParamaterUtil.toOrFor
 Given('A/An {itemState} {item} exists', async function (state, item) {
   log.info(`Step: A/An ${state} ${item.name} exists`);
   
-  await (await item.reportingDBInstances({STATE: state}, 1));
+  const activeItem = await (await item.reportingDBInstances({STATE: state}, 1));
+  browser.params.selectedItemDetails
 });
 
 When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
@@ -61,9 +62,9 @@ When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
       case ItemActivity.CREATE:
         await item.create();
         break;
-      // case 'edit':
-      //   await Item.edit(itemName);
-      //   break;
+      case 'edit':
+        await item.edit();
+        break;
       // case 'delete':
       //   await Item.delete(itemName);
       //   break;
@@ -124,7 +125,7 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
     
     displayedDetails[_.startCase(key)] = text;
   }
-  log.debug(`Data displayed in item details: ${displayedDetails}`);
+  log.debug(`Data displayed in item details: ${console.table(displayedDetails)}`);
 
   // TODO:TOFIX => needs to contain the ones in the created item details
   const detailsDBCols = item.summary.map(summary => {
@@ -171,36 +172,32 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
   log.info(`Item details checked`);
 });
 
-Then('I should see details of {items} in the table', async function (item) {
-  // const rdbListData = await ReportingDB.getItemTableData(itemConfig.reportingDB, itemConfig.tableConfig, itemConfig.itemSummary);
-  // Column checking. Wait for all columns to load
-  for (const column of item.summary.map(summaryRow => summaryRow.tableColumn).filter(column => column)) {
-    await ListPage._columnHeader(column).catch((_err) => {
-      _err.includes(`No element found that contains the text: ${column}`) && log.warn(_err);   
+Then('The user should see details of {items} in the table', async function (item) {
+  await ElementToBe.stale(element(by.css(ListPageElement.LOADING_ICON)));
+  const itemTableColumns = item.table.columns.map(columns => columns.column);
+  let currentTableColumns = (<any> await (await ListPage._columnHeaders).getText()).filter(header => header);
+  for (const column of itemTableColumns) {
+    await ListPage._columnHeader(column).then(async _column => {
+      const headerText = await _column.getText();
+      currentTableColumns = currentTableColumns.filter(header => header !== headerText)
+    }, _err => {
+      if (_err.includes(`No element found that contains the text: ${column}`)) {
+        log.error(_err.message);
+        throw `The column "${column}" for the ${item.name} table does not exist`;
+      }
     });
   }
-  const headers = await ListPage._columnHeaders.getText();
-  console.log(headers);
-  console.log(typeof headers);
 
-  //   await ElementToBe.stale(ItemList.getTableLoadingIconElement());
-  //   // TODO:TOFIX there is a millisecond that when the loading element would disappear, the row would still be there 
-  //   await browser.sleep(800);
+  if (currentTableColumns.length > 0) {
+    throw `The column/s [${currentTableColumns.join(',')}] exists in the list, but is/were not defined in the Item Configuration`
+  }
 
-  //   const tableRows = ItemList.getTableRows();
-  //   await ElementToBe.present(tableRows.first());
-  //   await ElementAction.scrollIntoView(await tableRows.first());
-    
-  //   // Parse the data from Reporting DB to match the format of the data extracted from the table
-  //   const databaseData = await Item.parseRDBData(rdbListData, itemConfig.reportingDB);
-  //   const itemListData = await ElementAction.getText(tableRows);
+  const tableRows = await ListPage._tableRows;
+  const tableRDBColumns = item.summary.map(summaryRow => summaryRow.DBColumn).filter(dbColumn => (itemTableColumns.map(column => column.toUpperCase()).includes(dbColumn)));
+  
+  const expectedData = await tableRows.getText();
+  const originalData = (await ReportingDB.getItem(item.reportingDB.tableName, tableRDBColumns, 
+                        item.table.filters, item.table.orderBy, item.table.maxRows)).map(row => Object.values(row).join(' '));
 
-  //   expect(itemListData).to.have.members(databaseData);
-  // } catch (err) {
-  //   if (view === 'not see' && err.toString().includes("No database result found for query:")) {
-  //     expect(true).to.be.true;
-  //   } else {
-  //     throw err;
-  //   }
-  // }
+  expect(expectedData).to.eql(originalData);
 });
