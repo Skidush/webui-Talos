@@ -8,8 +8,11 @@ const db: DBConnection = new DBConnection();
 
 export class ReportingDB {
   //TODO Change conditions to a type (Create condition type)
-  static async getItem(tableName: string, columns: Array<string> | string = '*', conditions: any = `1 = 1`, limit: number = null): Promise<JSONObject | JSONArray> {
+  static async getItem(
+    tableName: string, columns: Array<string> | string = '*', conditions: any = `1 = 1`, 
+    orderBy: Array<string> = null, limit: number = null): Promise<JSONObject | JSONArray> {
     const query = db.queryBuilder.select(columns).from(tableName).where(conditions);
+    orderBy && query.orderBy(orderBy[0], orderBy[1]);
     if (limit && limit > 0) {
       query.limit(limit);
       return await (await db.query(query)).rows;
