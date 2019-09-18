@@ -68,6 +68,23 @@ export class WebuiElement {
     this._elementTimeout = _el.browser_.allScriptsTimeout
   }
 
+  to = {
+    be: {
+      present: () => {
+        return ElementToBe.present(this._element);
+      },
+      stale: () => {
+        return ElementToBe.stale(this._element);
+      },
+      clickable: () => {
+        return ElementToBe.clickable(this._element);
+      },
+      displayed: () => {
+        return ElementToBe.displayed(this._element);
+      }
+    }
+  }
+
   /**
    * Scrolls the element into view
    * 
@@ -123,8 +140,9 @@ export class WebuiElement {
   async getText(_el: ElementFinder | ElementArrayFinder = this._element, timeout: number = this._elementTimeout): Promise<string> {
     browser.params.originalTime = browser.params.originalTime || timeout;
     let text;
+    const selector = ElementUtil.selector(_el);
     
-    ElementUtil.checkTimeout(timeout, _el.parentElementArrayFinder.locator_, ElementCommand.GET_TEXT, ElementCommandCycle.RETRY);
+    ElementUtil.checkTimeout(timeout, selector, ElementCommand.GET_TEXT, ElementCommandCycle.RETRY);
 
     let stopWatch = new Stopwatch();
     stopWatch.start();
