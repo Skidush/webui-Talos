@@ -17,3 +17,11 @@ export enum ItemActivity {
 export enum ItemState {
     TEST_STATE = 'State'
 }
+
+export enum ItemSingularName {
+    TEST_SINGULAR = 'Singular name'
+}
+
+export enum ItemPluralName {
+    TEST_PLURA = 'Plural name'
+}
