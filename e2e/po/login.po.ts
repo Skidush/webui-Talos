@@ -6,9 +6,9 @@ import { Application } from '../utils/utils.exports';
 const log = Application.log('Login');
 
 export enum LoginPageElement {
-    USERNAME = 'cristalise-login input[id="username"]',
-    PASSWORD = 'cristalise-login input[id="password"]',
-    LOGIN = 'cristalise-login button[id="login"]'
+    USERNAME_FIELD = 'cristalise-login input[id="username"]',
+    PASSWORD_FIELD = 'cristalise-login input[id="password"]',
+    LOGIN_BUTTON = 'cristalise-login button[id="login"]'
 }
 export class LoginPage {
     // Defaults to Admin login
@@ -21,14 +21,14 @@ export class LoginPage {
     }
 
     static get _usernameField(): Promise<WebuiElement> {
-        return GetElementBy.elementFinder(element(by.css(LoginPageElement.USERNAME)));
+        return GetElementBy.elementFinder(element(by.css(LoginPageElement.USERNAME_FIELD)));
     }
 
     static get _passwordField(): Promise<WebuiElement> {
-        return GetElementBy.elementFinder(element(by.css(LoginPageElement.PASSWORD)));
+        return GetElementBy.elementFinder(element(by.css(LoginPageElement.PASSWORD_FIELD)));
     }
 
     static get _loginButton(): Promise<WebuiElement> {
-        return GetElementBy.elementFinder(element(by.css(LoginPageElement.LOGIN)));
+        return GetElementBy.elementFinder(element(by.css(LoginPageElement.LOGIN_BUTTON)));
     }
 }

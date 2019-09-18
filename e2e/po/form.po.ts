@@ -7,9 +7,9 @@ import { Application, ElementUtil } from "../utils/utils.exports";
 
 export enum FormPageElement {
   BUTTON = 'webuilib-item-job-form button[id="{ID}"]',
-  FORM_HEADER = 'webuilib-item-job-form h2',
-  FORM_PANEL = 'webuilib-item-job-form',
-  FIELD_CAPTION = 'webuilib-item-job-form label[for="{FOR}"]'
+  HEADER = 'webuilib-item-job-form h2',
+  PANEL = 'webuilib-item-job-form',
+  CAPTION = 'webuilib-item-job-form label[for="{FOR}"]'
 }
 
 export class FormPage {
@@ -18,15 +18,15 @@ export class FormPage {
     }
 
     static _fieldCaption(caption: string): Promise<WebuiElement> {
-      return GetElementBy.elementFinder(element(by.css(ElementUtil.buildSelector(FormPageElement.FIELD_CAPTION, caption))));
+      return GetElementBy.elementFinder(element(by.css(ElementUtil.buildSelector(FormPageElement.CAPTION, caption))));
     }
 
     static get _formHeader(): Promise<WebuiElement> {
-      return GetElementBy.elementFinder(element(by.css(FormPageElement.FORM_HEADER)));
+      return GetElementBy.elementFinder(element(by.css(FormPageElement.HEADER)));
     }
 
     static get _formPanel(): Promise<WebuiElement> {
-      return GetElementBy.elementFinder(element(by.css(FormPageElement.FORM_PANEL)));
+      return GetElementBy.elementFinder(element(by.css(FormPageElement.PANEL)));
     }
 
     static async compareFormHeader(expectedHeader: string, _formHeader: ElementFinder | WebuiElement): Promise<boolean> {
