@@ -30,13 +30,13 @@ const log = Application.log(browser.params.currentScenario);
  * The user navigates to the Capabilities page
  * ----------------------------------------------------------------
  */ 
-Given(new RegExp(`^The user (?: is on|navigates to) the (${ParamaterUtil.toOrFormat(Page, true, false)}) page$`), async function (page) {
+Given(new RegExp(`^The user (?:is on|navigates to) the((?:\\s)existing|selected)? (${ParamaterUtil.toOrFormat(Page, true, false)}) page$`), async function (instance, page) {
   const path = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
   const currentUrl = await browser.getCurrentUrl();
 
   log.info(`Step: The user is on the ${page} page`);
   log.info(`Navigating to ${path}`);
-  
+  const lastInstance = ([...browser.params.initializedItems].pop()).instances.existing;
   await browser.get(path);
   
   const isRedirected = await Application.isRedirected(currentUrl, path);
@@ -50,9 +50,7 @@ Given(new RegExp(`^The user (?: is on|navigates to) the (${ParamaterUtil.toOrFor
 
 Given('A/An {itemState} {item} exists', async function (state, item) {
   log.info(`Step: A/An ${state} ${item.name} exists`);
-  
-  const activeItem = await (await item.reportingDBInstances({STATE: state}, 1));
-  browser.params.selectedItemDetails
+  item.instances['existing'] = await (await item.reportingDBInstances({STATE: state}, 1));
 });
 
 When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
@@ -62,7 +60,7 @@ When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
       case ItemActivity.CREATE:
         await item.create();
         break;
-      case 'edit':
+      case ItemActivity.EDIT:
         await item.edit();
         break;
       // case 'delete':
@@ -73,7 +71,7 @@ When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
 
 Then('The user should be redirected to the details page of the created {item}', async function (item) {
   log.info(`Step: The user should be redirected to the details page of the created ${item.name}`)
-  const itemUrl = `${browser.baseUrl}/${item.url.substring(0, item.url.indexOf('{') - 1)}/${encodeURI(browser.params.createdItemDetails[item.name][_.camelCase(item.identifier)])}`;
+  const itemUrl = `${browser.baseUrl}/${item.config.url.substring(0, item.config.url.indexOf('{') - 1)}/${encodeURI(browser.params.createdItemDetails[item.name][_.camelCase(item.config.identifier)])}`;
 
   expect(await browser.getCurrentUrl(), `The browser was not redirected to ${itemUrl}`).to.equal(itemUrl);
   log.info('Redirection checked');
@@ -106,8 +104,8 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
   // }
   
   const displayedDetails = {};
-  for (let key in item.details) {
-    const details = item.details[key];
+  for (let key in item.config.details) {
+    const details = item.config.details[key];
     // TODO Add checking for TABLE details
     // Also fix these conditions
     if (details.type === 'TABLE') {
@@ -125,21 +123,21 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
     
     displayedDetails[_.startCase(key)] = text;
   }
-  log.debug(`Data displayed in item details: ${console.table(displayedDetails)}`);
+  log.debug(`Data displayed in item details: ${displayedDetails}`);
 
   // TODO:TOFIX => needs to contain the ones in the created item details
-  const detailsDBCols = item.summary.map(summary => {
+  const detailsDBCols = item.config.summary.map(summary => {
     if (!isNullOrUndefined(summary.detailsID) && !isNullOrUndefined(summary.DBColumn)) {
       return summary.DBColumn;
     }
   }).filter(summary => summary);
 
-  const conditions = await ReportingDB.parseToQueryConditions(browser.params.createdItemDetails[item.name], item.summary, ItemSummaryField.DETAILS_ID);
-  const rdbItemRow = await ReportingDB.getItem(item.reportingDB.tableName, detailsDBCols, conditions);
+  const conditions = await ReportingDB.parseToQueryConditions(browser.params.createdItemDetails[item.name], item.config.summary, ItemSummaryField.DETAILS_ID);
+  const rdbItemRow = await ReportingDB.getItem(item.config.reportingDB.tableName, detailsDBCols, conditions);
 
   // TODO: Move to parseRDBData method of test-helpers
   for (const key in rdbItemRow) {
-    const summary = (item.summary).find(summary => summary.DBColumn === key);
+    const summary = (item.config.summary).find(summary => summary.DBColumn === key);
     const scKey = _.startCase(summary.detailsID);
 
     if (isNullOrUndefined(rdbItemRow[key]) || !displayedDetails.hasOwnProperty(scKey)) {
@@ -174,7 +172,7 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
 
 Then('The user should see details of {items} in the table', async function (item) {
   await ElementToBe.stale(element(by.css(ListPageElement.LOADING_ICON)));
-  const itemTableColumns = item.table.columns.map(columns => columns.column);
+  const itemTableColumns = item.config.table.columns.map(columns => columns.column);
   let currentTableColumns = (<any> await (await ListPage._columnHeaders).getText()).filter(header => header);
   for (const column of itemTableColumns) {
     await ListPage._columnHeader(column).then(async _column => {
@@ -193,11 +191,11 @@ Then('The user should see details of {items} in the table', async function (item
   }
 
   const tableRows = await ListPage._tableRows;
-  const tableRDBColumns = item.summary.map(summaryRow => summaryRow.DBColumn).filter(dbColumn => (itemTableColumns.map(column => column.toUpperCase()).includes(dbColumn)));
+  const tableRDBColumns = item.config.summary.map(summaryRow => summaryRow.DBColumn).filter(dbColumn => (itemTableColumns.map(column => column.toUpperCase()).includes(dbColumn)));
   
   const expectedData = await tableRows.getText();
-  const originalData = (await ReportingDB.getItem(item.reportingDB.tableName, tableRDBColumns, 
-                        item.table.filters, item.table.orderBy, item.table.maxRows)).map(row => Object.values(row).join(' '));
+  const originalData = (await ReportingDB.getItem(item.config.reportingDB.tableName, tableRDBColumns, 
+                        item.config.table.filters, item.config.table.orderBy, item.config.table.maxRows)).map(row => Object.values(row).join(' '));
 
   expect(expectedData).to.eql(originalData);
 });

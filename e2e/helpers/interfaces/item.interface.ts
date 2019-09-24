@@ -1,4 +1,5 @@
 import { ToolbarAction, FormField, ShowsOn } from "../helper.exports";
+import { JSONArray } from "./generic.interface";
 
 export interface ItemConfig {
   readonly name: string,
@@ -31,7 +32,8 @@ export type Table = {
   filters: Filter,
   orderBy: Array<string>,
   maxRows: number,
-  tableSelector: string
+  tableSelector: string,
+  columns: JSONArray
 }
 
 export type Details = {

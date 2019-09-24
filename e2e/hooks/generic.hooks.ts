@@ -1,4 +1,4 @@
-import { Before, BeforeAll, setDefaultTimeout } from 'cucumber';
+import { Before, BeforeAll, After, setDefaultTimeout } from 'cucumber';
 import { browser, protractor } from 'protractor';
 import { Application } from '../utils/utils.exports';
 import { LoginPage } from '../po/po.exports';
@@ -44,8 +44,10 @@ Before(({tags: 'not @Login'}), async (scenario) => {
     }
 });
 
-// // Fat function creates problems for `this`
-// After(async function(scenario) {
+After(async function(scenario) {
+    browser.params.initializedItems.forEach(item => {
+        item.instance = {};
+    });
 //     const world = this;
 //     if (scenario.result.status === 'failed') {
 //         // Close alerts if any 
@@ -61,7 +63,7 @@ Before(({tags: 'not @Login'}), async (scenario) => {
 //     }
 //     console.timeEnd('\nScenario done in');
 //     console.log('===============================================================');
-// });
+});
 
 // AfterAll(async () => {
 //     const uuids = browser.params.createdItemUUIDs; 

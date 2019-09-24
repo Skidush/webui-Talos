@@ -8,6 +8,7 @@ import {
     ItemSingularName, 
     ItemState, 
     ItemPluralName } from '../../helpers/helper.exports';
+import { browser } from 'protractor';
 
 export class ParamaterUtil {
     static toOrFormat(stringToTransform: any, includeKeys: boolean = false, returnAsRegExp: boolean = true): string | RegExp {
@@ -58,12 +59,32 @@ defineParameterType({
 
 defineParameterType({
     regexp: ParamaterUtil.toOrFormat(ItemSingularName, true),
-    transformer: s => new Item(s),
+    transformer: s => {
+        const item = new Item(s);
+        const existingIndex = browser.params.initializedItems.findIndex(initializedItem => initializedItem.name === item.name);
+        
+        if (existingIndex > 0) {
+            return browser.params.initializedItems[existingIndex];    
+        }
+
+        browser.params.initializedItems.push(item);
+        return item;
+    },
     name: 'item'
 });
 
 defineParameterType({
     regexp: ParamaterUtil.toOrFormat(ItemPluralName, true),
-    transformer: s => new Item(s),
+    transformer: s => {
+        const item = new Item(s);
+        const existingIndex = browser.params.initializedItems.findIndex(initializedItem => initializedItem.name === item.name);
+        
+        if (existingIndex > 0) {
+            return browser.params.initializedItems[existingIndex];    
+        }
+
+        browser.params.initializedItems.push(item);
+        return item;
+    },
     name: 'items'
 });
