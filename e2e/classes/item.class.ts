@@ -1,4 +1,4 @@
-import { browser, promise } from 'protractor';
+import { browser } from 'protractor';
 import * as _ from 'lodash';
 
 import { ItemValueParameter } from '../helpers/enum/testGeneric.enum';
@@ -6,7 +6,7 @@ import { JSONObject, JSONArray } from '../helpers/interfaces/generic.interface';
 import { ElementToBe, SchemaField, Details, ItemSummary, ItemSummaryField, ItemConfig, Table } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
-import { ToolbarPage, FormPage } from '../po/po.exports';
+import { ToolbarPage, FormPage, ListPage } from '../po/po.exports';
 
 import { ItemSingularName, ItemPluralName } from '../../project/enum/generic.enum';
 import { ReportingDB } from './classes.exports';
@@ -16,33 +16,23 @@ const fs = require('fs');
 
 // TODO custom errors
 // Maybe also do an item name search on files??
-export class Item implements ItemConfig {
-  readonly config: ItemConfig;
-  readonly reportingDB: any;
-  readonly toolbar: any;
-  readonly table: Table;
-  readonly details: Details;
-  
-  readonly identifier: string;
-
-  readonly summary: Array<ItemSummary>;
-  readonly schema: any;
-  
+// Implements an Item interface
+export class Item {
   readonly name: ItemSingularName;
   readonly pluralName: ItemPluralName;
+  
+  readonly config: ItemConfig;
   readonly values: any;
-  readonly url: string
 
+  instances: JSON;
   constructor(itemName: ItemSingularName | ItemPluralName) {
-    // Means the itemName is singular
     this.name = ItemSingularName[itemName.toUpperCase()];
     this.pluralName = ItemPluralName[itemName.toUpperCase()];
 
-    // If the itemName is plural
     if (!this.name) {
       this.name = <ItemSingularName> Object.keys(ItemPluralName).find(name => {
         if (ItemPluralName[name] === itemName) {
-          return name;
+          return _.startCase(_.toLower(name));
         }
       });
       this.pluralName = ItemPluralName[this.name.toUpperCase()];
@@ -50,18 +40,12 @@ export class Item implements ItemConfig {
     
     this.config = JSON.parse(fs.readFileSync(`${root}/project/data/${this.name}/itemConfiguration.json`));
     this.values = JSON.parse(fs.readFileSync(`${root}/project/data/${this.name}/values.td.json`));
-    this.toolbar = this.config.toolbar;
-    this.details = this.config.details;
-    this.summary = this.config.summary;
-    this.schema = this.config.schema;
-    this.reportingDB = this.config.reportingDB;
-    this.url = this.config.url;
-    this.identifier = this.config.identifier;
+    this.instances = JSON;
   }
 
   /**
    * Initializes the log for Item class
-   * @returns an stdin and stdout log
+   * @returns an object that creates logs
    */
   private get log(): any {
     return Application.log(`Item(${this.name})`);
@@ -74,7 +58,7 @@ export class Item implements ItemConfig {
    */
   formSchemaWithValues(valueType: any, schemaName: string): Array<SchemaField> {
     const itemValues = this.values[valueType];
-    const formSchema = _.cloneDeep(this.schema[schemaName]);
+    const formSchema = _.cloneDeep(this.config.schema[schemaName]);
 
     this.log.debug(`Populating schema with values`);
     try {
@@ -104,22 +88,11 @@ export class Item implements ItemConfig {
    * @param limit the maximum amount of instances to retrieve
    */
   async reportingDBInstances(conditions: any = `1 = 1`, limit: number = 0): Promise<JSONObject | JSONArray> {
-    return await ReportingDB.getItem(this.reportingDB.tableName, '*', conditions, limit);
+    return await ReportingDB.getItem(this.config.reportingDB.tableName, '*', conditions, null, limit);
   }
 
   /**
-   * Navigates to the dedicated page of the item
-   * @returns a command to either navigate to the given page or refresh the page
-   */
-  async navigateToPage(): promise.Promise<any> {
-    const itemUrl = `${browser.baseUrl}/${this.url}`;
-    this.log.debug(`Navigating to ${itemUrl}`);
-
-    return (await browser.getCurrentUrl()) !== itemUrl ? browser.get(itemUrl) : browser.refresh();
-  }
-
-  /**
-   * Executes the generic steps for creating an item which consists of:
+   * Executes the generic steps for creating/editing an item which consists of:
    * 1. Clicking the button for create
    * 2. Entering of data in the form
    * 3. Submitting the form
@@ -130,20 +103,59 @@ export class Item implements ItemConfig {
    * @param schemaName the schema name of the form to be filled
    * @param asCollection if true, the item will create itself as a collection
    */
-  async create(schemaName: string = 'create|edit', asCollection: boolean = false) {
+  async create(asCollection: boolean = false) {
     this.log.debug(`Creating a/an ${this.name}`);
     //TODO create iteself as a collection
     const valueType = 'create';
     let formSchemaWithValues;
-
     try {
-      formSchemaWithValues = this.formSchemaWithValues(valueType, schemaName);
+      formSchemaWithValues = this.formSchemaWithValues(valueType, 'create|edit');
     } catch (_err) {
-      formSchemaWithValues = this.formSchemaWithValues(valueType, 'create');
+      formSchemaWithValues = this.formSchemaWithValues(valueType, valueType);
     }
         
-    const createButton = await ToolbarPage.findButton(this.toolbar.actions.create);
+    const createButton = await ToolbarPage.findButton(this.config.toolbar.actions.create);
     await createButton.click();
+    const formPanel = await FormPage._formPanel;
+    this.log.debug(`The form "${await (await FormPage._formHeader).getText()}" has been displayed`);
+    
+    formSchemaWithValues = await FormPage.fill(formSchemaWithValues);
+    this.instances['created'] = this.values[valueType];
+
+    const submitButton = await FormPage._button('OK');
+    await submitButton.click();
+
+    await ElementToBe.stale(formPanel._element);
+
+    const conditions = await ReportingDB.parseToQueryConditions(this.instances['created'], this.config.summary, ItemSummaryField.SCHEMA_ID);
+    const itemDBRow = await (await ReportingDB.getItem(this.config.reportingDB.tableName, ['UUID', this.config.identifier.toUpperCase()] , conditions));
+
+    this.instances['created'].UUID = itemDBRow['UUID'];
+    this.instances['created'][_.camelCase(this.config.identifier)] = itemDBRow[this.config.identifier.toUpperCase()];
+
+    browser.params.createdItemDetails[this.name] = this.instances['created'];
+  }
+
+  async edit(fromItemPage: boolean = false, asCollection: boolean = false) {
+    this.log.debug(`Editing a/an ${this.name}`);
+    //TODO edit iteself as a collection
+    const valueType = 'edit';
+    let formSchemaWithValues;
+    try {
+      formSchemaWithValues = this.formSchemaWithValues(valueType, 'create|edit');
+    } catch (_err) {
+      formSchemaWithValues = this.formSchemaWithValues(valueType, valueType);
+    }
+        
+    if (fromItemPage) {
+      const editButton = await ToolbarPage.findButton(this.config.toolbar.actions.edit);
+      await editButton.click();
+    } else {
+      const firstItemInList = await (await ListPage._tableRows).first();
+      if (this.config.table.tableSelector === 'RadioButton') {
+        // await firstItemInList._element.element(by.css)
+      }
+    }
     const formPanel = await FormPage._formPanel;
     this.log.debug(`The form "${await (await FormPage._formHeader).getText()}" has been displayed`);
     
@@ -155,11 +167,11 @@ export class Item implements ItemConfig {
 
     await ElementToBe.stale(formPanel._element);
 
-    const conditions = await ReportingDB.parseToQueryConditions(createdItemValues, this.summary, ItemSummaryField.SCHEMA_ID);
-    const itemDBRow = await (await ReportingDB.getItem(this.reportingDB.tableName, ['UUID', this.identifier.toUpperCase()] , conditions));
+    const conditions = await ReportingDB.parseToQueryConditions(createdItemValues, this.config.summary, ItemSummaryField.SCHEMA_ID);
+    const itemDBRow = await (await ReportingDB.getItem(this.config.reportingDB.tableName, ['UUID', this.config.identifier.toUpperCase()] , conditions));
 
     createdItemValues.UUID = itemDBRow['UUID'];
-    createdItemValues[_.camelCase(this.identifier)] = itemDBRow[this.identifier.toUpperCase()];
+    createdItemValues[_.camelCase(this.config.identifier)] = itemDBRow[this.config.identifier.toUpperCase()];
 
     browser.params.createdItemDetails[this.name] = createdItemValues;
   }

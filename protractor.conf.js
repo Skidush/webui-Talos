@@ -18,9 +18,9 @@ exports.config = {
   },
 
   directConnect: true,
-  // baseUrl: 'http://localhost:4200', // Local URL
+  baseUrl: 'http://localhost:4200', // Local URL
   // baseUrl: 'http://192.168.88.75:4200',
-  baseUrl: 'http://clark.titusgt.com:7542',
+  // baseUrl: 'http://clark.titusgt.com:7542',
 
   specs: [
     'project/features/*.feature'
@@ -36,7 +36,7 @@ exports.config = {
       'project/features/support/*.ts',
       './e2e/step_definitions/*.ts'
     ],
-    tags: '@Capability and @Read',
+    tags: '@Capability',
     strict: true,
     format: [
       `json:reports/summary.json`,
@@ -47,7 +47,7 @@ exports.config = {
 
   params: {
     project: 'hmws',
-    logLevel: 'info',
+    logLevel: 'off',
     agents: [
       { role: 'Admin', username: 'hmws', password: 'test' }
     ],
@@ -55,6 +55,8 @@ exports.config = {
     createdItemDetails: {},
     createdItemUUIDs: [],
     editedItemDetails: {},
+    selectedItemDetails: {},
+    initializedItems: [],
     
     root: process.cwd(),
     originalTime: 0,
