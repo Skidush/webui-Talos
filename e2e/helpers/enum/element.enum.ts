@@ -1,5 +1,6 @@
 export enum ElementCommand {
     SCROLL_INTO_VIEW,
+    SEND_KEYS,
     GET_ATTRIBUTE,
     GET_TEXT,
     CLICK,
