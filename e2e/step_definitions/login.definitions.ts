@@ -46,7 +46,7 @@ When('The user logs in as {role}', async function (role) {
 Then(new RegExp(`^The user (?:should be|is) (${ParamaterUtil.toOrFormat(AuthenticationState, false, false)})` + 
     `(?:\\sas (?:an|a)\\s)(${ParamaterUtil.toOrFormat(Role, false, false)})?$`), async function (authState, role) {
   const log = Application.log(browser.params.currentScenario);
-  log.info(`Step: The user should be ${authState} (as an/a${role || '(role)'})`);
+  log.info(`=================== [STEP: The user should be ${authState} (as an/a${role || '(role)'})]`);
   
   switch (authState) {
     case AuthenticationState.LOGGED_IN:
@@ -54,7 +54,7 @@ Then(new RegExp(`^The user (?:should be|is) (${ParamaterUtil.toOrFormat(Authenti
 
       const userRole = await browser.executeScript("return window.localStorage.getItem('roles');");
       const actualAuthData = {
-        loggedIn: await Application.isLoggedIn(),
+        loggedIn: await LoginPage.isLoggedIn(),
         loggedInAsRole: role ? (<string> userRole).includes(role) : false
       }
 

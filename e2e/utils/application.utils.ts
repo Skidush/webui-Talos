@@ -1,37 +1,43 @@
 import { browser, protractor } from "protractor";
 import * as request from 'request';
+import * as log4js from 'log4js';
 
-const log4js = require('log4js');
 const EC = protractor.ExpectedConditions;
 const root = browser.params.root;
+
+const dateObj = new Date();
+const dateNow = `${dateObj.getMonth() + 1}-${dateObj.getDate()}_${dateObj.getHours()}:${dateObj.getMinutes()}`;
 
 export class Application {
     /**
      * Writes logs to stdin and stdout. 
-     * Default and only stdout file is `automated_test.log` at the root folder
+     * Default and only stdout file is `automated_test.log` at the reports folder
      * 
-     * @param appenderName name of the appender 
+     * @param appenderName name of the log appender 
      */
-    // TODO Separate logs from separate runs
     static log(appenderName: string): any {
-        const thisLog = log4js;
-        const logConfig = {
-            appenders: {
-                out: { type: 'stdout' }
-            },
-            categories: { default: { appenders: ['out', appenderName], level: browser.params.logLevel } }
-        }
-        logConfig.appenders[appenderName] = { type: 'file', filename: 'automated_test.log' };
-
-        thisLog.configure(logConfig);
-        return thisLog.getLogger(appenderName);
+        // log4js.
+        // console.log(log4js.getLogger(appenderName));
+        // if (!log4js.getLogger(appenderName)) {
+            const logConfig = {
+                appenders: {
+                    out: { type: 'stdout' }
+                },
+                categories: { default: { appenders: ['out', appenderName], level: browser.params.logLevel } }
+            }
+            logConfig.appenders[appenderName] = { type: 'file', filename: `reports/automated_test.log` };
+    
+            log4js.configure(logConfig);
+        // }
+        
+        return log4js.getLogger(appenderName);
     }
 
     /**
      * Returns the namespace object of the requested module.
      * 
-     * @param namespace the namespace of the module being requested/imported
-     * @param requestedModulePath the path of the module being requested/imported
+     * @param namespace the namespace of the module being requested
+     * @param requestedModulePath the path of the module being requested
      * @param defaultModulePath the fallback path of the import when the requested module is not found
      */
     static getNamespaceModule(
@@ -66,14 +72,6 @@ export class Application {
         redirected = !(currentUrl === oldUrl);
         log.debug(`Redirected: ${redirected}`);
         return redirected;
-    }
-
-    /**
-     * Checks the local storage value `loggedIn` to check if an agent is logged in
-     */
-    static async isLoggedIn(): Promise<boolean> {
-        const isLoggedIn: string = await browser.executeScript("return window.localStorage.getItem('loggedIn');");
-        return isLoggedIn === "true";
     }
 
     /**
