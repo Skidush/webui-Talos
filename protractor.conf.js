@@ -3,6 +3,7 @@
 
 exports.config = {
   allScriptsTimeout: 11000,
+  getPageTimeout: 60000,
   capabilities: {
     'browserName': 'chrome',
     'chromeOptions': {
@@ -47,7 +48,7 @@ exports.config = {
 
   params: {
     project: 'hmws',
-    logLevel: 'off',
+    logLevel: 'all',
     agents: [
       { role: 'Admin', username: 'hmws', password: 'test' }
     ],
