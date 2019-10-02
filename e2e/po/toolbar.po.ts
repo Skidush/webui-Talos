@@ -1,4 +1,4 @@
-import { by, element, ElementFinder } from 'protractor';
+import { $, ElementFinder } from 'protractor';
 import { WebuiElement } from '../classes/classes.exports';
 import { GetElementBy } from '../helpers/helper.exports';
 import { ElementUtil } from '../utils/utils.exports';
@@ -11,44 +11,43 @@ export enum ToolbarPageElement {
     SPLIT_BUTTON = 'webuilib-item-toolbar p-toolbar p-splitbutton[id="{ID}"]'
 }
 export class ToolbarPage {
-    static async findButton(button: any): Promise<WebuiElement> {
-        let subButton;
+    static async $toolbarButton(button: any): Promise<WebuiElement> {
+        let $subButton;
         if (button.constructor.name === 'Object') {
             const buttonID = Object.keys(button)[0];
-            const splitButton = await this._splitButton(buttonID);
-            await splitButton.click();
+            const $splitButton = this.$splitButton(buttonID);
+            await $splitButton.click();
 
-            subButton = await this._splitButtonSubButton(splitButton._element, button[buttonID]);
+            $subButton = await this.$splitButtonSubButton($splitButton.$element, button[buttonID]);
         } else if (button.constructor.name === 'String') {
-            subButton = await this._button(button);
+            $subButton = this.$button(button);
         }
 
-        return subButton;
+        return $subButton;
     }
 
-    static _button(buttonID: string): Promise<WebuiElement> {
-        return GetElementBy.elementFinder(element(by.css(ElementUtil.buildSelector(ToolbarPageElement.BUTTON, buttonID))));
+    static $button(buttonID: string): WebuiElement {
+        return new WebuiElement($(ElementUtil.buildSelector(ToolbarPageElement.BUTTON, buttonID)));
     }
 
-    static _splitButton(buttonID: string): Promise<WebuiElement> {
-        return GetElementBy.elementFinder(element(by.css(ElementUtil.buildSelector(ToolbarPageElement.SPLIT_BUTTON, buttonID))));
+    static $splitButton(buttonID: string): WebuiElement {
+        return new WebuiElement($(ElementUtil.buildSelector(ToolbarPageElement.SPLIT_BUTTON, buttonID)));
     }
 
-    static _splitButtonSubButton(splitButton: ElementFinder, subButtonCaption: string): Promise<WebuiElement> {
-        const subButtons = splitButton.all(by.tagName('li'));
-        return GetElementBy.cssWithExactText(subButtons, subButtonCaption);
+    static $splitButtonSubButton($splitButton: ElementFinder, subButtonCaption: string): Promise<WebuiElement> {
+        return GetElementBy.cssWithExactText($splitButton.$$('li'), subButtonCaption);
     }
 
-    static _dialogButton(buttonLabel: string): Promise<WebuiElement> {
-        return GetElementBy.elementFinder(element(by.css(ElementUtil.buildSelector(ToolbarPageElement.SPLIT_BUTTON, buttonLabel))));
+    static $dialogButton(buttonLabel: string): WebuiElement {
+        return new WebuiElement($(ElementUtil.buildSelector(ToolbarPageElement.SPLIT_BUTTON, buttonLabel)));
     }
 
-    static get _dialog(): Promise<WebuiElement> {
-        return GetElementBy.elementFinder(element(by.css(ToolbarPageElement.DIALOG)));
+    static get $dialog(): WebuiElement {
+        return new WebuiElement($(ToolbarPageElement.DIALOG));
     }
 
-    static get _dialogMessage(): Promise<WebuiElement> {
-        return GetElementBy.elementFinder(element(by.css(ToolbarPageElement.DIALOG_MESSAGE)));
+    static get $dialogMessage(): WebuiElement {
+        return new WebuiElement($(ToolbarPageElement.DIALOG_MESSAGE));
     }
 
 }

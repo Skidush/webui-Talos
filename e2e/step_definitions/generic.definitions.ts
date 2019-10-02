@@ -1,13 +1,13 @@
-import { Given, When, Then } from 'cucumber';
-import { browser, element, by } from 'protractor';
+import { Given, When, Then, defineStep } from 'cucumber';
+import { browser } from 'protractor';
 import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
-import { ReportingDB, WebuiElement } from '../classes/classes.exports';
-import { ItemActivity, ItemSummaryField, Page, ElementToBe } from '../helpers/helper.exports';
+import { ReportingDB } from '../classes/classes.exports';
+import { ItemActivity, ItemSummaryField, Page } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
-import { DetailsPage, ListPage, ListPageElement } from '../po/po.exports';
+import { DetailsPage, ListPage, LoginPage } from '../po/po.exports';
 import { ParamaterUtil } from '../features/support/parameterTypes';
 
 const chai = require('chai').use(require('chai-as-promised'));
@@ -17,44 +17,54 @@ const log = Application.log(browser.params.currentScenario);
 /**
  * Expression:
  * ================================================================
- * The user (is on/navigates to) the {page} page
+ * The user (is on/navigates to) the ({instance}) {page} page
  * ================================================================
  * Usage:
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * The user is on the {page}
  * The user navigates to the {page}
+ * The user navigates to the ({instance}) {page}
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * Examples:
  * ----------------------------------------------------------------
  * The user is on the Capabilities page
  * The user navigates to the Capabilities page
+ * The user navigates to the existing Capabilities page
  * ----------------------------------------------------------------
- */ 
-Given(new RegExp(`^The user (?:is on|navigates to) the((?:\\s)existing|selected)? (${ParamaterUtil.toOrFormat(Page, true, false)}) page$`), async function (instance, page) {
+ * Description:
+ * ================================================================
+ * Navigates to the instance or the page of the item.
+ * ================================================================
+ */
+defineStep(new RegExp(`^The user (?:is on|navigates to) the((?:\\s)existing|selected)? (${ParamaterUtil.toOrFormat(Page, true, false)}) page$`), async function (instance, page) {
   const path = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
   const currentUrl = await browser.getCurrentUrl();
 
-  log.info(`Step: The user is on the ${page} page`);
+  log.info(`=================== [STEP: The user is on the ${page} page]`);
   log.info(`Navigating to ${path}`);
-  const lastInstance = ([...browser.params.initializedItems].pop()).instances.existing;
+  if (instance) {
+    const lastInstance = ([...browser.params.initializedItems].pop()).instances.existing;
+  }
   await browser.get(path);
   
   const isRedirected = await Application.isRedirected(currentUrl, path);
   if (!isRedirected) {
-    const _err = `The browser was not redirected to: ${path}`;
+    const error = `The browser was not redirected to: ${path}`;
     log.debug(`Current url: ${currentUrl}`);
-    log.error(_err);
-    throw _err;
+    log.error(error);
+    throw error;
   }
 });
 
 Given('A/An {itemState} {item} exists', async function (state, item) {
-  log.info(`Step: A/An ${state} ${item.name} exists`);
+  log.info(`=================== [STEP: A/An ${state} ${item.name} exists]`);
   item.instances['existing'] = await (await item.reportingDBInstances({STATE: state}, 1));
+  log.info(`A record for a/an ${state} ${item.name} exists`);
+  log.debug(`Existing ${state} ${item.name}: ${JSON.stringify(item.instances['existing'])} `);
 });
 
 When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
-  log.info(`Step: The user ${action}(s) a/an ${item.name}`);
+  log.info(`=================== [STEP: The user ${action}(s) a/an ${item.name}]`);
 
     switch (action) {
       case ItemActivity.CREATE:
@@ -70,18 +80,20 @@ When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
 });
 
 Then('The user should be redirected to the details page of the created {item}', async function (item) {
-  log.info(`Step: The user should be redirected to the details page of the created ${item.name}`)
-  const itemUrl = `${browser.baseUrl}/${item.config.url.substring(0, item.config.url.indexOf('{') - 1)}/${encodeURI(browser.params.createdItemDetails[item.name][_.camelCase(item.config.identifier)])}`;
+  log.info(`=================== [STEP: The user should be redirected to the details page of the created ${item.name}]`);
+  const itemUrl = `${browser.baseUrl}/${item.config.url.substring(0, item.config.url.lastIndexOf('/'))}` +
+                  `/${encodeURI(browser.params.createdItemDetails[item.name][_.camelCase(item.config.identifier)])}`;
 
-  expect(await browser.getCurrentUrl(), `The browser was not redirected to ${itemUrl}`).to.equal(itemUrl);
+  expect(await browser.getCurrentUrl(), `The browser was not redirected to the details page of the created ${item.name}`).to.equal(itemUrl);
   log.info('Redirection checked');
 });
 
+//TODO TOFIX
 Then('The user should be redirected to the {page} page', async function (page) {
-  log.info(`Step: The user should be redirected to the ${page} page`);
+  log.info(`=================== [STEP: The user should be redirected to the ${page} page]`);
 
   const nextPage = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
-  const currentPage = `${browser.baseUrl}/${Page.LOGIN}`;
+  const currentPage = await browser.getCurrentUrl(); // THIS
   log.debug(`Current page: ${currentPage}`);
   log.debug(`Next page: ${nextPage}`);
 
@@ -94,7 +106,7 @@ Then('The user should be redirected to the {page} page', async function (page) {
 
 
 Then('The user should see the {itemActivity}(d)(ed) item details of the {item}', async function(action, item) {
-  log.info(`Step: The user should see the ${action}(d)(ed) item details of the ${item.name}`);
+  log.info(`=================== [STEP: The user should see the ${action}(d)(ed) item details of the ${item.name}]`);
   
   // if (action === 'updated') {
   //   detailsJSON = browser.params.editedItemDetails[itemName];
@@ -116,14 +128,12 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
     //   continue;
     // }
 
-    const text = await (await DetailsPage._detailField(key)).getText();
-    if (!text) {
-      continue;
-    }
-    
-    displayedDetails[_.startCase(key)] = text;
+    const text = await DetailsPage.$detailField(key).getText();
+    if (text) {
+      displayedDetails[_.startCase(key)] = text;
+    }    
   }
-  log.debug(`Data displayed in item details: ${displayedDetails}`);
+  log.debug(`Data displayed in item details: ${JSON.stringify(displayedDetails)}`);
 
   // TODO:TOFIX => needs to contain the ones in the created item details
   const detailsDBCols = item.config.summary.map(summary => {
@@ -166,36 +176,59 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
     rdbItemRow[scKey] = value;
   }
 
-  expect(displayedDetails).to.eql(rdbItemRow);
-  log.info(`Item details checked`);
+  expect(displayedDetails, `The displayed details of the created ${item.name} does not match the database records`).to.eql(rdbItemRow);
+  log.info(`${item.name} details checked`);
 });
 
 Then('The user should see details of {items} in the table', async function (item) {
-  await ElementToBe.stale(element(by.css(ListPageElement.LOADING_ICON)));
+  log.info(`=================== [STEP: The user should see details of ${item.name}/${item.pluralName} in the table]`);
+  await ListPage.$loadingIcon.to.be.stale();
+  
   const itemTableColumns = item.config.table.columns.map(columns => columns.column);
-  let currentTableColumns = (<any> await (await ListPage._columnHeaders).getText()).filter(header => header);
+  let currentTableColumns = (<any> await ListPage.$$columnHeaders.getText()).filter(header => header);
+
   for (const column of itemTableColumns) {
-    await ListPage._columnHeader(column).then(async _column => {
-      const headerText = await _column.getText();
-      currentTableColumns = currentTableColumns.filter(header => header !== headerText)
-    }, _err => {
-      if (_err.includes(`No element found that contains the text: ${column}`)) {
-        log.error(_err.message);
-        throw `The column "${column}" for the ${item.name} table does not exist`;
-      }
+    const headerText = await (await ListPage.$columnHeader(column)).getText().catch(error => {
+      const errorMsg = error.includes(`No element found that contains the text: ${column}`) 
+                    ? `The column "${column}" for the ${item.name} table does not exist` : error;
+      log.error(errorMsg);
+      throw error;
     });
+
+    log.info(`Column: ${column} is present`);
+    currentTableColumns = currentTableColumns.filter(header => header !== headerText);
   }
 
   if (currentTableColumns.length > 0) {
-    throw `The column/s [${currentTableColumns.join(',')}] exists in the list, but is/were not defined in the Item Configuration`
+    const errorMsg = `The column/s [${currentTableColumns.join(',')}] exists in the list, but is/were not defined in the Item Configuration. Unsafe to continue.`;
+    log.error(errorMsg);
+    throw errorMsg;
   }
 
-  const tableRows = await ListPage._tableRows;
-  const tableRDBColumns = item.config.summary.map(summaryRow => summaryRow.DBColumn).filter(dbColumn => (itemTableColumns.map(column => column.toUpperCase()).includes(dbColumn)));
-  
-  const expectedData = await tableRows.getText();
-  const originalData = (await ReportingDB.getItem(item.config.reportingDB.tableName, tableRDBColumns, 
-                        item.config.table.filters, item.config.table.orderBy, item.config.table.maxRows)).map(row => Object.values(row).join(' '));
+  log.info(`No missing or extra columns`);
 
-  expect(expectedData).to.eql(originalData);
+  const tableRDBColumns = item.config.summary.map(summaryRow => summaryRow.DBColumn).filter(dbColumn => (itemTableColumns.map(column => column.toUpperCase()).includes(dbColumn)));
+  const expectedData = await ListPage.$$tableRows.getText();
+  let originalData = await ReportingDB.getItem(item.config.reportingDB.tableName, tableRDBColumns, item.config.table.filters, item.config.table.orderBy, item.config.table.maxRows);
+  originalData.forEach(row => {
+    Object.keys(row).forEach(column => {
+      return row[column] == null && delete row[column];
+    })
+  });
+  originalData = originalData.map(row => Object.values(row).join(' '));
+
+  let diffIndex = _.reduce(expectedData, (result, value, key) => _.isEqual(value, originalData[key]) ? result : result.concat(key), []);
+  while (diffIndex.length > 0) {
+    log.warn(`Row ${diffIndex} => "${expectedData[diffIndex]}" of the expected data does not match the original data "${originalData[diffIndex]}"`);
+    log.warn(`Trimming spaces of the data to verify true equality`);
+
+    (<any> expectedData[diffIndex]) = expectedData[diffIndex].split(' ').join(' ');
+    (<any> originalData[diffIndex]) = expectedData[diffIndex].split(' ').join(' ');
+    diffIndex = _.isEqual(expectedData, originalData) 
+                  ? _.reduce(expectedData, (result, value, key) => _.isEqual(value, originalData[key]) ? result : result.concat(key), [])
+                  : [];
+  }
+  
+  expect(expectedData, `Details found in the page does not match the ones retrived from the database`).to.eql(originalData);
+  log.info(`${item.name} details in the table have been checked`);
 });

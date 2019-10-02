@@ -1,4 +1,4 @@
-import { by, element } from 'protractor';
+import { $, $$ } from 'protractor';
 import { WebuiElement, WebuiElements } from '../classes/classes.exports';
 import { GetElementBy } from '../helpers/helper.exports';
 
@@ -8,20 +8,20 @@ export enum ListPageElement {
   ROWS = 'cristalise-list p-table tbody tr'
 }
 export class ListPage {
-  static get _loadingIcon(): Promise<WebuiElement> {
-    return GetElementBy.elementFinder(element(by.css(ListPageElement.LOADING_ICON)));
+  static get $loadingIcon(): WebuiElement {
+    return new WebuiElement($(ListPageElement.LOADING_ICON));
   }
 
-  static _columnHeader(caption: string): Promise<WebuiElement> {
-    // For some reason, header captions are enclosed with spaces
-    return GetElementBy.cssWithExactText(element.all(by.css(ListPageElement.HEADER)), ` ${caption} `);
+  static $columnHeader(caption: string): Promise<WebuiElement> {
+    // Header captions are enclosed with spaces
+    return GetElementBy.cssWithExactText($$(ListPageElement.HEADER), ` ${caption} `);
   }
 
-  static get _columnHeaders(): Promise<WebuiElements> {
-    return GetElementBy.elementsFinder(element.all(by.css(ListPageElement.HEADER)));
+  static get $$columnHeaders(): WebuiElements {
+    return new WebuiElements($$(ListPageElement.HEADER));
   }
 
-  static get _tableRows(): Promise<WebuiElements> {
-    return GetElementBy.elementsFinder(element.all(by.css(ListPageElement.ROWS)));
+  static get $$tableRows(): WebuiElements {
+    return new WebuiElements($$(ListPageElement.ROWS));
   }
 }

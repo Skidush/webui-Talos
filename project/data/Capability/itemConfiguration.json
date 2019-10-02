@@ -2,7 +2,7 @@
     "singularName": "Capability",
     "pluralName": "Capabilities",
     "identifier": "Name",
-    "url": "#/hmws/capabilities/{NAME}",
+    "url": "#/hmws/capabilities/",
 
     "toolbar": {
       "toolbars": [ "New", "Edit", "Delete" ],

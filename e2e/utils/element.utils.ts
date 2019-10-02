@@ -8,7 +8,8 @@ export class ElementUtil {
      * 
      * @param timeout the time window in melliseconds for the execution of the command 
      * @param elementSelector the selector of the element
-     * @param action the ElementCommand being executed
+     * @param action the command to the element being executed. See `ElementCommand` for options
+     * @param commandCycle the command cycle used to retrieve the element. See `ElementCommandCycle` for options
      * @throws An error relative to the action executed
      */
     static checkTimeout(timeout: number, elementSelector: string, command: ElementCommand, commandCycle: ElementCommandCycle) {
@@ -30,6 +31,9 @@ export class ElementUtil {
                     break;
                     case ElementCommand.CLEAR:
                     message = `${message}, the element ${elementSelector} was not cleared.`;
+                    break;
+                    case ElementCommand.SEND_KEYS:
+                    message = `${message}, the keys sent to the the element ${elementSelector} were not received.`;
                     break;
                     case ElementCommand.CHECK_DISPLAY:
                     message = `${message}, the element ${elementSelector} was not displayed.`;
@@ -57,6 +61,6 @@ export class ElementUtil {
     }
 
     static selector(_el: ElementFinder | ElementArrayFinder): string {
-        return ((_el.constructor.name === 'ElementFinder' ? _el.parentElementArrayFinder.locator_ : _el.locator_).toString()).split(',')[1].replace(/.$/, '');
+        return ((_el.constructor.name === 'ElementFinder' ? _el.parentElementArrayFinder.locator_ : _el.locator_).toString()).split(',')[1].replace(/.$/, '').trim();
     }
 }
