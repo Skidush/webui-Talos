@@ -22,7 +22,7 @@ export class ToolbarPage {
         } else if (button.constructor.name === 'String') {
             $subButton = this.$button(button);
         }
-
+        
         return $subButton;
     }
 

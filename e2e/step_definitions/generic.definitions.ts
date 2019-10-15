@@ -3,50 +3,30 @@ import { browser } from 'protractor';
 import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
-import { ReportingDB } from '../classes/classes.exports';
+import { ReportingDB, Item, Step } from '../classes/classes.exports';
 import { ItemActivity, ItemSummaryField, Page } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
-import { DetailsPage, ListPage, LoginPage } from '../po/po.exports';
+import { DetailsPage, ListPage } from '../po/po.exports';
 import { ParamaterUtil } from '../features/support/parameterTypes';
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 const log = Application.log(browser.params.currentScenario);
 
-/**
- * Expression:
- * ================================================================
- * The user (is on/navigates to) the ({instance}) {page} page
- * ================================================================
- * Usage:
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * The user is on the {page}
- * The user navigates to the {page}
- * The user navigates to the ({instance}) {page}
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Examples:
- * ----------------------------------------------------------------
- * The user is on the Capabilities page
- * The user navigates to the Capabilities page
- * The user navigates to the existing Capabilities page
- * ----------------------------------------------------------------
- * Description:
- * ================================================================
- * Navigates to the instance or the page of the item.
- * ================================================================
- */
-defineStep(new RegExp(`^The user (?:is on|navigates to) the((?:\\s)existing|selected)? (${ParamaterUtil.toOrFormat(Page, true, false)}) page$`), async function (instance, page) {
-  const path = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
+defineStep(Step.navigateToItemPage, async function (instance, page) {
+  let path = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
   const currentUrl = await browser.getCurrentUrl();
 
   log.info(`=================== [STEP: The user is on the ${page} page]`);
   log.info(`Navigating to ${path}`);
   if (instance) {
-    const lastInstance = ([...browser.params.initializedItems].pop()).instances.existing;
+    const item = new Item(page);
+    const lastInstance = ([...browser.params.initializedItems].pop()).instances[instance];
+    path = `${path}/${lastInstance[0][item.config.identifier.toUpperCase()]}`;
   }
   await browser.get(path);
-  
+
   const isRedirected = await Application.isRedirected(currentUrl, path);
   if (!isRedirected) {
     const error = `The browser was not redirected to: ${path}`;
@@ -58,9 +38,9 @@ defineStep(new RegExp(`^The user (?:is on|navigates to) the((?:\\s)existing|sele
 
 Given('A/An {itemState} {item} exists', async function (state, item) {
   log.info(`=================== [STEP: A/An ${state} ${item.name} exists]`);
-  item.instances['existing'] = await (await item.reportingDBInstances({STATE: state}, 1));
+  item.instances[state] = await (await item.reportingDBInstances({STATE: state}, 1));
   log.info(`A record for a/an ${state} ${item.name} exists`);
-  log.debug(`Existing ${state} ${item.name}: ${JSON.stringify(item.instances['existing'])} `);
+  log.debug(`${item.name} with state '${state}': ${JSON.stringify(item.instances[state])} `);
 });
 
 When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
@@ -104,29 +84,17 @@ Then('The user should be redirected to the {page} page', async function (page) {
   log.info('Redirection checked');
 });
 
-
-Then('The user should see the {itemActivity}(d)(ed) item details of the {item}', async function(action, item) {
+Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
+  item = ParamaterUtil.getItemObject(item);
+  
   log.info(`=================== [STEP: The user should see the ${action}(d)(ed) item details of the ${item.name}]`);
-  
-  // if (action === 'updated') {
-  //   detailsJSON = browser.params.editedItemDetails[itemName];
-  //   const itemValues = await GenericHelper.appendItemIDs(itemConfig.itemSummary, itemConfig.reportingDB, detailsJSON);
-  //   const itemPath = browser.baseUrl + '/#/hmws/' + Item.getItemUrl(itemName, itemValues);
-  //   await browser.get(itemPath);
-  // }
-  
   const displayedDetails = {};
   for (let key in item.config.details) {
     const details = item.config.details[key];
     // TODO Add checking for TABLE details
-    // Also fix these conditions
     if (details.type === 'TABLE') {
       continue;
     }
-
-    // if (((details.showsOn === 'create' || details.showsOn === 'all') && action !== 'created') || (details.showsOn === 'update' && action !== 'edit')) {
-    //   continue;
-    // }
 
     const text = await DetailsPage.$detailField(key).getText();
     if (text) {
@@ -142,7 +110,8 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
     }
   }).filter(summary => summary);
 
-  const conditions = await ReportingDB.parseToQueryConditions(browser.params.createdItemDetails[item.name], item.config.summary, ItemSummaryField.DETAILS_ID);
+  const condition = state ? item.instances[state] : browser.params.createdItemDetails[item.name];
+  const conditions = await ReportingDB.parseToQueryConditions(condition, item.config.summary, ItemSummaryField.DETAILS_ID);
   const rdbItemRow = await ReportingDB.getItem(item.config.reportingDB.tableName, detailsDBCols, conditions);
 
   // TODO: Move to parseRDBData method of test-helpers
@@ -155,21 +124,6 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
       continue;
     }
 
-    // const fkey = rdbConfig.foreignKeys;
-    // if (fkey && (fkey).hasOwnProperty(key)) {
-    //   let res;
-    //   if (fkey[key].constructor.name === 'String') {
-    //     res = await ReportingDB.getItem(fkey[key], `"UUID" = '${rdbItemRow[key]}'`, "NAME");
-    //   } else if (fkey[key].constructor.name === 'Object') {
-    //     res = await ReportingDB.getItem(fkey[key]['table'], `"UUID" = '${rdbItemRow[key]}'`, "NAME");
-    //   }
-    //   rdbItemRow[key] = res.NAME;
-    // }
-
-    // if (rdbItemRow[key] instanceof Date) {
-    //   rdbItemRow[key] = Item.parseISODate(rdbItemRow[key]);
-    // }
-
   // Pass expectedJSON[key] to a variable for instances where it equals to scKey
     const value = rdbItemRow[key];
     delete rdbItemRow[key];
@@ -180,7 +134,7 @@ Then('The user should see the {itemActivity}(d)(ed) item details of the {item}',
   log.info(`${item.name} details checked`);
 });
 
-Then('The user should see details of {items} in the table', async function (item) {
+Then('The user should see the details of the {items} in the table', async function (item) {
   log.info(`=================== [STEP: The user should see details of ${item.name}/${item.pluralName} in the table]`);
   await ListPage.$loadingIcon.to.be.stale();
   
@@ -217,18 +171,6 @@ Then('The user should see details of {items} in the table', async function (item
   });
   originalData = originalData.map(row => Object.values(row).join(' '));
 
-  let diffIndex = _.reduce(expectedData, (result, value, key) => _.isEqual(value, originalData[key]) ? result : result.concat(key), []);
-  while (diffIndex.length > 0) {
-    log.warn(`Row ${diffIndex} => "${expectedData[diffIndex]}" of the expected data does not match the original data "${originalData[diffIndex]}"`);
-    log.warn(`Trimming spaces of the data to verify true equality`);
-
-    (<any> expectedData[diffIndex]) = expectedData[diffIndex].split(' ').join(' ');
-    (<any> originalData[diffIndex]) = expectedData[diffIndex].split(' ').join(' ');
-    diffIndex = _.isEqual(expectedData, originalData) 
-                  ? _.reduce(expectedData, (result, value, key) => _.isEqual(value, originalData[key]) ? result : result.concat(key), [])
-                  : [];
-  }
-  
   expect(expectedData, `Details found in the page does not match the ones retrived from the database`).to.eql(originalData);
   log.info(`${item.name} details in the table have been checked`);
 });

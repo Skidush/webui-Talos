@@ -29,6 +29,9 @@ export class WebuiElement {
     return stopWatch;
   }
 
+  /**
+   * Waits for the element to...
+   */
   to = {
     be: {
       /**
@@ -113,7 +116,7 @@ export class WebuiElement {
       },
 
       /**
-       * Retrieves the page visibility of the element
+       * Waits for the visibility of the element
        *
        * @param $el the element being tested
        * @param timeout the time, in milliseconds, for waiting the element to meet the condition

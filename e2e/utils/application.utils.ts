@@ -56,7 +56,7 @@ export class Application {
      * @param timeout the time to wait for the redirection to occur in milliseconds
      * @returns a promise that represent if the user has been redirected
      */  
-    static async isRedirected(oldUrl: string, newUrl: string, timeout: number = browser.allScriptsTimeout) {
+    static async isRedirected(oldUrl: string, newUrl: string, timeout: number = browser.allScriptsTimeout): Promise<boolean> {
         const log = this.log('Application(isRedirected) => Checking redirection');
         let redirected = true;
         
@@ -65,7 +65,6 @@ export class Application {
             log.error(`The browser was not redirected: to ${newUrl} after ${timeout}`);
             redirected = false;
         });
-
         const currentUrl = await browser.getCurrentUrl();
         log.debug(`Url after redirection: ${currentUrl}`);
 

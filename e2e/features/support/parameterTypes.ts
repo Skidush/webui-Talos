@@ -25,6 +25,22 @@ export class ParamaterUtil {
     static appendToRegExp(regExp: RegExp, regExpToAppend: string): RegExp {
         return new RegExp(regExp.toString().replace(/\//g, '').concat(`${regExpToAppend}`));
     }
+
+    static itemNamesToOrFormat() {
+        return `${this.toOrFormat(ItemSingularName, false, false)}|${this.toOrFormat(ItemPluralName, false, false)}`;
+    }
+
+    static getItemObject(itemName: typeof ItemSingularName | typeof ItemPluralName) {
+        const item = new Item(itemName);
+        const existingIndex = browser.params.initializedItems.findIndex(initializedItem => initializedItem.name === item.name);
+        
+        if (existingIndex > 0) {
+            return browser.params.initializedItems[existingIndex];    
+        }
+
+        browser.params.initializedItems.push(item);
+        return item;
+    }
 }
 
 defineParameterType({
@@ -60,15 +76,7 @@ defineParameterType({
 defineParameterType({
     regexp: ParamaterUtil.toOrFormat(ItemSingularName, true),
     transformer: s => {
-        const item = new Item(s);
-        const existingIndex = browser.params.initializedItems.findIndex(initializedItem => initializedItem.name === item.name);
-        
-        if (existingIndex > 0) {
-            return browser.params.initializedItems[existingIndex];    
-        }
-
-        browser.params.initializedItems.push(item);
-        return item;
+        ParamaterUtil.getItemObject(s);
     },
     name: 'item'
 });
@@ -76,15 +84,7 @@ defineParameterType({
 defineParameterType({
     regexp: ParamaterUtil.toOrFormat(ItemPluralName, true),
     transformer: s => {
-        const item = new Item(s);
-        const existingIndex = browser.params.initializedItems.findIndex(initializedItem => initializedItem.name === item.name);
-        
-        if (existingIndex > 0) {
-            return browser.params.initializedItems[existingIndex];    
-        }
-
-        browser.params.initializedItems.push(item);
-        return item;
+        ParamaterUtil.getItemObject(s);
     },
     name: 'items'
 });

@@ -48,7 +48,7 @@ export class Item {
    * @returns an object that creates logs
    */
   private get log(): any {
-    return Application.log(`Item(${this.name})`);
+    return Application.log(`${this.name}`);
   }
   
   /**
