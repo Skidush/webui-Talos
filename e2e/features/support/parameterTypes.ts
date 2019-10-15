@@ -76,7 +76,7 @@ defineParameterType({
 defineParameterType({
     regexp: ParamaterUtil.toOrFormat(ItemSingularName, true),
     transformer: s => {
-        ParamaterUtil.getItemObject(s);
+        return ParamaterUtil.getItemObject(s);
     },
     name: 'item'
 });
@@ -84,7 +84,7 @@ defineParameterType({
 defineParameterType({
     regexp: ParamaterUtil.toOrFormat(ItemPluralName, true),
     transformer: s => {
-        ParamaterUtil.getItemObject(s);
+        return ParamaterUtil.getItemObject(s);
     },
     name: 'items'
 });
