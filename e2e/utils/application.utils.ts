@@ -16,19 +16,15 @@ export class Application {
      * @param appenderName name of the log appender 
      */
     static log(appenderName: string): any {
-        // log4js.
-        // console.log(log4js.getLogger(appenderName));
-        // if (!log4js.getLogger(appenderName)) {
-            const logConfig = {
-                appenders: {
-                    out: { type: 'stdout' }
-                },
-                categories: { default: { appenders: ['out', appenderName], level: browser.params.logLevel } }
-            }
-            logConfig.appenders[appenderName] = { type: 'file', filename: `reports/automated_test.log` };
-    
-            log4js.configure(logConfig);
-        // }
+        const logConfig = {
+            appenders: {
+                out: { type: 'stdout' }
+            },
+            categories: { default: { appenders: ['out', appenderName], level: browser.params.logLevel } }
+        }
+        logConfig.appenders[appenderName] = { type: 'file', filename: `reports/automated_test.log` };
+
+        log4js.configure(logConfig);
         
         return log4js.getLogger(appenderName);
     }
@@ -74,17 +70,28 @@ export class Application {
     }
 
     /**
+     * Executes the API called with a super agent
+     * 
+     * @param callback the callback
+     */
+    static async executeAPI(callback: (err, res) => any | void): Promise<any|void> {
+        request.get(`${browser.baseUrl}/api/login?user=hmws&pass=test`, {
+            headers: {
+                ['Accept']:'application/json'
+            }
+        }, (err, res) =>{
+            return callback(err, res);
+        });
+    }
+
+    /**
      * Erases the item/s from the system
      * 
      * @param uuids an array of UUIDs to delete
      */
     static async eraseItems(uuids: Array<string>): Promise<void> {
         let count = 0;
-        request.get(`${browser.baseUrl}/api/login?user=hmws&pass=test`, {
-            headers: {
-                ['Accept']:'application/json'
-            }
-        }, (err, res) =>{
+        Application.executeAPI((err, res) => {
             if (err) {
                 throw err;
             }
@@ -108,7 +115,7 @@ export class Application {
                 });
             }
         });
-        
+
         while (count !== uuids.length) {};
 
         return;

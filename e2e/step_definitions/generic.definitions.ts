@@ -4,7 +4,7 @@ import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
 import { ReportingDB, Item, Step } from '../classes/classes.exports';
-import { ItemActivity, ItemSummaryField, Page } from '../helpers/helper.exports';
+import { ItemActivity, ItemSummaryField, Page, View } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
 import { DetailsPage, ListPage } from '../po/po.exports';
@@ -53,18 +53,17 @@ When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
       case ItemActivity.EDIT:
         await item.edit();
         break;
-      // case 'delete':
-      //   await Item.delete(itemName);
-      //   break;
+      case ItemActivity.DELETE:
+        await item.delete();
+        break;
     }
 });
 
-Then('The user should be redirected to the details page of the created {item}', async function (item) {
-  log.info(`=================== [STEP: The user should be redirected to the details page of the created ${item.name}]`);
+Then('The user should be redirected to the details page of the {itemActivity}(d)(ed) {item}', async function (activity, item) {
+  log.info(`=================== [STEP: The user should be redirected to the details page of the item: ${item.name}]`);
   const itemUrl = `${browser.baseUrl}/${item.config.url.substring(0, item.config.url.lastIndexOf('/'))}` +
-                  `/${encodeURI(browser.params.createdItemDetails[item.name][_.camelCase(item.config.identifier)])}`;
-
-  expect(await browser.getCurrentUrl(), `The browser was not redirected to the details page of the created ${item.name}`).to.equal(itemUrl);
+                  `/${encodeURI(item.instances[activity][_.camelCase(item.config.identifier)])}`;
+  expect(await browser.getCurrentUrl(), `The browser was not redirected to the details page of the item: ${item.name}`).to.equal(itemUrl);
   log.info('Redirection checked');
 });
 
@@ -110,7 +109,7 @@ Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
     }
   }).filter(summary => summary);
 
-  const condition = state ? item.instances[state] : browser.params.createdItemDetails[item.name];
+  const condition = state ? item.instances[state] : item.instances[action];
   const conditions = await ReportingDB.parseToQueryConditions(condition, item.config.summary, ItemSummaryField.DETAILS_ID);
   const rdbItemRow = await ReportingDB.getItem(item.config.reportingDB.tableName, detailsDBCols, conditions);
 
@@ -134,7 +133,7 @@ Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
   log.info(`${item.name} details checked`);
 });
 
-Then('The user should see the details of the {items} in the table', async function (item) {
+Then('The user should {view} the details of the {items} in the table', async function (view, item) {
   log.info(`=================== [STEP: The user should see details of ${item.name}/${item.pluralName} in the table]`);
   await ListPage.$loadingIcon.to.be.stale();
   
@@ -171,6 +170,6 @@ Then('The user should see the details of the {items} in the table', async functi
   });
   originalData = originalData.map(row => Object.values(row).join(' '));
 
-  expect(expectedData, `Details found in the page does not match the ones retrived from the database`).to.eql(originalData);
+  expect(expectedData, `Details found in the page does not match the ones retrieved from the database`).to.eql(originalData);
   log.info(`${item.name} details in the table have been checked`);
 });

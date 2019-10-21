@@ -15,6 +15,7 @@ export * from './enum/testGeneric.enum';
 export const AuthenticationState = Application.getNamespaceModule('AuthenticationState');
 export const Role = Application.getNamespaceModule('Role');
 export const Page = Application.getNamespaceModule('Page');
+export const View = Application.getNamespaceModule('View');
 export const ItemActivity = Application.getNamespaceModule('ItemActivity');
 export const ItemState = Application.getNamespaceModule('ItemState');
 export const ItemSingularName = Application.getNamespaceModule('ItemSingularName');

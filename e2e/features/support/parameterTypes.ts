@@ -4,7 +4,10 @@ import { _ } from 'lodash';
 import { Item } from '../../classes/classes.exports';
 import { 
     AuthenticationState, 
-    ItemActivity, Role, Page, 
+    ItemActivity, 
+    Role, 
+    Page,
+    View,
     ItemSingularName, 
     ItemState, 
     ItemPluralName } from '../../helpers/helper.exports';
@@ -71,6 +74,12 @@ defineParameterType({
     regexp: ParamaterUtil.toOrFormat(Page, true),
     transformer: s => s.toString(),
     name: 'page'
+});
+
+defineParameterType({
+    regexp: ParamaterUtil.toOrFormat(View, true),
+    transformer: s => s.toString(),
+    name: 'view'
 });
 
 defineParameterType({

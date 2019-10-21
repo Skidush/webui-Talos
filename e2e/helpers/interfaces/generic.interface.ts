@@ -1,8 +1,8 @@
 // TypeScript doesn't pprovide `JSON` as basic type
 // https://github.com/Microsoft/TypeScript/issues/1897
-export type JSONValue = any | JSONObject | JSONArray;
+export type JSONValue = any | JSObject | JSONArray;
 export interface JSONArray extends Array<JSONValue>{};
-export type JSONObject = {
+export type JSObject = {
     [member: string]: JSONValue;
 };
 

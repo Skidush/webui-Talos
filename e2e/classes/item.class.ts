@@ -2,7 +2,7 @@ import { browser } from 'protractor';
 import * as _ from 'lodash';
 
 import { ItemValueParameter } from '../helpers/enum/testGeneric.enum';
-import { JSONObject, JSONArray } from '../helpers/interfaces/generic.interface';
+import { JSObject, JSONArray } from '../helpers/interfaces/generic.interface';
 import { SchemaField, ItemSummaryField, ItemConfig } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
@@ -45,6 +45,7 @@ export class Item {
 
   /**
    * Initializes the log for Item class
+   * 
    * @returns an object that creates logs
    */
   private get log(): any {
@@ -53,6 +54,7 @@ export class Item {
   
   /**
    * Retrieves the schema of the item with defined values
+   * 
    * @param valueType the values to pair with the schema. See `values.td.json` of an item
    * @returns the schema of the item with defined values in JSON
    */
@@ -87,115 +89,79 @@ export class Item {
   }
 
   /**
-   * Retrieves the instances of the item (not including collections) in the database.
+   * Retrieves the instances of the item (not including collections) in the database
+   * 
    * @param limit the maximum amount of instances to retrieve
    */
-  async reportingDBInstances(conditions: any = `1 = 1`, limit: number = 0): Promise<JSONObject | JSONArray> {
+  async reportingDBInstances(conditions: any = `1 = 1`, limit: number = 0): Promise<JSObject | JSONArray> {
     return await ReportingDB.getItem(this.config.reportingDB.tableName, '*', conditions, null, limit);
   }
 
   /**
-   * Executes the generic steps for creating/editing an item which consists of:
+   * Executes the generic steps for creating an item which consists of:
+   * ~~~
    * 1. Clicking the button for create
    * 2. Entering of data in the form
    * 3. Submitting the form
-   * 
+   * ~~~
    * Passes the data filled in the form to the item instance with the generated UUID
    * 
    * @param schemaName the schema name of the form to be filled
    * @param asCollection if true, the item will create itself as a collection
    */
   async create(asCollection: boolean = false) {
-    this.log.debug(`Creating a/an ${this.name}`);
-    //TODO create iteself as a collection
-    const valueType = 'create';
-    let formSchemaWithValues = this.formSchemaWithValues(valueType, 'create');
-    
-    // TODO Reduce to a declarative method
-    // ==========
-    (await ToolbarPage.$toolbarButton(this.config.toolbar.actions.create)).click();
-    await FormPage.$formPanel.to.be.present();
-    this.log.debug(`The form "${await FormPage.$formHeader.getText()}" has been displayed`);
-    
-    formSchemaWithValues = await FormPage.fill(formSchemaWithValues);
-    this.instances['created'] = this.values[valueType]; // hmmmm what? should be form schema with values... lets see
-
-    const submitButton = await FormPage.$button('OK');
-    await submitButton.click();
-
-    await FormPage.$formPanel.to.be.stale();
-    // ==========
-
-    const conditions = await ReportingDB.parseToQueryConditions(this.instances['created'], this.config.summary, ItemSummaryField.SCHEMA_ID);
-    const itemDBRow = await (await ReportingDB.getItem(this.config.reportingDB.tableName, ['UUID', this.config.identifier.toUpperCase()] , conditions));
-
-    this.instances['created'].UUID = itemDBRow['UUID'];
-    this.instances['created'][_.camelCase(this.config.identifier)] = itemDBRow[this.config.identifier.toUpperCase()];
-
-    browser.params.createdItemDetails[this.name] = this.instances['created']; // ???
+    //TODO create itself as a collection
+    this.instances['create'] = FormPage.fillAndSubmitForm(
+                                await ToolbarPage.$toolbarButton(this.config.toolbar.actions.create), 
+                                this.formSchemaWithValues('create', 'create')
+                              );
+    this.instances['create'] = Object.assign(this.instances['create'], this.addIDandUUIDtoItemInstance(this.instances['create']));
   }
 
-  // async edit(fromItemPage: boolean = false, asCollection: boolean = false) {
-  //   this.log.debug(`Editing a/an ${this.name}`);
-  //   //TODO edit iteself as a collection
-  //   const valueType = 'edit';
-  //   let formSchemaWithValues;
-  //   try {
-  //     formSchemaWithValues = this.formSchemaWithValues(valueType, 'create|edit');
-  //   } catch (_err) {
-  //     formSchemaWithValues = this.formSchemaWithValues(valueType, valueType);
-  //   }
-        
-  //   if (fromItemPage) {
-  //     const editButton = await ToolbarPage.findButton(this.config.toolbar.actions.edit);
-  //     await editButton.click();
-  //   } else {
-  //     const firstItemInList = await (await ListPage._tableRows).first();
-  //     if (this.config.table.tableSelector === 'RadioButton') {
-  //       // await firstItemInList._element.element(by.css)
-  //     }
-  //   }
-  //   const formPanel = await FormPage._formPanel;
-  //   this.log.debug(`The form "${await (await FormPage._formHeader).getText()}" has been displayed`);
+  /**
+   * Executes the generic steps for editing an item which consists of:
+   * ~~~
+   * 1. Clicking the button for edit
+   * 2. Entering of data in the form
+   * 3. Submitting the form
+   * ~~~
+   * Passes the data filled in the form to the item instance with the generated UUID
+   * 
+   * @param schemaName the schema name of the form to be filled
+   * @param asCollection if true, the item will create itself as a collection
+   */
+  async edit(asCollection: boolean = false) {
+    //TODO edit itself as a collection
+    this.instances['edit'] = FormPage.fillAndSubmitForm(
+                                await ToolbarPage.$toolbarButton(this.config.toolbar.actions.create), 
+                                this.formSchemaWithValues('edit', 'edit')
+                              );
+    this.instances['edit'] = Object.assign(this.instances['edit'], this.addIDandUUIDtoItemInstance(this.instances['edit']));
+  }
+
+  /**
+   * Executes the generic steps for deleting an item which consists of:
+   * ~~~
+   * 1. Clicking the button for delete
+   * 2. Confirming the deletion
+   * ~~~
+   * Passes the data filled in the form to the item instance with the generated UUID
+   * 
+   * @param asCollection if true, the item will delete itself as a collection
+   */
+  async delete(asCollection: boolean = false) {
+    await (await ToolbarPage.$toolbarButton(this.config.toolbar.actions.delete)).click();
     
-  //   formSchemaWithValues = await FormPage.fill(formSchemaWithValues);
-  //   const createdItemValues = this.values[valueType];
+  }
 
-  //   const submitButton = await FormPage._button('OK');
-  //   await submitButton.click();
+  async addIDandUUIDtoItemInstance(itemInstance: JSObject) {
+    const identifier = this.config.identifier.toUpperCase();
+    const conditions = await ReportingDB.parseToQueryConditions(itemInstance, this.config.summary, ItemSummaryField.SCHEMA_ID);
+    const itemDBRow = await (await ReportingDB.getItem(this.config.reportingDB.tableName, ['UUID', identifier] , conditions));
 
-  //   await ElementToBe.stale(formPanel._element);
+    itemInstance.UUID = itemDBRow['UUID'];
+    itemInstance[_.camelCase(this.config.identifier)] = itemDBRow[identifier];
 
-  //   const conditions = await ReportingDB.parseToQueryConditions(createdItemValues, this.config.summary, ItemSummaryField.SCHEMA_ID);
-  //   const itemDBRow = await (await ReportingDB.getItem(this.config.reportingDB.tableName, ['UUID', this.config.identifier.toUpperCase()] , conditions));
-
-  //   createdItemValues.UUID = itemDBRow['UUID'];
-  //   createdItemValues[_.camelCase(this.config.identifier)] = itemDBRow[this.config.identifier.toUpperCase()];
-
-  //   browser.params.createdItemDetails[this.name] = createdItemValues;
-  // }
-
-  // static parseISODate(date: Date) {
-  //   const dateRegex = /(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})\.(\d{3}[Z])/gm;
-  //   const timeRegex = /(\d[16])\:(\d[00])\:(\d[00])/gm;
-  //   if (dateRegex.test(date.toISOString())) {
-  //     let isoDate = new Date(date.toISOString());
-  //     isoDate.setDate(isoDate.getDate() + 1);
-  //     (isoDate as any) = (isoDate.toISOString()).split("T");
-
-  //     // TODO Create wrappers for date time
-  //     // Some times are being shown as datetime with seconds and some are being shown without the seconds.
-
-  //     // let time = isoDate[1]
-      
-  //     // if (!timeRegex.test(time)) {
-  //     //   time = time.split('.')
-  //     // }
-
-  //     return isoDate[0];
-  //   } 
-
-  //   // Default
-  //   return date;
-  // }
+    return itemInstance;
+  }
 }

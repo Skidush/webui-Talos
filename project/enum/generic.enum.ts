@@ -85,3 +85,8 @@ export enum ToolbarAction {
     EDIT    = 'edit',
     DELETE  = 'delete'
 }
+
+export enum View {
+    SEE = 'see',
+    NOT_SEE = 'not see'
+}
