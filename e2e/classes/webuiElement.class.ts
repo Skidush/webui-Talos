@@ -1,8 +1,9 @@
-import { ElementFinder, ElementArrayFinder, promise, browser, protractor } from "protractor";
+import { ElementFinder, ElementArrayFinder, promise, browser, protractor, $, $$ } from "protractor";
 import { Stopwatch } from "ts-stopwatch";
 
 import { ElementCommand, ElementCommandCycle, WebDriverError } from '../helpers/helper.exports';
 import { ElementUtil, Application } from "../utils/utils.exports";
+import { WebuiElements } from "./webuiElements.class";
 
 const log = Application.log(`WebuiElement`);
 const EC = protractor.ExpectedConditions;
@@ -27,6 +28,14 @@ export class WebuiElement {
     stopWatch.start();
 
     return stopWatch;
+  }
+
+  $ (elementByCss: string) {
+    return new WebuiElement(this.$element.$(elementByCss));
+  }
+
+  $$ (elementsByCss: string) {
+    return new WebuiElements(this.$element.$$(elementsByCss));
   }
 
   /**
@@ -57,7 +66,6 @@ export class WebuiElement {
               const ex = `No element found '${this.selector}'. ${error[1]}`;
 
               log.error(ex);
-              log.trace(ex);
               throw ex; 
             }
         });
@@ -220,20 +228,25 @@ export class WebuiElement {
     let stopWatch = new Stopwatch();
     stopWatch.start();
     
-    await $el.getText().then((eleText) => {
-      text = eleText;
+    return $el.getText().then(async (eleText) => {
+      // text = eleText;
+      log.debug(`The text for the element/s "${selector}" has been retrieved`)
+      return eleText;
     }, async (error: Error) => {
+      timeout = timeout - stopWatch.getTime();
       switch(error.name) {
         case WebDriverError.NO_SUCH_ELEMENT:
-          await this.to.be.present();
+          log.debug(`No element "${selector}" found. Retrying...`);
+          await this.to.be.present(timeout);
         case WebDriverError.STALE_ELEMENT:
-            await this.getText($el, timeout - stopWatch.getTime());
-          break;
+          log.debug(`Stale element "${selector}". Retrying...`);
+          return await this.getText($el, timeout);
         default:
           throw error;
       }
     });
 
+    log.debug(`The text for the element/s "${selector}" has been retrieved`)
     return text;
   }
 
