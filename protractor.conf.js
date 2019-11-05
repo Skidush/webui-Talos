@@ -70,5 +70,5 @@ exports.config = {
     });
   },
 
-  ignoreUncaughtExceptions: true,
+  // ignoreUncaughtExceptions: true,
 };

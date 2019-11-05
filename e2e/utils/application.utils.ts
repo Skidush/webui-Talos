@@ -120,4 +120,13 @@ export class Application {
 
         return;
     }
+
+  /**
+   * Closes an open browser alert
+   */
+  static async closeAlert() {
+    return await browser.switchTo().alert().then(async (alert) => {
+      await alert.accept();
+    });
+  }
 }

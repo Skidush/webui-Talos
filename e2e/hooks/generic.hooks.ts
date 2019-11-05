@@ -1,7 +1,7 @@
 import { Before, BeforeAll, After, setDefaultTimeout } from 'cucumber';
 import { browser, protractor } from 'protractor';
 import { Application } from '../utils/utils.exports';
-import { LoginPage } from '../po/po.exports';
+import { LoginPage, ToolbarPage } from '../po/po.exports';
 
 const EC = protractor.ExpectedConditions;
 const log = Application.log(`Hooks`);
@@ -18,14 +18,15 @@ Before((scenario) => {
 
 Before(({tags: 'not @Login'}), async (scenario) => {
     const currentUrl = await browser.getCurrentUrl();
-    // // Close alerts if any 
-    // await GenericHelper.closeAlert().then(() => {}, () => {
-    //     // Catch rejection of promise but don't do anything
-    // });
+    // Close alerts if any 
+    await Application.closeAlert().then(() => {}, () => {
+        // No open alerts
+    });
 
-    // if (await element(by.css(ToolbarElement.DIALOG)).isPresent()) {
-    //     await GenericHelper.closeDialog('Yes');
-    // }
+    // Close open dialogs
+    if (await ToolbarPage.$dialog.$element.isPresent()) {
+        await ToolbarPage.closeDialog('Yes');
+    }
 
     // Check if logged out, else login
     if (currentUrl === 'data:,') {
@@ -45,21 +46,15 @@ After(async function(scenario) {
     browser.params.initializedItems.forEach(item => {
         item.instance = {};
     });
-//     const world = this;
-//     if (scenario.result.status === 'failed') {
-//         // Close alerts if any 
-//         await GenericHelper.closeAlert().then(() => {}, () => {
-//             // Catch rejection of promise but don't do anything
-//         });
-
-//         if (!scenario.result.exception.message.includes('No database result found')) {
-//             await browser.takeScreenshot().then(buffer => {
-//                 return world.attach(buffer, 'image/png');
-//             });
-//         }
-//     }
-//     console.timeEnd('\nScenario done in');
-//     console.log('===============================================================');
+    
+    const world = this;
+    if (scenario.result.status === 'failed') {
+        if (!scenario.result.exception.message.includes('No database result found')) {
+            await browser.takeScreenshot().then(buffer => {
+                return world.attach(buffer, 'image/png');
+            });
+        }
+    }
 });
 
 // AfterAll(async () => {
