@@ -4,6 +4,7 @@ import { Application } from '../utils/utils.exports';
 import { LoginPage } from '../po/po.exports';
 
 const EC = protractor.ExpectedConditions;
+const log = Application.log(`Hooks`);
 
 BeforeAll(async () => {
     browser.waitForAngularEnabled(false);
@@ -12,15 +13,11 @@ BeforeAll(async () => {
 
 Before((scenario) => {
     browser.params.currentScenario = scenario.pickle.name;
-    const log = Application.log(`GenericHooks(Before)`);
-
     log.info(`Scenario: ${browser.params.currentScenario}`);
 });
 
 Before(({tags: 'not @Login'}), async (scenario) => {
-    const log = Application.log(`GenericHooks(Before {not @Login})`);
     const currentUrl = await browser.getCurrentUrl();
-
     // // Close alerts if any 
     // await GenericHelper.closeAlert().then(() => {}, () => {
     //     // Catch rejection of promise but don't do anything

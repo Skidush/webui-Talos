@@ -4,10 +4,10 @@ import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
 import { ReportingDB, Item, Step } from '../classes/classes.exports';
-import { ItemActivity, ItemSummaryField, Page, View } from '../helpers/helper.exports';
+import { ItemActivity, ItemSummaryField, Page } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
-import { DetailsPage, ListPage } from '../po/po.exports';
+import { DetailsPage, ListPage, ToolbarPage } from '../po/po.exports';
 import { ParamaterUtil } from '../features/support/parameterTypes';
 
 const chai = require('chai').use(require('chai-as-promised'));
@@ -18,12 +18,12 @@ defineStep(Step.navigateToItemPage, async function (instance, page) {
   let path = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
   const currentUrl = await browser.getCurrentUrl();
 
-  log.info(`=================== [STEP: The user is on the ${page} page]`);
+  log.info(`Step: The user is on the ${page} page`);
   log.info(`Navigating to ${path}`);
   if (instance) {
     const item = new Item(page);
     const lastInstance = ([...browser.params.initializedItems].pop()).instances[instance];
-    path = `${path}/${lastInstance[0][item.config.identifier.toUpperCase()]}`;
+    path = `${path}/${encodeURI(lastInstance[0][item.config.identifier.toUpperCase()])}`;
   }
   await browser.get(path);
 
@@ -37,14 +37,13 @@ defineStep(Step.navigateToItemPage, async function (instance, page) {
 });
 
 Given('A/An {itemState} {item} exists', async function (state, item) {
-  log.info(`=================== [STEP: A/An ${state} ${item.name} exists]`);
-  item.instances[state] = await (await item.reportingDBInstances({STATE: state}, 1));
-  log.info(`A record for a/an ${state} ${item.name} exists`);
-  log.debug(`${item.name} with state '${state}': ${JSON.stringify(item.instances[state])} `);
+  log.info(`Step: A/An ${state} ${item.name} exists`);
+  item.instances[state] = await item.reportingDBInstances({STATE: state}, 1);
+  log.debug(`${item.name} with state '${state}': ${JSON.stringify(item.instances[state])} exists`);
 });
 
-When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
-  log.info(`=================== [STEP: The user ${action}(s) a/an ${item.name}]`);
+When('The user {itemActivity}(s) a/an/the {item}', async function (action, item) {
+  log.info(`Step: The user ${action}(s) a/an ${item.name}`);
 
     switch (action) {
       case ItemActivity.CREATE:
@@ -60,16 +59,34 @@ When('The user {itemActivity}(s) a/an {item}', async function (action, item) {
 });
 
 Then('The user should be redirected to the details page of the {itemActivity}(d)(ed) {item}', async function (activity, item) {
-  log.info(`=================== [STEP: The user should be redirected to the details page of the item: ${item.name}]`);
+  log.info(`Step: The user should be redirected to the details page of the item: ${item.name}`);
   const itemUrl = `${browser.baseUrl}/${item.config.url.substring(0, item.config.url.lastIndexOf('/'))}` +
-                  `/${encodeURI(item.instances[activity][_.camelCase(item.config.identifier)])}`;
+                  `/${encodeURI(item.instances[activity].find(field => field.ID === item.config.identifier).value)}`;
   expect(await browser.getCurrentUrl(), `The browser was not redirected to the details page of the item: ${item.name}`).to.equal(itemUrl);
   log.info('Redirection checked');
 });
 
+Then('The user should be not be able to execute further actions on the {item}', async function (item) {
+  log.info(`Step: The user should be not be able to execute further actions on the: ${item.name}`);
+  let extraToolbarFound;
+
+  // No other toolbars should be shown except for 'New'
+  for (const toolbar of item.config.toolbar.toolbars) {
+    if (toolbar === 'New') {
+      continue;
+    }
+
+    await (await ToolbarPage.$toolbarButton(toolbar)).to.be.stale().catch((error: Error) => {
+      extraToolbarFound = toolbar;
+    });
+  }
+
+  expect(!!extraToolbarFound, `${extraToolbarFound} is still displayed`).to.be.false;
+});
+
 //TODO TOFIX
 Then('The user should be redirected to the {page} page', async function (page) {
-  log.info(`=================== [STEP: The user should be redirected to the ${page} page]`);
+  log.info(`Step: The user should be redirected to the ${page} page`);
 
   const nextPage = `${browser.baseUrl}/${Page[page.toUpperCase()]}`;
   const currentPage = await browser.getCurrentUrl(); // THIS
@@ -86,7 +103,7 @@ Then('The user should be redirected to the {page} page', async function (page) {
 Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
   item = ParamaterUtil.getItemObject(item);
   
-  log.info(`=================== [STEP: The user should see the ${action}(d)(ed) item details of the ${item.name}]`);
+  log.info(`Step: The user should see the ${action}(d)(ed) item details of the ${item.name}`);
   const displayedDetails = {};
   for (let key in item.config.details) {
     const details = item.config.details[key];
@@ -133,43 +150,35 @@ Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
   log.info(`${item.name} details checked`);
 });
 
-Then('The user should {view} the details of the {items} in the table', async function (view, item) {
-  log.info(`=================== [STEP: The user should see details of ${item.name}/${item.pluralName} in the table]`);
+Then(Step.viewItemsInList, async function (view, action, tenseSuffix, item) {
+  item = ParamaterUtil.getItemObject(item);
+  log.info(`Step: The user should see details of ${item.name}/${item.pluralName} in the table`);
   await ListPage.$loadingIcon.to.be.stale();
   
   const itemTableColumns = item.config.table.columns.map(columns => columns.column);
-  let currentTableColumns = (<any> await ListPage.$$columnHeaders.getText()).filter(header => header);
-
-  for (const column of itemTableColumns) {
-    const headerText = await (await ListPage.$columnHeader(column)).getText().catch(error => {
-      const errorMsg = error.includes(`No element found that contains the text: ${column}`) 
-                    ? `The column "${column}" for the ${item.name} table does not exist` : error;
-      log.error(errorMsg);
-      throw error;
-    });
-
-    log.info(`Column: ${column} is present`);
-    currentTableColumns = currentTableColumns.filter(header => header !== headerText);
-  }
-
-  if (currentTableColumns.length > 0) {
-    const errorMsg = `The column/s [${currentTableColumns.join(',')}] exists in the list, but is/were not defined in the Item Configuration. Unsafe to continue.`;
-    log.error(errorMsg);
-    throw errorMsg;
-  }
-
-  log.info(`No missing or extra columns`);
+  await ListPage.verifyColumns(itemTableColumns);
 
   const tableRDBColumns = item.config.summary.map(summaryRow => summaryRow.DBColumn).filter(dbColumn => (itemTableColumns.map(column => column.toUpperCase()).includes(dbColumn)));
+  let conditions = item.config.table.filters;
+  if (action) {
+    const rowID = item.instances[action][item.config.identifier.toLowerCase()];
+    await ToolbarPage.$searchInput.sendKeys(rowID);
+    await ListPage.$loadingIcon.to.be.stale();
+    conditions = {};
+    conditions[item.config.identifier.toUpperCase()] = rowID;
+    await browser.sleep(2500); // TODO: TOFIX. Loading disappears even when the list has not yet completely loaded
+  }
+
   const expectedData = await ListPage.$$tableRows.getText();
-  let originalData = await ReportingDB.getItem(item.config.reportingDB.tableName, tableRDBColumns, item.config.table.filters, item.config.table.orderBy, item.config.table.maxRows);
+
+  let originalData = await ReportingDB.getItem(item.config.reportingDB.tableName, tableRDBColumns, conditions, item.config.table.orderBy, item.config.table.maxRows);
   originalData.forEach(row => {
     Object.keys(row).forEach(column => {
       return row[column] == null && delete row[column];
-    })
+    });
   });
   originalData = originalData.map(row => Object.values(row).join(' '));
 
-  expect(expectedData, `Details found in the page does not match the ones retrieved from the database`).to.eql(originalData);
-  log.info(`${item.name} details in the table have been checked`);
+  expect(expectedData, `Details found in the table does not match the ones retrieved from the database`).to.eql(originalData);
+  log.info(`${item.name} details in the table has been checked`);
 });

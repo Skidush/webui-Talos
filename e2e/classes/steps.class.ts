@@ -1,5 +1,5 @@
 import { ParamaterUtil } from "../features/support/parameterTypes";
-import { ItemState, Page, ItemActivity } from "../helpers/helper.exports";
+import { ItemState, Page, ItemActivity, View } from "../helpers/helper.exports";
 
 export class Step {
     /**
@@ -36,8 +36,8 @@ export class Step {
     /**
      * Expression:
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * The user should see the {ItemActivity}(d)(ed) details of the {Item}
-     * The user should see the details of the {ItemState} {Item}
+     * The user should {view} the {ItemActivity}(d)(ed) details of the {Item}
+     * The user should {view} the details of the {ItemState} {Item}
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      * 
      * Description:
@@ -47,19 +47,49 @@ export class Step {
      * 
      * Usage:
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * The user should see the {ItemActivity} details of the {Item}
-     * The user should see the details of the {ItemState} {Item}
+     * The user should {view} the {ItemActivity} details of the {Item}
+     * The user should {view} the details of the {ItemState} {Item}
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      * Examples:
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      * The user should see the created details of the Employee
-     * The user should see the details of the ACTIVE Employee
+     * The user should not see the details of the ACTIVE Employee
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
     static get viewItemDetails() {
         return new RegExp(
             `^The user should see the:?\\s(${ParamaterUtil.toOrFormat(ItemActivity, false, false)}|:?\\s?)(:?d|ed)?:?\\s?details of the` 
-            + `:?\\s(${ParamaterUtil.toOrFormat(ItemState, false, false)}|:?\\s?):?\\s?(${ParamaterUtil.itemNamesToOrFormat()})$`
+            + `:?\\s(${ParamaterUtil.toOrFormat(ItemState, false, false)}|:?\\s?):?\\s?(${ParamaterUtil.itemNamesToOrFormat})$`
+        );
+    }
+
+    /**
+     * Expression:
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * The user should {view} the details of the {ItemActivity}(d)(ed) {Item} in the table
+     * The user should {view} the details of the {Item}
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * 
+     * Description:
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * Checks the details of the item in its the item list
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * 
+     * Usage:
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * The user should {view} the details of the {ItemActivity}(d)(ed) {Item} in the table
+     * The user should {view} the details of the {Item} in the table
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * Examples:
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * The user should see the details of the created Employee in the table
+     * The user should not see the details of the Employee in the table
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     */
+    static get viewItemsInList() {
+        return new RegExp(
+            `^The user should (${ParamaterUtil.toOrFormat(View, false, false)}) the details of the:?\\s(${ParamaterUtil.toOrFormat(ItemActivity, false, false)}|:?\\s?)`
+            + `(:?d|ed)?:?\\s?:?\\s?(${ParamaterUtil.itemNamesToOrFormat}) in the table$`
         );
     }
 }

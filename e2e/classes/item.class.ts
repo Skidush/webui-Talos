@@ -1,15 +1,13 @@
 import { browser } from 'protractor';
 import * as _ from 'lodash';
 
-import { ItemValueParameter } from '../helpers/enum/testGeneric.enum';
-import { JSObject, JSONArray } from '../helpers/interfaces/generic.interface';
-import { SchemaField, ItemSummaryField, ItemConfig } from '../helpers/helper.exports';
+import { SchemaField, ItemSummaryField, ItemConfig, GetElementBy, JSObject, JSONArray, ItemValueParameter } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
-import { ToolbarPage, FormPage, ListPage } from '../po/po.exports';
+import { ToolbarPage, FormPage, ListPage, DetailsPage } from '../po/po.exports';
 
-import { ItemSingularName, ItemPluralName } from '../../project/enum/generic.enum'; // TO FIX
-import { ReportingDB } from './classes.exports';
+import { ItemSingularName, ItemPluralName } from '../../project/enum/generic.enum';
+import { ReportingDB, WebuiElement } from './classes.exports';
 
 const root = browser.params.root;
 const fs = require('fs');
@@ -44,7 +42,7 @@ export class Item {
   }
 
   /**
-   * Initializes the log for Item class
+   * Initializes a log for the Item initialized with the class
    * 
    * @returns an object that creates logs
    */
@@ -109,9 +107,9 @@ export class Item {
    * @param schemaName the schema name of the form to be filled
    * @param asCollection if true, the item will create itself as a collection
    */
-  async create(asCollection: boolean = false) {
+  async create(asCollection: boolean = false): Promise<void> {
     //TODO create itself as a collection
-    this.instances['create'] = FormPage.fillAndSubmitForm(
+    this.instances['create'] = await FormPage.fillAndSubmitForm(
                                 await ToolbarPage.$toolbarButton(this.config.toolbar.actions.create), 
                                 this.formSchemaWithValues('create', 'create')
                               );
@@ -130,12 +128,15 @@ export class Item {
    * @param schemaName the schema name of the form to be filled
    * @param asCollection if true, the item will create itself as a collection
    */
-  async edit(asCollection: boolean = false) {
+  async edit(asCollection: boolean = false, mark: number | string = 0): Promise<void> {
     //TODO edit itself as a collection
-    this.instances['edit'] = FormPage.fillAndSubmitForm(
-                                await ToolbarPage.$toolbarButton(this.config.toolbar.actions.create), 
-                                this.formSchemaWithValues('edit', 'edit')
-                              );
+    if (await ListPage.$listComponent.$element.isPresent()) {
+      let $itemRow: WebuiElement = typeof mark === 'number' 
+                        ? ListPage.$$tableRows.get(mark) 
+                        : await GetElementBy.cssWithExactText(ListPage.$$tableRows.$$elements, mark);
+      await $itemRow.$('.RadioButton span').click();
+    }
+    this.instances['edit'] = await FormPage.fillAndSubmitForm(await ToolbarPage.$toolbarButton(this.config.toolbar.actions.edit), this.formSchemaWithValues('edit', 'edit'));
     this.instances['edit'] = Object.assign(this.instances['edit'], this.addIDandUUIDtoItemInstance(this.instances['edit']));
   }
 
@@ -149,15 +150,31 @@ export class Item {
    * 
    * @param asCollection if true, the item will delete itself as a collection
    */
-  async delete(asCollection: boolean = false) {
+  async delete(asCollection: boolean = false, mark: number | string = 0): Promise<void> {
+    //TODO delete itself as a collection
+    const identifier = this.config.identifier.toLowerCase();
+    this.instances['delete'] = {};
+
+    if (await ListPage.$listComponent.$element.isPresent()) {
+      let $itemRow: WebuiElement = typeof mark === 'number' 
+      ? ListPage.$$tableRows.get(mark) 
+      : await GetElementBy.cssWithExactText(ListPage.$$tableRows.$$elements, mark);
+      await $itemRow.$('.RadioButton span').click();
+      this.instances['delete'][identifier] = await $itemRow.$$('td').get(1).getText(); //TODO: Get from index zero if no Radio Button is present
+    } else {
+      // Currently in the details page of the item, the identifier of the item is displayed at the header beside the item type
+      await DetailsPage.$detailsHeader.to.have.text(this.name);
+      this.instances['delete'][identifier] = (await DetailsPage.$detailsHeader.getText()).split(':')[1].trim();
+    }
+
     await (await ToolbarPage.$toolbarButton(this.config.toolbar.actions.delete)).click();
-    
+    await ToolbarPage.closeDialog('Yes');
   }
 
   async addIDandUUIDtoItemInstance(itemInstance: JSObject) {
     const identifier = this.config.identifier.toUpperCase();
     const conditions = await ReportingDB.parseToQueryConditions(itemInstance, this.config.summary, ItemSummaryField.SCHEMA_ID);
-    const itemDBRow = await (await ReportingDB.getItem(this.config.reportingDB.tableName, ['UUID', identifier] , conditions));
+    const itemDBRow = await ReportingDB.getItem(this.config.reportingDB.tableName, ['UUID', identifier] , conditions);
 
     itemInstance.UUID = itemDBRow['UUID'];
     itemInstance[_.camelCase(this.config.identifier)] = itemDBRow[identifier];

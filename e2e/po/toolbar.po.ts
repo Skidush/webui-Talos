@@ -8,7 +8,8 @@ export enum ToolbarPageElement {
     DIALOG_MESSAGE = 'webuilib-item-toolbar p-dialog div[role="dialog"]',
     DIALOG_BUTTON = 'webuilib-item-toolbar p-dialog div[role="dialog"] div.ui-dialog-footer p-footer button[label="{LABEL}"]',
     BUTTON = 'webuilib-item-toolbar p-toolbar button[id="{ID}"]',
-    SPLIT_BUTTON = 'webuilib-item-toolbar p-toolbar p-splitbutton[id="{ID}"]'
+    SPLIT_BUTTON = 'webuilib-item-toolbar p-toolbar p-splitbutton[id="{ID}"]',
+    SEARCH_FIELD = 'webuilib-item-toolbar input[placeholder="  Search"]'
 }
 export class ToolbarPage {
     static async $toolbarButton(button: any): Promise<WebuiElement> {
@@ -39,7 +40,7 @@ export class ToolbarPage {
     }
 
     static $dialogButton(buttonLabel: string): WebuiElement {
-        return new WebuiElement($(ElementUtil.buildSelector(ToolbarPageElement.SPLIT_BUTTON, buttonLabel)));
+        return new WebuiElement($(ElementUtil.buildSelector(ToolbarPageElement.DIALOG_BUTTON, buttonLabel)));
     }
 
     static get $dialog(): WebuiElement {
@@ -50,4 +51,12 @@ export class ToolbarPage {
         return new WebuiElement($(ToolbarPageElement.DIALOG_MESSAGE));
     }
 
+    static get $searchInput(): WebuiElement {
+        return new WebuiElement($(ToolbarPageElement.SEARCH_FIELD));
+    }
+
+    static async closeDialog(buttonToClick: string): Promise<void> {
+        await this.$dialogButton(buttonToClick).click();
+        await this.$dialog.to.be.stale();
+    }
 }

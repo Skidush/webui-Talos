@@ -29,7 +29,7 @@ export class ParamaterUtil {
         return new RegExp(regExp.toString().replace(/\//g, '').concat(`${regExpToAppend}`));
     }
 
-    static itemNamesToOrFormat() {
+    static get itemNamesToOrFormat() {
         return `${this.toOrFormat(ItemSingularName, false, false)}|${this.toOrFormat(ItemPluralName, false, false)}`;
     }
 

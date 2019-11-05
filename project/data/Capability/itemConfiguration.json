@@ -17,7 +17,7 @@
     ],
 
     "schema": {
-        "create": [
+        "create|edit": [
           { "ID": "Name",         "caption": "Name *",          "field": "input" },
           { "ID": "Description",  "caption": "Description *",   "field": "input" }
         ]

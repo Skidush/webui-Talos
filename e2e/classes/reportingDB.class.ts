@@ -12,12 +12,12 @@ export class ReportingDB {
     tableName: string, columns: Array<string> | string = '*', conditions: any = `1 = 1`, 
     orderBy: Array<string> = null, limit: number = null): Promise<JSObject | JSONArray> {
     const query = db.queryBuilder.select(columns).from(tableName).where(conditions);
-    orderBy && query.orderBy(orderBy[0], orderBy[1]);
+    orderBy && query.orderBy(orderBy[0], orderBy[1]);    
     if (limit && limit > 0) {
       query.limit(limit);
-      return await (await db.query(query)).rows;
+      return await (await db.query(query).catch(err => { throw err })).rows;
     }
-    return await (await db.query(query)).rows[0];
+    return await (await db.query(query).catch(err => { throw err })).rows[0];
   }
 
   // TODO conditions seems wrong, change name and make it an explicit type

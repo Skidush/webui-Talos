@@ -116,6 +116,7 @@ export class FormPage {
     const submitButton = await FormPage.$button('OK');
     await submitButton.click();
 
+    await FormPage.$formPanel.to.be.stale();
     return formSchemaWithValues;
   }
 }

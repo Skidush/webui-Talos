@@ -7,11 +7,11 @@ import { Application } from '../utils/utils.exports';
 import { LoginPage } from '../po/po.exports';
 import { ParamaterUtil } from '../features/support/parameterTypes';
 
+const log = Application.log(browser.params.currentScenario);
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
 When('The user logs in as {role}', async function (role) {
-  const log = Application.log(browser.params.currentScenario);
   log.info(`Step: The user logs in as ${role}`);
 
   const userData = (browser.params.agents).find(agent => agent.role === role);
@@ -45,7 +45,6 @@ When('The user logs in as {role}', async function (role) {
  */ 
 Then(new RegExp(`^The user (?:should be|is) (${ParamaterUtil.toOrFormat(AuthenticationState, false, false)})` + 
     `(?:\\sas (?:an|a)\\s)(${ParamaterUtil.toOrFormat(Role, false, false)})?$`), async function (authState, role) {
-  const log = Application.log(browser.params.currentScenario);
   log.info(`=================== [STEP: The user should be ${authState} (as an/a${role || '(role)'})]`);
   
   switch (authState) {

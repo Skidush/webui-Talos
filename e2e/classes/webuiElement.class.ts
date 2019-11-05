@@ -57,7 +57,6 @@ export class WebuiElement {
         log.debug(`Checking the presence of the element => '${this.selector}'`);
         await browser.wait(EC.presenceOf(this.$element), timeout).catch(async (error) => {
             error = <Error> error;
-            
             if (error.name === WebDriverError.STALE_ELEMENT) {
               log.warn(`Exception caught: ${WebDriverError.STALE_ELEMENT}. Retrying...`)
               this.to.be.present(timeout - stopWatch.getTime());
@@ -141,15 +140,37 @@ export class WebuiElement {
                 log.debug(`Element '${this.selector}' is not present. Presence is required to acquire display state. Retrying...`);
               await this.to.be.present(_remainingTime);
             case WebDriverError.STALE_ELEMENT:
-              log.debug(`Element '${this.selector}' is not displayed. Retrying...`);
-              await this.to.be.displayed(_remainingTime);
-              break;
+              log.debug(`Element '${this.selector}' is stale. Retrying...`);
+              return this.to.be.displayed(_remainingTime);
             default:
               throw error;
           }
         });
 
         log.debug(`Element '${this.selector}' is displayed`);
+        return true;
+      }
+    },
+
+    have: {
+      text: async (text: string, timeout: number = this.timeout): Promise<boolean> => {
+        const stopWatch = this._initializeStopWatch(timeout, ElementCommand.GET_TEXT, ElementCommandCycle.RETRY);
+
+        await browser.wait(EC.textToBePresentInElement(this.$element, text)).catch(async (error: Error) => {
+          const _remainingTime = timeout - stopWatch.getTime();
+          switch(error.name) {
+            case WebDriverError.NO_SUCH_ELEMENT:
+                log.debug(`Element '${this.selector}' is not present. Presence is required to acquire display state. Retrying...`);
+              await this.to.be.present(_remainingTime);
+            case WebDriverError.STALE_ELEMENT:
+              log.debug(`Element '${this.selector}' is stale. Retrying...`);
+              return this.to.have.text(text, _remainingTime);
+            default:
+              throw error;
+          }
+        });
+
+        log.debug(`Text "${text} is now present in element '${this.selector}'`);
         return true;
       }
     }
@@ -228,8 +249,7 @@ export class WebuiElement {
     let stopWatch = new Stopwatch();
     stopWatch.start();
     
-    return $el.getText().then(async (eleText) => {
-      // text = eleText;
+    return $el.getText().then(eleText => {
       log.debug(`The text for the element/s "${selector}" has been retrieved`)
       return eleText;
     }, async (error: Error) => {
@@ -245,9 +265,6 @@ export class WebuiElement {
           throw error;
       }
     });
-
-    log.debug(`The text for the element/s "${selector}" has been retrieved`)
-    return text;
   }
 
   /**
@@ -257,7 +274,7 @@ export class WebuiElement {
    * @param timeout the time window in milliseconds to execute the event
    * @returns a promise representing the action of the event
    */
-  async click($el: ElementFinder = this.$element, timeout: number = this.timeout): promise.Promise<this> {
+  async click($el: ElementFinder = this.$element, timeout: number = this.timeout): promise.Promise<void> {
     const selector = ElementUtil.selector($el);
     log.debug(`Element to click => '${selector}'`);
 
@@ -268,20 +285,20 @@ export class WebuiElement {
     let stopWatch = new Stopwatch();
     stopWatch.start();
     
-    await $el.click().then(() => {}, async (error: Error) => {
+    return $el.click().then(() => {
+      log.debug(`Element '${selector}' was clicked`);
+    }, async (error: Error) => {
+      timeout = timeout - stopWatch.getTime();
       if (error.name === WebDriverError.NO_SUCH_ELEMENT) {
         await this.to.be.present();
-        await this.click($el, timeout - stopWatch.getTime());
+        return this.click($el, timeout);
       } else if (error.message.includes(WebDriverError.INDEX_OUT_OF_BOUND) || error.message.includes(WebDriverError.NOT_CLICKABLE)) {
         log.warn(`WebDriver error caught: ${error.message}. Retrying the action`);          
-        await this.click($el, timeout - stopWatch.getTime());
+        return this.click($el, timeout);
       } else {
         throw error;
       }
     });
-    
-    log.debug(`Element '${selector}' was clicked`);
-    return this;
   }
 
   /**
