@@ -1,0 +1,3494 @@
+[
+  {
+    "description": "    As an Admin\n    I should be able to Create, Read, Update, and Delete a Capability.",
+    "keyword": "Feature",
+    "name": "Capability",
+    "line": 4,
+    "id": "capability",
+    "tags": [
+      {
+        "name": "@Capability",
+        "line": 3
+      }
+    ],
+    "uri": "project\\features\\Capability.feature",
+    "elements": [
+      {
+        "id": "capability;create-a-capability",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Create a Capability",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Create",
+            "line": 11
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10999000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 186000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1328000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "The user creates a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12083000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "The user should be redirected to the details page of the created Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:61"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 97000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "The user should see the created details of the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1118000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;read-capability-details-from-the-list",
+        "keyword": "Scenario",
+        "line": 19,
+        "name": "Read Capability details from the list",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Read",
+            "line": 18
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 23000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 20,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 41000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 21,
+            "name": "The user navigates to the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 593000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 22,
+            "name": "The user should see the details of the Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2394000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;read-capability-details-from-its-page",
+        "keyword": "Scenario",
+        "line": 25,
+        "name": "Read Capability details from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Read",
+            "line": 24
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 26,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 27,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 447000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 28,
+            "name": "The user should see the details of the ACTIVE Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1153000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;edit-a-capability-from-the-list",
+        "keyword": "Scenario",
+        "line": 31,
+        "name": "Edit a Capability from the list",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Edit",
+            "line": 30
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 32,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 33,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 365000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 34,
+            "name": "The user edits a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10671000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 35,
+            "name": "The user should see the details of the edited Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7931000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;edit-a-capability-from-its-page",
+        "keyword": "Scenario",
+        "line": 38,
+        "name": "Edit a Capability from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Edit",
+            "line": 37
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 39,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 40,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 103000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 41,
+            "name": "The user edits the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6380000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 42,
+            "name": "The user should see the edited details of the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1339000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;delete-a-capability-from-its-page",
+        "keyword": "Scenario",
+        "line": 45,
+        "name": "Delete a Capability from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Delete",
+            "line": 44
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 46,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 48000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 47,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 240000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 48,
+            "name": "The user deletes the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2388000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 49,
+            "name": "The user should be not be able to execute further actions on the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;delete-a-capability",
+        "keyword": "Scenario",
+        "line": 52,
+        "name": "Delete a Capability",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Delete",
+            "line": 51
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 21000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 53,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 67000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 54,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 245000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 55,
+            "name": "The user deletes a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4768000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 56,
+            "name": "The user should not see the details of the deleted Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9021000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "description": "    As an Admin\n    I should be able to Create, Read, Update, and Delete a Capability.",
+    "keyword": "Feature",
+    "name": "Capability",
+    "line": 4,
+    "id": "capability",
+    "tags": [
+      {
+        "name": "@Capability",
+        "line": 3
+      }
+    ],
+    "uri": "project\\features\\Capability.feature",
+    "elements": [
+      {
+        "id": "capability;create-a-capability",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Create a Capability",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Create",
+            "line": 11
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10999000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 186000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1328000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "The user creates a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12083000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "The user should be redirected to the details page of the created Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:61"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 97000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "The user should see the created details of the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1118000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;read-capability-details-from-the-list",
+        "keyword": "Scenario",
+        "line": 19,
+        "name": "Read Capability details from the list",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Read",
+            "line": 18
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 23000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 20,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 41000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 21,
+            "name": "The user navigates to the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 593000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 22,
+            "name": "The user should see the details of the Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2394000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;read-capability-details-from-its-page",
+        "keyword": "Scenario",
+        "line": 25,
+        "name": "Read Capability details from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Read",
+            "line": 24
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 26,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 27,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 447000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 28,
+            "name": "The user should see the details of the ACTIVE Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1153000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;edit-a-capability-from-the-list",
+        "keyword": "Scenario",
+        "line": 31,
+        "name": "Edit a Capability from the list",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Edit",
+            "line": 30
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 32,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 33,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 365000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 34,
+            "name": "The user edits a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10671000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 35,
+            "name": "The user should see the details of the edited Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7931000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;edit-a-capability-from-its-page",
+        "keyword": "Scenario",
+        "line": 38,
+        "name": "Edit a Capability from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Edit",
+            "line": 37
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 39,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 40,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 103000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 41,
+            "name": "The user edits the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6380000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 42,
+            "name": "The user should see the edited details of the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1339000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;delete-a-capability-from-its-page",
+        "keyword": "Scenario",
+        "line": 45,
+        "name": "Delete a Capability from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Delete",
+            "line": 44
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 46,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 48000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 47,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 240000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 48,
+            "name": "The user deletes the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2388000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 49,
+            "name": "The user should be not be able to execute further actions on the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;delete-a-capability",
+        "keyword": "Scenario",
+        "line": 52,
+        "name": "Delete a Capability",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Delete",
+            "line": 51
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 21000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 53,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 67000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 54,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 245000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 55,
+            "name": "The user deletes a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4768000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 56,
+            "name": "The user should not see the details of the deleted Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9021000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "description": "    As an Admin\n    I should be able to Create, Read, Update, and Delete a Capability.",
+    "keyword": "Feature",
+    "name": "Capability",
+    "line": 4,
+    "id": "capability",
+    "tags": [
+      {
+        "name": "@Capability",
+        "line": 3
+      }
+    ],
+    "uri": "project\\features\\Capability.feature",
+    "elements": [
+      {
+        "id": "capability;create-a-capability",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Create a Capability",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Create",
+            "line": 11
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10999000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 186000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1328000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "The user creates a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12083000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "The user should be redirected to the details page of the created Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:61"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 97000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "The user should see the created details of the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1118000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;read-capability-details-from-the-list",
+        "keyword": "Scenario",
+        "line": 19,
+        "name": "Read Capability details from the list",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Read",
+            "line": 18
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 23000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 20,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 41000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 21,
+            "name": "The user navigates to the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 593000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 22,
+            "name": "The user should see the details of the Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2394000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;read-capability-details-from-its-page",
+        "keyword": "Scenario",
+        "line": 25,
+        "name": "Read Capability details from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Read",
+            "line": 24
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 26,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 27,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 447000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 28,
+            "name": "The user should see the details of the ACTIVE Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1153000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;edit-a-capability-from-the-list",
+        "keyword": "Scenario",
+        "line": 31,
+        "name": "Edit a Capability from the list",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Edit",
+            "line": 30
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 32,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 33,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 365000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 34,
+            "name": "The user edits a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10671000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 35,
+            "name": "The user should see the details of the edited Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7931000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;edit-a-capability-from-its-page",
+        "keyword": "Scenario",
+        "line": 38,
+        "name": "Edit a Capability from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Edit",
+            "line": 37
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 39,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 40,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 103000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 41,
+            "name": "The user edits the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6380000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 42,
+            "name": "The user should see the edited details of the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1339000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;delete-a-capability-from-its-page",
+        "keyword": "Scenario",
+        "line": 45,
+        "name": "Delete a Capability from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Delete",
+            "line": 44
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 46,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 48000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 47,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 240000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 48,
+            "name": "The user deletes the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2388000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 49,
+            "name": "The user should be not be able to execute further actions on the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;delete-a-capability",
+        "keyword": "Scenario",
+        "line": 52,
+        "name": "Delete a Capability",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Delete",
+            "line": 51
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 21000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 53,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 67000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 54,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 245000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 55,
+            "name": "The user deletes a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4768000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 56,
+            "name": "The user should not see the details of the deleted Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9021000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "description": "    As an Admin\n    I should be able to Create, Read, Update, and Delete a Capability.",
+    "keyword": "Feature",
+    "name": "Capability",
+    "line": 4,
+    "id": "capability",
+    "tags": [
+      {
+        "name": "@Capability",
+        "line": 3
+      }
+    ],
+    "uri": "project\\features\\Capability.feature",
+    "elements": [
+      {
+        "id": "capability;create-a-capability",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Create a Capability",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Create",
+            "line": 11
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10999000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 186000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1328000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "The user creates a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12083000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "The user should be redirected to the details page of the created Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:61"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 97000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "The user should see the created details of the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1118000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;read-capability-details-from-the-list",
+        "keyword": "Scenario",
+        "line": 19,
+        "name": "Read Capability details from the list",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Read",
+            "line": 18
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 23000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 20,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 41000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 21,
+            "name": "The user navigates to the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 593000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 22,
+            "name": "The user should see the details of the Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2394000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;read-capability-details-from-its-page",
+        "keyword": "Scenario",
+        "line": 25,
+        "name": "Read Capability details from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Read",
+            "line": 24
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 26,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 27,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 447000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 28,
+            "name": "The user should see the details of the ACTIVE Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1153000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;edit-a-capability-from-the-list",
+        "keyword": "Scenario",
+        "line": 31,
+        "name": "Edit a Capability from the list",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Edit",
+            "line": 30
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 32,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 33,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 365000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 34,
+            "name": "The user edits a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10671000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 35,
+            "name": "The user should see the details of the edited Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7931000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;edit-a-capability-from-its-page",
+        "keyword": "Scenario",
+        "line": 38,
+        "name": "Edit a Capability from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Edit",
+            "line": 37
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 39,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 40,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 103000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 41,
+            "name": "The user edits the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6380000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 42,
+            "name": "The user should see the edited details of the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1339000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;delete-a-capability-from-its-page",
+        "keyword": "Scenario",
+        "line": 45,
+        "name": "Delete a Capability from its page",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Delete",
+            "line": 44
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 46,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 48000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 47,
+            "name": "The user navigates to the ACTIVE Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 240000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 48,
+            "name": "The user deletes the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2388000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 49,
+            "name": "The user should be not be able to execute further actions on the Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      },
+      {
+        "id": "capability;delete-a-capability",
+        "keyword": "Scenario",
+        "line": 52,
+        "name": "Delete a Capability",
+        "tags": [
+          {
+            "name": "@Capability",
+            "line": 3
+          },
+          {
+            "name": "@Delete",
+            "line": 51
+          }
+        ],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:14"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 21000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 9,
+            "name": "The user is logged in as an Admin",
+            "match": {
+              "location": "e2e\\step_definitions\\login.definitions.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 53,
+            "name": "An ACTIVE Capability exists",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 67000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 54,
+            "name": "The user is on the Capabilities page",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 245000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 55,
+            "name": "The user deletes a Capability",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4768000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 56,
+            "name": "The user should not see the details of the deleted Capabilities in the table",
+            "match": {
+              "location": "e2e\\step_definitions\\generic.definitions.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9021000000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "e2e\\hooks\\generic.hooks.ts:45"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules\\protractor-cucumber-framework\\lib\\resultsCapturer.js:26"
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

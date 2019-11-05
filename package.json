@@ -4,7 +4,8 @@
   "description": "",
   "main": "protractor.conf.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-report": "node e2e\\configurations\\cucumberReport.conf.ts"
   },
   "author": "",
   "license": "ISC",
@@ -16,7 +17,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cucumber": "^5.1.0",
-    "cucumber-html-reporter": "^5.0.0",
+    "cucumber-html-reporter": "^5.0.2",
     "knex": "^0.19.3",
     "lodash": "^4.17.11",
     "log4js": "^4.5.1",

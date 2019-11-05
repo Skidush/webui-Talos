@@ -8,7 +8,7 @@ exports.config = {
     'browserName': 'chrome',
     'chromeOptions': {
       'args': [
-        '--start-maximized', // Uncomment to launch tests in the browser and comment the `args` below
+        '--start-maximized', // Uncomment to launch tests using the browser and comment the argument `properties` below
         //  '--headless',
         //  '--disable-gpu',
         //  '--window-size=1920,1080',
@@ -19,9 +19,7 @@ exports.config = {
   },
 
   directConnect: true,
-  baseUrl: 'http://localhost:4200', // Local URL
-  // baseUrl: 'http://192.168.88.75:4200',
-  // baseUrl: 'http://clark.titusgt.com:7542',
+  baseUrl: 'http://localhost:4200',
 
   specs: [
     'project/features/*.feature'
@@ -53,10 +51,7 @@ exports.config = {
       { role: 'Admin', username: 'hmws', password: 'test' }
     ],
     
-    createdItemDetails: {},
     createdItemUUIDs: [],
-    editedItemDetails: {},
-    selectedItemDetails: {},
     initializedItems: [],
     
     root: process.cwd(),
