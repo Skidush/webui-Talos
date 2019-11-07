@@ -7,7 +7,13 @@ const root = browser.params.root;
 
 const dateObj = new Date();
 const dateNow = `${dateObj.getMonth() + 1}-${dateObj.getDate()}_${dateObj.getHours()}:${dateObj.getMinutes()}`;
-
+const logNames = new Array();
+const logConfig = {
+    appenders: {
+        out: { type: 'stdout' }
+    },
+    categories: { default: { appenders: ['out', 'default'], level: browser.params.logLevel } }
+}
 export class Application {
     /**
      * Writes logs to stdin and stdout. 
@@ -16,16 +22,15 @@ export class Application {
      * @param appenderName name of the log appender 
      */
     static log(appenderName: string): any {
-        const logConfig = {
-            appenders: {
-                out: { type: 'stdout' }
-            },
-            categories: { default: { appenders: ['out', appenderName], level: browser.params.logLevel } }
+        if (logNames.includes(appenderName)) {
+            return log4js.getLogger(appenderName);
         }
+        logNames.push(appenderName);
+        logConfig.categories.default.appenders = ['out', appenderName];
         logConfig.appenders[appenderName] = { type: 'file', filename: `reports/automated_test.log` };
 
         log4js.configure(logConfig);
-        
+
         return log4js.getLogger(appenderName);
     }
 
@@ -43,7 +48,6 @@ export class Application {
         return require(requestedModulePath)[namespace] || require(defaultModulePath)[namespace];
     }
 
-    //TODO Does not wait for redirection if the link is invalid
     /**
      * Checks if the user has been redirected from a url to another
      *
