@@ -13,4 +13,4 @@ Feature: Login
     Scenarios:
     | role              | authState    |
     | Admin             | logged in    |
-    
+    | Inventory         | logged in    |    
