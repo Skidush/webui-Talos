@@ -35,7 +35,7 @@ exports.config = {
       'project/features/support/*.ts',
       './e2e/step_definitions/*.ts'
     ],
-    tags: '@Capability',
+    tags: [],
     strict: true,
     format: [
       `json:reports/summary.json`,
@@ -48,7 +48,8 @@ exports.config = {
     project: 'hmws',
     logLevel: 'all',
     agents: [
-      { role: 'Admin', username: 'hmws', password: 'test' }
+      { role: 'Admin',     username: 'hmws',      password: 'test' },
+      { role: 'Inventory', username: 'inventory', password: 'test' }
     ],
     
     createdItemUUIDs: [],
