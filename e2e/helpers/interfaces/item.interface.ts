@@ -4,7 +4,6 @@ import { JSONArray } from "./generic.interface";
 export interface ItemConfig {
   readonly name: string,
   readonly pluralName: string,
-  readonly identifier: string,
   readonly summary: Array<ItemSummary>,
   readonly toolbar: Toolbar,
   readonly schema: Array<SchemaField>,
@@ -55,7 +54,9 @@ export interface SchemaField {
   ID: string,
   caption: string,
   field: FormField,
-  value?: string
+  value?: string,
+  format?: string,
+  updateScriptRef?: boolean
 }
 
 type Filter = {
@@ -68,8 +69,9 @@ interface DetailsField {
   showsOn: ShowsOn
 }
 
-interface ReportingDB {
+export interface ReportingDB {
   tableName: string,
+  identifier: string,
   foreignKeys?: RDBForeignkeys
 }
 
