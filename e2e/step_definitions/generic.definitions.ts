@@ -3,7 +3,7 @@ import { browser } from 'protractor';
 import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
-import { ReportingDB, Item, Step } from '../classes/classes.exports';
+import { ReportingDB, Item, Step, FieldFormat } from '../classes/classes.exports';
 import { ItemActivity, ItemSummaryField, Page } from '../helpers/helper.exports';
 import { Application } from '../utils/utils.exports';
 
@@ -21,9 +21,9 @@ defineStep(Step.navigateToItemPage, async function (instance, page) {
   log.info(`Step: The user is on the ${page} page`);
   log.info(`Navigating to ${path}`);
   if (instance) {
-    const item = new Item(page);
+    const item: Item = ParamaterUtil.getItemObject(page);
     const lastInstance = ([...browser.params.initializedItems].pop()).instances[instance];
-    path = `${path}/${encodeURI(lastInstance[0][item.config.identifier.toUpperCase()])}`;
+    path = `${path}/${encodeURI(lastInstance[0][item.config.reportingDB.identifier])}`;
   }
   await browser.get(path);
 
@@ -61,14 +61,14 @@ When('The user {itemActivity}(s) a/an/the {item}', async function (action, item)
 Then('The user should be redirected to the details page of the {itemActivity}(d)(ed) {item}', async function (activity, item) {
   log.info(`Step: The user should be redirected to the details page of the item: ${item.name}`);
   const itemUrl = `${browser.baseUrl}/${item.config.url.substring(0, item.config.url.lastIndexOf('/'))}` +
-                  `/${encodeURI(item.instances[activity].find(field => field.ID === item.config.identifier).value)}`;
+                  `/${encodeURI(item.instances[activity][item.config.reportingDB.identifier])}`;
   expect(await browser.getCurrentUrl(), `The browser was not redirected to the details page of the item: ${item.name}`).to.equal(itemUrl);
   log.info('Redirection checked');
 });
 
 Then('The user should be not be able to execute further actions on the {item}', async function (item) {
   log.info(`Step: The user should be not be able to execute further actions on the: ${item.name}`);
-  let extraToolbarFound;
+  let extraToolbarFound = false;
 
   // No other toolbars should be shown except for 'New'
   for (const toolbar of item.config.toolbar.toolbars) {
@@ -84,7 +84,6 @@ Then('The user should be not be able to execute further actions on the {item}', 
   expect(!!extraToolbarFound, `${extraToolbarFound} is still displayed`).to.be.false;
 });
 
-//TODO TOFIX
 Then('The user should be redirected to the {page} page', async function (page) {
   log.info(`Step: The user should be redirected to the ${page} page`);
 
@@ -102,12 +101,14 @@ Then('The user should be redirected to the {page} page', async function (page) {
 
 Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
   item = ParamaterUtil.getItemObject(item);
+  const detailsConfig  = item.config.details;
+  const itemSummaryConfig = item.config.summary;
+  const rdbConfig = item.config.reportingDB;
   
   log.info(`Step: The user should see the ${action}(d)(ed) item details of the ${item.name}`);
   const displayedDetails = {};
-  for (let key in item.config.details) {
-    const details = item.config.details[key];
-    // TODO Add checking for TABLE details
+  for (let key in detailsConfig) {
+    const details = detailsConfig[key];
     if (details.type === 'TABLE') {
       continue;
     }
@@ -119,20 +120,17 @@ Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
   }
   log.debug(`Data displayed in item details: ${JSON.stringify(displayedDetails)}`);
 
-  // TODO:TOFIX => needs to contain the ones in the created item details
-  const detailsDBCols = item.config.summary.map(summary => {
+  const detailsDBCols = itemSummaryConfig.map(summary => {
     if (!isNullOrUndefined(summary.detailsID) && !isNullOrUndefined(summary.DBColumn)) {
       return summary.DBColumn;
     }
   }).filter(summary => summary);
 
-  const condition = state ? item.instances[state] : item.instances[action];
-  const conditions = await ReportingDB.parseToQueryConditions(condition, item.config.summary, ItemSummaryField.DETAILS_ID);
-  const rdbItemRow = await ReportingDB.getItem(item.config.reportingDB.tableName, detailsDBCols, conditions);
-
-  // TODO: Move to parseRDBData method of test-helpers
+  const conditions = state ? item.instances[state] : item.instances[action];
+  const condition = await ReportingDB.parseToQueryConditions(conditions, itemSummaryConfig, ItemSummaryField.DETAILS_ID, rdbConfig);
+  const rdbItemRow = await ReportingDB.getItem(rdbConfig.tableName, detailsDBCols, condition);
   for (const key in rdbItemRow) {
-    const summary = (item.config.summary).find(summary => summary.DBColumn === key);
+    const summary = (itemSummaryConfig).find(summary => summary.DBColumn === key);
     const scKey = _.startCase(summary.detailsID);
 
     if (isNullOrUndefined(rdbItemRow[key]) || !displayedDetails.hasOwnProperty(scKey)) {
@@ -140,10 +138,19 @@ Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
       continue;
     }
 
-  // Pass expectedJSON[key] to a variable for instances where it equals to scKey
+    const fk = rdbConfig.foreignKeys[key];
     const value = rdbItemRow[key];
     delete rdbItemRow[key];
     rdbItemRow[scKey] = value;
+    if (fk) {
+      // TODO : Base the columns on the respective identifiers
+      rdbItemRow[scKey] = (await ReportingDB.getItem(fk.table, "NAME", { UUID: value }))["NAME"];
+    }
+
+    const fieldWithFormat = conditions.find(field => field.ID === summary.schemaID && field.format);
+    if (fieldWithFormat) {
+      rdbItemRow[scKey] = FieldFormat.formatFieldValue(fieldWithFormat.format, rdbItemRow[scKey]);
+    }
   }
 
   expect(displayedDetails, `The displayed details of the created ${item.name} does not match the database records`).to.eql(rdbItemRow);
@@ -161,11 +168,11 @@ Then(Step.viewItemsInList, async function (view, action, tenseSuffix, item) {
   const tableRDBColumns = item.config.summary.map(summaryRow => summaryRow.DBColumn).filter(dbColumn => (itemTableColumns.map(column => column.toUpperCase()).includes(dbColumn)));
   let conditions = item.config.table.filters;
   if (action) {
-    const rowID = item.instances[action][item.config.identifier.toLowerCase()];
+    const rowID = item.instances[action][item.config.reportingDB.identifier];
     await ToolbarPage.$searchInput.sendKeys(rowID);
     await ListPage.$loadingIcon.to.be.stale();
     conditions = {};
-    conditions[item.config.identifier.toUpperCase()] = rowID;
+    conditions[item.config.reportingDB.identifier] = rowID;
     await browser.sleep(2500); // TODO: TOFIX. Loading disappears even when the list has not yet completely loaded
   }
 
