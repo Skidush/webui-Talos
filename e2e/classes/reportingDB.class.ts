@@ -2,7 +2,7 @@ import { isNullOrUndefined } from "util";
 import * as _ from 'lodash';
 
 import { DBConnection } from "../../project/configurations/dbConnection.conf";
-import { JSONArray, JSObject, QueryCondition, ItemSummary, ItemSummaryField } from "../helpers/helper.exports";
+import { JSONArray, JSObject, QueryCondition, ItemSummary, ItemSummaryField, ReportingDB as RDB } from "../helpers/helper.exports";
 
 const db: DBConnection = new DBConnection();
 
@@ -15,25 +15,30 @@ export class ReportingDB {
     orderBy && query.orderBy(orderBy[0], orderBy[1]);    
     if (limit && limit > 0) {
       query.limit(limit);
-      return await (await db.query(query).catch(err => { throw err })).rows;
+      return (await db.query(query)).rows;
     }
-    return await (await db.query(query).catch(err => { throw err })).rows[0];
+    return (await db.query(query)).rows[0];
   }
 
-  // TODO conditions seems wrong, change name and make it an explicit type
-  static async parseToQueryConditions(conditions: JSObject, itemSummary: Array<ItemSummary>, summaryField: ItemSummaryField): Promise<QueryCondition> {
+  static async parseToQueryConditions(conditions: JSObject, itemSummary: Array<ItemSummary>, summaryField: ItemSummaryField, rdbConfig: RDB): Promise<QueryCondition> {
     const queryCondition: QueryCondition = {};
-    itemSummary.forEach(field => {
+    for (const field of itemSummary) {
       if (isNullOrUndefined(field[summaryField]) || isNullOrUndefined(field[ItemSummaryField.DBCOLUMN])) {
-        return;
+        continue;
       }
-      
-      const valueProperty = _.lowerCase(field[summaryField]);
-      const foundProperty = conditions ? conditions.find(value => value.ID.toUpperCase() == valueProperty.toUpperCase()) : null;
-      if (foundProperty){
+      const schemaID = field[ItemSummaryField.SCHEMA_ID] ? field[ItemSummaryField.SCHEMA_ID].toUpperCase() : null;
+      const foundProperty = conditions ? conditions.find(value => value.ID.toUpperCase() === schemaID) : null;
+      if (foundProperty) {
+        let fk = rdbConfig.foreignKeys;
         queryCondition[field[ItemSummaryField.DBCOLUMN]] = foundProperty.value;
+        if (fk && Object.keys(fk).includes(field[ItemSummaryField.DBCOLUMN])) {
+          fk = rdbConfig.foreignKeys[field[ItemSummaryField.DBCOLUMN]];
+          const condition = {};
+          condition[fk['column']] = foundProperty.value;
+          queryCondition[field[ItemSummaryField.DBCOLUMN]] = (await this.getItem(fk['table'], 'UUID', condition))['UUID'];
+        }
       }
-    });
+    };
 
     return queryCondition;
   }
