@@ -1,7 +1,34 @@
 import { ParamaterUtil } from "../features/support/parameterTypes";
-import { ItemState, Page, ItemActivity, View } from "../helpers/helper.exports";
+import { ItemState, Page, ItemActivity, View, AuthenticationState, Role } from "../helpers/helper.exports";
 
 export class Step {
+    /**
+     * Expression:
+     * ================================================================
+     * The user (should be/is) {authenticationState} (as (a/an) {role})
+     * ================================================================
+     * Usage:
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * The user should be {authenticationState}
+     * The user should be {authenticationState} as a {role}
+     * The user should be {authenticationState} as an {role}
+     * The user is {authenticationState}
+     * The user is {authenticationState} as a {role}
+     * The user is {authenticationState} as an {role}
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * Examples:
+     * ----------------------------------------------------------------
+     * The user should be logged in as a Manager
+     * The user is logged in as an Admin
+     * ----------------------------------------------------------------
+     */
+    static get login() {
+        return new RegExp(
+            `^The user (?:should be|is) (${ParamaterUtil.toOrFormat(AuthenticationState, false, false)})` 
+            + `(?:\\sas (?:an|a)\\s)(${ParamaterUtil.toOrFormat(Role, false, false)})?$`
+        );
+    }
+
     /**
      * Expression:
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
