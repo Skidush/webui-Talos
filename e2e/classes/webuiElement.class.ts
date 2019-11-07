@@ -153,24 +153,36 @@ export class WebuiElement {
     },
 
     have: {
-      text: async (text: string, timeout: number = this.timeout): Promise<boolean> => {
+      text: async (text?: string, timeout: number = this.timeout): Promise<boolean> => {
+        let _remainingTime;
         const stopWatch = this._initializeStopWatch(timeout, ElementCommand.GET_TEXT, ElementCommandCycle.RETRY);
-
-        await browser.wait(EC.textToBePresentInElement(this.$element, text)).catch(async (error: Error) => {
-          const _remainingTime = timeout - stopWatch.getTime();
-          switch(error.name) {
-            case WebDriverError.NO_SUCH_ELEMENT:
-                log.debug(`Element '${this.selector}' is not present. Presence is required to acquire display state. Retrying...`);
-              await this.to.be.present(_remainingTime);
-            case WebDriverError.STALE_ELEMENT:
-              log.debug(`Element '${this.selector}' is stale. Retrying...`);
-              return this.to.have.text(text, _remainingTime);
-            default:
-              throw error;
+        log.debug(`Checking text of element "${this.selector}"`);
+        if (text) {
+          await browser.wait(EC.textToBePresentInElement(this.$element, text), timeout).catch(async (error: Error) => {
+            _remainingTime = timeout - stopWatch.getTime();
+            switch(error.name) {
+              case WebDriverError.NO_SUCH_ELEMENT:
+                  log.debug(`Element '${this.selector}' is not present. Presence is required to acquire display state. Retrying...`);
+                await this.to.be.present(_remainingTime);
+              case WebDriverError.STALE_ELEMENT:
+                log.debug(`Element '${this.selector}' is stale. Retrying...`);
+                return this.to.have.text(text, _remainingTime);
+              default:
+                throw error;
+            }
+          });
+        } else {
+          _remainingTime = timeout - stopWatch.getTime();
+          const foundText = await this.$element.getText();
+          if (foundText.length !== 0) {
+            text = foundText;
+          } else {
+            log.debug(`Element '${this.selector}' doesn't have text. Retrying...`);
+            return this.to.have.text(null, _remainingTime);
           }
-        });
+        }
 
-        log.debug(`Text "${text} is now present in element '${this.selector}'`);
+        log.debug(`Text "${text}" is now present in element '${this.selector}'`);
         return true;
       }
     }
