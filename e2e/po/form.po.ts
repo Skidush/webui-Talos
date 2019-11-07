@@ -8,6 +8,7 @@ import { Application, ElementUtil } from "../utils/utils.exports";
 const log = Application.log(`FormPage`);
 
 export enum FormPageElement {
+  SELECTOR = 'webuilib-item-job-form',
   BUTTON = 'webuilib-item-job-form button[id="{ID}"]',
   HEADER = 'webuilib-item-job-form h2',
   PANEL = 'webuilib-item-job-form',
@@ -64,27 +65,21 @@ export class FormPage {
           await details.$el.sendKeys(details.value);
           break;
         case FormField.DATE:
-          const $dateField = new WebuiElement(details.$el.$element.$('input'));
-          const $datePickerBtn = new WebuiElement(details.$el.$element.$('.ui-datepicker-trigger'));
+          const $dateField = details.$el.$('input');
+          const $datePickerBtn = details.$el.$('.ui-datepicker-trigger');
           await $dateField.clear();
           await $dateField.sendKeys(details.value);
           await $datePickerBtn.click();
           break;
         case FormField.AUTOCOMPLETE_DROPDOWN:
-          // TODO: Select random data in autocomplete-dropdown
-          const $autocompleteField = new WebuiElement(details.$el.$element.$('input.ui-dropdown-label'));
+          const $autocompleteField = details.$el.$('input.ui-dropdown-label');
           await $autocompleteField.clear();
           await $autocompleteField.sendKeys(details.value);
           break;
-        case FormField.DROPDOWN:
-          // TODO Update script ref needs time to populate the field
-          await browser.sleep(1200);
-          const $dropdownDiv = new WebuiElement(details.$el.$element.$('.ui-dropdown'));
-          const $dropdownClass = await $dropdownDiv.getAttribute('class');
-
-          if ($dropdownClass.includes('ui-state-disabled')) {
-            const elText = await $dropdownDiv.getText();
-            details.value = elText;
+        case FormField.DROPDOWN:          
+          const fieldValue = details.updateScriptRef ? await this.waitForUpdateScriptRef(details.$el.$('.ui-dropdown')) : null;
+          if (fieldValue) {
+            details.value = fieldValue;
             break;
           }
 
@@ -92,9 +87,9 @@ export class FormPage {
           const $$dropdownList = new WebuiElements($$('.ui-dropdown-item'));
 
           let $dropdownItem;
-          if (details.value === 'random') {
+          if (details.value === '{random}') {
             const randomIndex = _.random(1, await $$dropdownList.$$elements.count() - 1);
-            $dropdownItem = new WebuiElement($$dropdownList.get(randomIndex));
+            $dropdownItem = $$dropdownList.get(randomIndex);
             details.value = await $dropdownItem.getText();
           } else {
             $dropdownItem = await GetElementBy.cssWithExactText($$dropdownList.$$elements, details.value, timeout);
@@ -106,7 +101,14 @@ export class FormPage {
     return formSchemaWithValues;
   }
 
-  static async fillAndSubmitForm($buttonTrigger: WebuiElement | ElementFinder, formSchemaWithValues: Array<SchemaField>) {
+  static async waitForUpdateScriptRef($el: WebuiElement): Promise<string | void> {
+    await $el.to.have.text().catch((error: Error) => { throw `Field ${$el} did not have its value/s updated` });
+    if ((await $el.getAttribute('class')).includes('ui-state-disabled')) {
+      return $el.getText();
+    }
+  }
+
+  static async fillAndSubmitForm($buttonTrigger: WebuiElement | ElementFinder, formSchemaWithValues: Array<SchemaField>): Promise<SchemaField[]> {
     await $buttonTrigger.click();
     await FormPage.$formPanel.to.be.present();
 
