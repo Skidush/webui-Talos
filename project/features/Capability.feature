@@ -1,6 +1,6 @@
 # TODO Explicit stating of the test data to use
 # https://stackoverflow.com/questions/4671703/should-bdd-scenarios-include-actual-test-data-or-just-describe-it
-@Capability
+@Capability @HMWS-VISION_UM_4.3
 Feature: Capability
     As an Admin
     I should be able to Create, Read, Update, and Delete a Capability.
@@ -8,7 +8,7 @@ Feature: Capability
     Background: User is logged in as an Admin
         Given The user is logged in as an Admin
 
-    @Create
+    @Create @HMWS-VISION_UM_4.3.1
     Scenario: Create a Capability
         Given The user is on the Capabilities page
         When The user creates a Capability
@@ -27,28 +27,28 @@ Feature: Capability
         When The user navigates to the ACTIVE Capabilities page
         Then The user should see the details of the ACTIVE Capability
 
-    @Edit
+    @Edit @HMWS-VISION_UM_4.3.2
     Scenario: Edit a Capability from the list
         Given An ACTIVE Capability exists
             And The user is on the Capabilities page
         When The user edits a Capability
         Then The user should see the details of the edited Capabilities in the table
 
-    @Edit
+    @Edit @HMWS-VISION_UM_4.3.2
     Scenario: Edit a Capability from its page
         Given An ACTIVE Capability exists
             And The user navigates to the ACTIVE Capabilities page
         When The user edits the Capability
         Then The user should see the edited details of the Capability
 
-    @Delete
+    @Delete @HMWS-VISION_UM_4.3.4
     Scenario: Delete a Capability from its page
         Given An ACTIVE Capability exists
             And The user navigates to the ACTIVE Capabilities page
         When The user deletes the Capability
         Then The user should be not be able to execute further actions on the Capability
 
-    @Delete
+    @Delete @HMWS-VISION_UM_4.3.4
     Scenario: Delete a Capability
         Given An ACTIVE Capability exists
             And The user is on the Capabilities page
