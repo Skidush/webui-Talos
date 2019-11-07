@@ -1,0 +1,22 @@
+{
+    "create": { 
+                "customer": "HMWA",
+                "billingAddress": "{random}",
+                "shippingAddress": "{random}",
+                "customerReference": "[Test]CustomerRef-{randomNumber}",
+                "date": "2019-10-27",
+                "dateReceived": "2019-11-05 16:15",
+                "expectedDelivery": "2019-11-05",
+                "deliveryInstructions": "[Test]For patient #{randomNumber}"
+              },
+    "edit": { 
+                "customer": "{random}",
+                "billingAddress": "{random}",
+                "shippingAddress": "{random}",
+                "customerReference": "[Test][Edit]CustomerRef-{randomNumber}",
+                "date": "2019-10-27",
+                "dateReceived": "2019-11-05 16:15",
+                "expectedDelivery": "2019-11-05",
+                "deliveryInstructions": "[Test][Edit]For patient #{randomNumber}"
+            }
+}

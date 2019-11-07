@@ -1,0 +1,77 @@
+{
+    "singularName": "Purchase Order",
+    "pluralName": "Purchase Orders",
+    "url": "#/hmws/purchaseorders/",
+
+    "toolbar": {
+      "toolbars": [ "New", "Edit", "Delete" ],
+      "actions": { "create": "New", "edit": "Edit", "delete": "Delete" }
+    },
+
+    "summary": [
+      { "schemaID": null,                     "tableColumn": "ID",                      "detailsID": null,                      "DBColumn": "NAME"                  },
+      { "schemaID": "Customer",               "tableColumn": "Customer",                "detailsID": "Customer",                "DBColumn": "CUSTOMER"              },
+      { "schemaID": "BillingAddress",         "tableColumn": "Billing Address",         "detailsID": "Billing Address",         "DBColumn": "BILLINGADDRESS"        },
+      { "schemaID": "ShippingAddress",        "tableColumn": "Shipping Address",        "detailsID": "Shipping Address",        "DBColumn": "SHIPPINGADDRESS"       },
+      { "schemaID": "CustomerReference",      "tableColumn": "Customer PO #",           "detailsID": "Customer PO #",           "DBColumn": "CUSTOMERREFERENCE"     },
+      { "schemaID": "Date",                   "tableColumn": "Date Issued",             "detailsID": "Date Issued",             "DBColumn": "DATE"                  },
+      { "schemaID": "DateReceived",           "tableColumn": "Date Received",           "detailsID": "Date Received",           "DBColumn": "DATERECEIVED"          },
+      { "schemaID": "ExpectedDelivery",       "tableColumn": "Expected Delivery",       "detailsID": "Expected Delivery",       "DBColumn": "EXPECTEDDELIVERY"      },
+      { "schemaID": "DeliveryInstructions",   "tableColumn": "Delivery Instructions",   "detailsID": "Delivery Instructions",   "DBColumn": "DELIVERYINSTRUCTIONS"  },
+      { "schemaID": null,                     "tableColumn": "State",                   "detailsID": "State",                   "DBColumn": "STATE"                 }
+    ],
+
+    "schema": {
+        "create|edit": [
+          { "ID": "Customer",               "caption": "Customer *",            "field": "dropdown"                            },
+          { "ID": "BillingAddress",         "caption": "Billing Address *",     "field": "dropdown",  "updateScriptRef": true  },
+          { "ID": "ShippingAddress",        "caption": "Shipping Address *",    "field": "dropdown",  "updateScriptRef": true  },
+          { "ID": "CustomerReference",      "caption": "Customer PO # *",       "field": "input"                               },
+          { "ID": "Date",                   "caption": "Date Issued *",         "field": "date",      "format": "date"         },
+          { "ID": "DateReceived",           "caption": "Date Received *",       "field": "date",      "format": "dateTime"     },
+          { "ID": "ExpectedDelivery",       "caption": "Expected Delivery",     "field": "date",      "format": "date"         },
+          { "ID": "DeliveryInstructions",   "caption": "Delivery Instructions", "field": "textarea"                           }
+        ]
+    },
+
+    "table": {
+      "filters": { "STATE": "ACTIVE" },
+      "orderBy": ["NAME", "DESC"],
+      "maxRows": 40,
+      "tableSelector": "RadioButton",
+      "columns": [
+        { "column": "ID"                      },
+        { "column": "Customer"                },
+        { "column": "Billing Address"         },
+        { "column": "Shipping Address"        },
+        { "column": "Customer PO #"           },
+        { "column": "Date Issued"             },
+        { "column": "Date Received"           },
+        { "column": "Expected Delivery"       },
+        { "column": "Delivery Instructions"   },
+        { "column": "State"                   }
+      ]
+    },
+
+    "details": {
+      "State"                 : { "caption": "State",                   "type": "FIELD", "showsOn": "all"                        },
+      "Customer"              : { "caption": "Customer",                "type": "FIELD", "showsOn": "all"                        },
+      "Billing Address"       : { "caption": "Billing Address",         "type": "FIELD", "showsOn": "all"                        },
+      "Shipping Address"      : { "caption": "Shipping Address",        "type": "FIELD", "showsOn": "all"                        },
+      "Customer PO #"         : { "caption": "Customer PO #",           "type": "FIELD", "showsOn": "all"                        },
+      "Date Issued"           : { "caption": "Date Issued",             "type": "FIELD", "showsOn": "all",  "format": "date"     },
+      "Date Received"         : { "caption": "Date Received",           "type": "FIELD", "showsOn": "all",  "format": "dateTime" },
+      "Expected Delivery"     : { "caption": "Expected Delivery",       "type": "FIELD", "showsOn": "all",  "format": "date"     },
+      "Delivery Instructions" : { "caption": "Delivery Instructions",   "type": "FIELD", "showsOn": "all"                        }
+    },
+
+    "reportingDB": {
+      "tableName": "PURCHASEORDER",
+      "identifier": "NAME",
+      "foreignKeys": {
+        "CUSTOMER": { "table": "COMPANY", "column": "NAME" },
+        "BILLINGADDRESS": { "table": "ADDRESS", "column": "ADDRESSLINE1" },
+        "SHIPPINGADDRESS": { "table": "ADDRESS", "column": "ADDRESSLINE1" }
+      }
+    }
+}

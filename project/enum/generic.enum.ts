@@ -44,6 +44,7 @@ export enum Page {
     LOGIN = '#/login',
     DASHBOARD = '#/dashboard',
     CAPABILITIES = '#/hmws/capabilities',
+    "PURCHASE ORDERS" = '#/hmws/purchaseorders',
 }
 
 export enum ItemActivity {
