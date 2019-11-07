@@ -1,7 +1,6 @@
 {
     "singularName": "Capability",
     "pluralName": "Capabilities",
-    "identifier": "Name",
     "url": "#/hmws/capabilities/",
 
     "toolbar": {
@@ -47,6 +46,7 @@
     },
 
     "reportingDB": {
+      "identifier": "NAME",
       "tableName": "CAPABILITY"
     }
 }

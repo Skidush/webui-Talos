@@ -12,9 +12,6 @@ import { ReportingDB, WebuiElement } from './classes.exports';
 const root = browser.params.root;
 const fs = require('fs');
 
-// TODO custom errors
-// Maybe also do an item name search on files??
-// Implements an Item interface
 export class Item {
   readonly name: ItemSingularName;
   readonly pluralName: ItemPluralName;
@@ -108,12 +105,11 @@ export class Item {
    * @param asCollection if true, the item will create itself as a collection
    */
   async create(asCollection: boolean = false): Promise<void> {
-    //TODO create itself as a collection
     this.instances['create'] = await FormPage.fillAndSubmitForm(
                                 await ToolbarPage.$toolbarButton(this.config.toolbar.actions.create), 
                                 this.formSchemaWithValues('create', 'create')
                               );
-    this.instances['create'] = Object.assign(this.instances['create'], this.addIDandUUIDtoItemInstance(this.instances['create']));
+    this.instances['create'] = Object.assign(this.instances['create'], await this.addIDandUUIDtoItemInstance(this.instances['create']));
   }
 
   /**
@@ -129,7 +125,6 @@ export class Item {
    * @param asCollection if true, the item will create itself as a collection
    */
   async edit(asCollection: boolean = false, mark: number | string = 0): Promise<void> {
-    //TODO edit itself as a collection
     if (await ListPage.$listComponent.$element.isPresent()) {
       let $itemRow: WebuiElement = typeof mark === 'number' 
                         ? ListPage.$$tableRows.get(mark) 
@@ -137,7 +132,7 @@ export class Item {
       await $itemRow.$('.RadioButton span').click();
     }
     this.instances['edit'] = await FormPage.fillAndSubmitForm(await ToolbarPage.$toolbarButton(this.config.toolbar.actions.edit), this.formSchemaWithValues('edit', 'edit'));
-    this.instances['edit'] = Object.assign(this.instances['edit'], this.addIDandUUIDtoItemInstance(this.instances['edit']));
+    this.instances['edit'] = Object.assign(this.instances['edit'], await this.addIDandUUIDtoItemInstance(this.instances['edit']));
   }
 
   /**
@@ -151,8 +146,7 @@ export class Item {
    * @param asCollection if true, the item will delete itself as a collection
    */
   async delete(asCollection: boolean = false, mark: number | string = 0): Promise<void> {
-    //TODO delete itself as a collection
-    const identifier = this.config.identifier.toLowerCase();
+    const identifier = this.config.reportingDB.identifier;
     this.instances['delete'] = {};
 
     if (await ListPage.$listComponent.$element.isPresent()) {
@@ -160,7 +154,7 @@ export class Item {
       ? ListPage.$$tableRows.get(mark) 
       : await GetElementBy.cssWithExactText(ListPage.$$tableRows.$$elements, mark);
       await $itemRow.$('.RadioButton span').click();
-      this.instances['delete'][identifier] = await $itemRow.$$('td').get(1).getText(); //TODO: Get from index zero if no Radio Button is present
+      this.instances['delete'][identifier] = await $itemRow.$$('td').get(1).getText();
     } else {
       // Currently in the details page of the item, the identifier of the item is displayed at the header beside the item type
       await DetailsPage.$detailsHeader.to.have.text(this.name);
@@ -172,13 +166,11 @@ export class Item {
   }
 
   async addIDandUUIDtoItemInstance(itemInstance: JSObject) {
-    const identifier = this.config.identifier.toUpperCase();
-    const conditions = await ReportingDB.parseToQueryConditions(itemInstance, this.config.summary, ItemSummaryField.SCHEMA_ID);
+    const identifier = this.config.reportingDB.identifier;
+    const conditions = await ReportingDB.parseToQueryConditions(itemInstance, this.config.summary, ItemSummaryField.SCHEMA_ID, this.config.reportingDB);
     const itemDBRow = await ReportingDB.getItem(this.config.reportingDB.tableName, ['UUID', identifier] , conditions);
-
     itemInstance.UUID = itemDBRow['UUID'];
-    itemInstance[_.camelCase(this.config.identifier)] = itemDBRow[identifier];
-
+    itemInstance[identifier] = itemDBRow[identifier];
     return itemInstance;
   }
 }
