@@ -32,7 +32,7 @@ export class ReportingDB {
         let fk = rdbConfig.foreignKeys;
         queryCondition[field[ItemSummaryField.DBCOLUMN]] = foundProperty.value;
         if (fk && Object.keys(fk).includes(field[ItemSummaryField.DBCOLUMN])) {
-          fk = rdbConfig.foreignKeys[field[ItemSummaryField.DBCOLUMN]];
+          fk = fk[field[ItemSummaryField.DBCOLUMN]];
           const condition = {};
           condition[fk['column']] = foundProperty.value;
           queryCondition[field[ItemSummaryField.DBCOLUMN]] = (await this.getItem(fk['table'], 'UUID', condition))['UUID'];

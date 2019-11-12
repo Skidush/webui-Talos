@@ -1,6 +1,5 @@
 import { Given, When, Then, defineStep } from 'cucumber';
 import { browser } from 'protractor';
-import { isNullOrUndefined } from 'util';
 import * as _ from 'lodash';
 
 import { ReportingDB, Item, Step, FieldFormat } from '../classes/classes.exports';
@@ -121,7 +120,7 @@ Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
   log.debug(`Data displayed in item details: ${JSON.stringify(displayedDetails)}`);
 
   const detailsDBCols = itemSummaryConfig.map(summary => {
-    if (!isNullOrUndefined(summary.detailsID) && !isNullOrUndefined(summary.DBColumn)) {
+    if (summary.detailsID && summary.DBColumn) {
       return summary.DBColumn;
     }
   }).filter(summary => summary);
@@ -133,12 +132,12 @@ Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
     const summary = (itemSummaryConfig).find(summary => summary.DBColumn === key);
     const scKey = _.startCase(summary.detailsID);
 
-    if (isNullOrUndefined(rdbItemRow[key]) || !displayedDetails.hasOwnProperty(scKey)) {
+    if (!rdbItemRow[key] || !displayedDetails.hasOwnProperty(scKey)) {
       delete rdbItemRow[key];
       continue;
     }
 
-    const fk = rdbConfig.foreignKeys[key];
+    const fk = rdbConfig.foreignKeys ? rdbConfig.foreignKeys[key] : null;
     const value = rdbItemRow[key];
     delete rdbItemRow[key];
     rdbItemRow[scKey] = value;
@@ -158,32 +157,58 @@ Then(Step.viewItemDetails, async function(action, tenseSuffix, state, item) {
 });
 
 Then(Step.viewItemsInList, async function (view, action, tenseSuffix, item) {
+  log.info(`Step: The user should see de=tails of ${item.name}/${item.pluralName} in the table`);
   item = ParamaterUtil.getItemObject(item);
-  log.info(`Step: The user should see details of ${item.name}/${item.pluralName} in the table`);
+  const itemConfig = item.config;
+  const itemTableConfig = itemConfig.table;
+  const rdbConfig = itemConfig.reportingDB;
   await ListPage.$loadingIcon.to.be.stale();
-  
-  const itemTableColumns = item.config.table.columns.map(columns => columns.column);
+  const itemTableColumns = itemTableConfig.columns.map(columns => columns.column);
   await ListPage.verifyColumns(itemTableColumns);
 
-  const tableRDBColumns = item.config.summary.map(summaryRow => summaryRow.DBColumn).filter(dbColumn => (itemTableColumns.map(column => column.toUpperCase()).includes(dbColumn)));
-  let conditions = item.config.table.filters;
+  const tableRDBColumns = itemConfig.summary.filter(summaryRow => summaryRow.tableColumn)
+                          .sort((a, b) => {
+                            if (itemTableColumns.indexOf(a.tableColumn) > itemTableColumns.indexOf(b.tableColumn)) {
+                              return 0;
+                            }
+                            return -1
+                          }).map(props => props.DBColumn);
+
+  let conditions = itemTableConfig.filters;
   if (action) {
-    const rowID = item.instances[action][item.config.reportingDB.identifier];
+    const rowID = item.instances[action][rdbConfig.identifier];
     await ToolbarPage.$searchInput.sendKeys(rowID);
     await ListPage.$loadingIcon.to.be.stale();
     conditions = {};
-    conditions[item.config.reportingDB.identifier] = rowID;
+    conditions[rdbConfig.identifier] = rowID;
     await browser.sleep(2500); // TODO: TOFIX. Loading disappears even when the list has not yet completely loaded
   }
 
+  let originalData = await ReportingDB.getItem(rdbConfig.tableName, tableRDBColumns, conditions, itemTableConfig.orderBy, itemTableConfig.maxRows);
   const expectedData = await ListPage.$$tableRows.getText();
+  for (let index = 0; index < originalData.length; index++) { // TODO: Replace with for of array.entries()
+    const row = originalData[index];
+    for(const column in row) {
+      if (!row[column] || row[column] === 'null') {
+        delete row[column];
+        return;
+      }
 
-  let originalData = await ReportingDB.getItem(item.config.reportingDB.tableName, tableRDBColumns, conditions, item.config.table.orderBy, item.config.table.maxRows);
-  originalData.forEach(row => {
-    Object.keys(row).forEach(column => {
-      return row[column] == null && delete row[column];
-    });
-  });
+      let fk = rdbConfig.foreignKeys;
+      if (fk && Object.keys(fk).includes(column)) {
+        fk = fk[column];
+        const condition = {};
+        condition['UUID'] = row[column];
+        originalData[index][column] = (await ReportingDB.getItem(fk.table, 'UUID', condition))['UUID'];
+      }
+
+      const itemSummary = itemConfig.summary.find(summaryRow => summaryRow.DBColumn === column);
+      const tableRowConfig = itemSummary.tableColumn ? itemConfig.table.columns.find(prop => prop.column === itemSummary.tableColumn) : itemSummary.tableColumn;
+      if (row[column] && tableRowConfig && tableRowConfig.format) {
+        originalData[index][column] = FieldFormat.formatFieldValue(tableRowConfig.format, row[column]);
+      }
+    };
+  };
   originalData = originalData.map(row => Object.values(row).join(' '));
 
   expect(expectedData, `Details found in the table does not match the ones retrieved from the database`).to.eql(originalData);

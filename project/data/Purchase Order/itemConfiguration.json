@@ -30,7 +30,7 @@
           { "ID": "Date",                   "caption": "Date Issued *",         "field": "date",      "format": "date"         },
           { "ID": "DateReceived",           "caption": "Date Received *",       "field": "date",      "format": "dateTime"     },
           { "ID": "ExpectedDelivery",       "caption": "Expected Delivery",     "field": "date",      "format": "date"         },
-          { "ID": "DeliveryInstructions",   "caption": "Delivery Instructions", "field": "textarea"                           }
+          { "ID": "DeliveryInstructions",   "caption": "Delivery Instructions", "field": "textarea"                            }
         ]
     },
 
@@ -40,16 +40,16 @@
       "maxRows": 40,
       "tableSelector": "RadioButton",
       "columns": [
-        { "column": "ID"                      },
-        { "column": "Customer"                },
-        { "column": "Billing Address"         },
-        { "column": "Shipping Address"        },
-        { "column": "Customer PO #"           },
-        { "column": "Date Issued"             },
-        { "column": "Date Received"           },
-        { "column": "Expected Delivery"       },
-        { "column": "Delivery Instructions"   },
-        { "column": "State"                   }
+        { "column": "ID"                                            },
+        { "column": "Customer PO #"                                 },
+        { "column": "Customer"                                      },
+        { "column": "Billing Address"                               },
+        { "column": "Shipping Address"                              },
+        { "column": "Date Issued",            "format": "date"      },
+        { "column": "Date Received",          "format": "dateTime"  },
+        { "column": "Expected Delivery",      "format": "date"      },
+        { "column": "State"                                         },
+        { "column": "Delivery Instructions"                         }
       ]
     },
 
