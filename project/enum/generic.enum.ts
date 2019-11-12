@@ -37,6 +37,7 @@ export enum ItemSingularName {
 
 export enum Role {
     ADMIN = 'Admin',
+    INVENTORY = 'Inventory',
     CONTACT_PERSON = 'Contact Person'
 }
 
