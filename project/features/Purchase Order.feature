@@ -6,18 +6,18 @@ Feature: Purchase Order
     Background: User is logged in as an Admin
         Given The user is logged in as an Admin
 
-    @Create
-    Scenario: Create a Purchase Order
-        Given The user is on the Purchase Orders page
-        When The user creates a Purchase Order
-        Then The user should be redirected to the details page of the created Purchase Order
-            And The user should see the created details of the Purchase Order
+    # @Create
+    # Scenario: Create a Purchase Order
+    #     Given The user is on the Purchase Orders page
+    #     When The user creates a Purchase Order
+    #     Then The user should be redirected to the details page of the created Purchase Order
+    #         And The user should see the created details of the Purchase Order
         
-    # @Read
-    # Scenario: Read Purchase Order details from the list
-    #     Given An ACTIVE Purchase Order exists
-    #     When The user navigates to the Purchase Orders page
-    #     Then The user should see the details of the Purchase Orders in the table
+    @Read
+    Scenario: Read Purchase Order details from the list
+        Given An ACTIVE Purchase Order exists
+        When The user navigates to the Purchase Orders page
+        Then The user should see the details of the Purchase Orders in the table
 
     # @Read
     # Scenario: Read Purchase Order details from its page
