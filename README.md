@@ -1,1 +1,1 @@
-**webui-Talos** is a keyword-driven web test automation library based on protractor and cucumber for projects made with Titus Webui-Library and [Cristal-ISE](https://github.com/cristal-ise/cristal-ise). 
+**webui-Talos** is a keyword-driven web test automation framework based on protractor and cucumber for projects made with Titus Webui-Library and [Cristal-ISE](https://github.com/cristal-ise/cristal-ise). 
